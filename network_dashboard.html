@@ -159,7 +159,6 @@
   <div class="sitem" data-cat="Inner Circle">Inner Circle <span class="scount" id="sc-0"></span></div>
   <div class="sitem" data-cat="Power Network">Power Network <span class="scount" id="sc-1"></span></div>
   <div class="slabel">Sector</div>
-  <div class="sitem" data-cat="Goldman Sachs">Goldman Sachs <span class="scount" id="sc-2"></span></div>
   <div class="sitem" data-cat="Finance">Finance <span class="scount" id="sc-3"></span></div>
   <div class="sitem" data-cat="PE / VC">PE / VC <span class="scount" id="sc-4"></span></div>
   <div class="sitem" data-cat="Tech / AI">Tech / AI <span class="scount" id="sc-5"></span></div>
@@ -196,7 +195,7 @@
 const C = [
 {
   name: 'Kris Meulen', title: 'Chief Digital Officer', org: 'The Hershey Company',
-  cat: 'Inner Circle', tier: 'inner', note: 'Key connector — Jefferies Israel Group',
+  cat: 'Inner Circle', tier: 'inner', note: 'Mentor & boss — Avenir Growth',
   email: 'kmeulen@gmail.com', li: 'https://www.linkedin.com/in/kris-meulen-b091b',
   tags: ['Consumer', 'CDO', 'Digital']
 },
@@ -378,13 +377,13 @@ const C = [
 // ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'Robert Steven Kaplan', title: 'Vice Chairman & Partner', org: 'Goldman Sachs (former Dallas Fed President)',
-  cat: 'Goldman Sachs', tier: 't-2',
+  cat: 'Finance', tier: 't-2',
   email: '', li: 'https://www.linkedin.com/in/rob-s-kaplan',
   tags: ['Goldman', 'Fed', 'Finance']
 },
 {
   name: 'Adrian Jones', title: 'Chairman, Global Private Equity', org: 'Goldman Sachs',
-  cat: 'Goldman Sachs', tier: 't-2',
+  cat: 'Finance', tier: 't-2',
   email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Adrian+Jones+Goldman+Sachs+PE',
   tags: ['Goldman', 'PE']
 },
@@ -844,13 +843,13 @@ let activeTier = 'all';
 let query = '';
 
 const CAT_ORDER = [
-  'Inner Circle', 'Power Network', 'Goldman Sachs', 'Finance', 'PE / VC',
+  'Inner Circle', 'Power Network', 'Finance', 'PE / VC',
   'Tech / AI', 'Law', 'Consumer', 'Healthcare',
   'JHP Mentors', 'Penn Peers', 'Israel', 'Athletics', 'Penn Wrestling'
 ];
 
 const CAT_SC = {
-  'Inner Circle': 'sc-0', 'Power Network': 'sc-1', 'Goldman Sachs': 'sc-2',
+  'Inner Circle': 'sc-0', 'Power Network': 'sc-1',
   'Finance': 'sc-3', 'PE / VC': 'sc-4', 'Tech / AI': 'sc-5',
   'Law': 'sc-6', 'Consumer': 'sc-7', 'Healthcare': 'sc-8',
   'JHP Mentors': 'sc-9', 'Penn Peers': 'sc-10', 'Israel': 'sc-11', 'Athletics': 'sc-12'
