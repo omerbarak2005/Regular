@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Omer Barak — Network</title>
+<title>Network</title>
 <style>
   :root {
     --bg: #09090e;
@@ -144,15 +144,10 @@
 <body>
 
 <div class="topbar">
-  <div class="brand">Omer Barak — <span>Network</span></div>
+  <div class="brand"><span>Network</span></div>
   <div class="search-wrap">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input id="search" type="text" placeholder="Search contacts… (press /)" autocomplete="off">
-  </div>
-  <div class="topbar-meta">
-    <div class="meta-item">LinkedIn <b>1,767</b></div>
-    <div class="meta-item">Emails found <b id="emailCount">—</b></div>
-    <div class="meta-item">Inner Circle <b>17</b></div>
   </div>
 </div>
 
@@ -201,7 +196,7 @@
 const C = [
 {
   name: 'Kris Meulen', title: 'Chief Digital Officer', org: 'The Hershey Company',
-  cat: 'Inner Circle', tier: 'inner', note: 'Key mentor — connected Omer to Jefferies; current Avenir focus',
+  cat: 'Inner Circle', tier: 'inner', note: 'Key connector — Jefferies Israel Group',
   email: 'kmeulen@gmail.com', li: 'https://www.linkedin.com/in/kris-meulen-b091b',
   tags: ['Consumer', 'CDO', 'Digital']
 },
@@ -967,7 +962,6 @@ Object.entries(CAT_SC).forEach(([cat, id]) => {
     const el = document.getElementById(id);
     if (el) el.textContent = C.filter(c => c.cat === cat).length;
   });
-  document.getElementById('emailCount').textContent = C.filter(c => c.email).length;
 }
 
 // ─── EVENTS ──────────────────────────────────────────────────────────────────
