@@ -6,457 +6,847 @@
 <title>Omer Barak — Network</title>
 <style>
   :root {
-    --bg: #0a0a0f;
-    --surface: #13131a;
-    --surface2: #1a1a24;
-    --border: #2a2a3a;
+    --bg: #09090e;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: #252530;
     --gold: #f0b429;
-    --gold2: #ffd700;
+    --gold2: #ffd060;
     --blue: #4f8ef7;
     --green: #34d399;
     --purple: #a78bfa;
-    --red: #f87171;
-    --text: #e8e8f0;
-    --muted: #8888a8;
-    --li-blue: #0a66c2;
+    --text: #e8e8f2;
+    --muted: #7878a0;
+    --li: #0a66c2;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
 
+  /* TOP BAR */
   .topbar {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(10,10,15,0.96); backdrop-filter: blur(12px);
+    background: rgba(9,9,14,0.97); backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 20px; padding: 0 24px; height: 56px;
+    display: flex; align-items: center; gap: 20px; padding: 0 24px; height: 54px;
   }
-  .topbar-brand { font-size: 15px; font-weight: 700; color: var(--text); white-space: nowrap; }
-  .topbar-brand span { color: var(--gold); }
-  .search-wrap { flex: 1; max-width: 400px; position: relative; }
+  .brand { font-size: 14px; font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
+  .brand span { color: var(--gold); }
+  .search-wrap { position: relative; flex: 1; max-width: 380px; }
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
   .search-wrap input {
     width: 100%; background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text); padding: 7px 12px 7px 34px;
-    font-size: 13px; outline: none;
+    border-radius: 8px; color: var(--text); padding: 7px 12px 7px 32px; font-size: 13px; outline: none;
   }
   .search-wrap input:focus { border-color: var(--gold); }
-  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); }
-  .topbar-stats { display: flex; gap: 16px; margin-left: auto; }
-  .tstat { font-size: 12px; color: var(--muted); white-space: nowrap; }
-  .tstat b { color: var(--text); }
+  .topbar-meta { margin-left: auto; display: flex; gap: 20px; }
+  .meta-item { font-size: 12px; color: var(--muted); }
+  .meta-item b { color: var(--text); font-weight: 700; }
 
+  /* LAYOUT */
   .layout { display: flex; }
 
+  /* SIDEBAR */
   .sidebar {
-    width: 220px; min-width: 220px; position: sticky; top: 56px;
-    height: calc(100vh - 56px); overflow-y: auto;
-    background: var(--surface); border-right: 1px solid var(--border);
-    padding: 16px 0;
+    width: 210px; min-width: 210px; position: sticky; top: 54px;
+    height: calc(100vh - 54px); overflow-y: auto;
+    background: var(--surface); border-right: 1px solid var(--border); padding: 12px 0;
   }
-  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar { width: 3px; }
   .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-  .sidebar-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; color: var(--muted); text-transform: uppercase; padding: 0 16px 6px; margin-top: 8px; }
-  .sidebar-item {
+  .slabel { font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 10px 14px 4px; }
+  .sitem {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 7px 16px; cursor: pointer; font-size: 13px; color: var(--muted);
-    border-left: 2px solid transparent; transition: all .15s;
+    padding: 6px 14px; cursor: pointer; font-size: 12.5px; color: var(--muted);
+    border-left: 2px solid transparent; transition: all .12s; gap: 6px;
   }
-  .sidebar-item:hover { color: var(--text); background: var(--surface2); }
-  .sidebar-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(240,180,41,.06); font-weight: 600; }
-  .sidebar-count { font-size: 11px; background: var(--surface2); padding: 1px 6px; border-radius: 10px; color: var(--muted); }
+  .sitem:hover { color: var(--text); background: var(--surface2); }
+  .sitem.active { color: var(--gold); border-left-color: var(--gold); background: rgba(240,180,41,.05); font-weight: 600; }
+  .scount { font-size: 10px; background: var(--surface2); padding: 1px 5px; border-radius: 8px; color: var(--muted); flex-shrink: 0; }
 
-  .main { flex: 1; padding: 24px; overflow: hidden; }
+  /* MAIN */
+  .main { flex: 1; padding: 20px 24px; min-width: 0; }
 
-  .section { margin-bottom: 40px; }
-  .section-header {
-    display: flex; align-items: baseline; gap: 10px;
-    border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 16px;
+  /* TIER FILTERS */
+  .filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .fbtn {
+    font-size: 12px; padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--border); background: transparent; color: var(--muted);
+    cursor: pointer; transition: all .12s;
   }
-  .section-title { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .section-count { font-size: 12px; color: var(--muted); }
-  .inner-circle .section-title { color: var(--gold); }
+  .fbtn:hover { color: var(--text); border-color: var(--muted); }
+  .fbtn.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 700; }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  /* SECTION */
+  .section { margin-bottom: 36px; }
+  .sec-head {
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 14px;
+  }
+  .sec-title { font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .sec-count { font-size: 11px; color: var(--muted); }
+  .inner-circle .sec-title { color: var(--gold); }
+  .inner-circle .sec-head { border-bottom-color: rgba(240,180,41,.25); }
 
+  /* GRID */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 10px; }
+
+  /* CARD */
   .card {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 16px;
-    transition: border-color .15s, background .15s;
-    display: flex; flex-direction: column; gap: 10px;
+    border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px;
+    transition: border-color .12s, background .12s;
   }
-  .card:hover { border-color: var(--gold); background: var(--surface2); }
-  .inner-circle .card { border-color: rgba(240,180,41,.2); }
-  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-  .card-info { flex: 1; min-width: 0; }
-  .card-name { font-size: 15px; font-weight: 700; color: var(--text); }
-  .card-title { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
-  .card-org { font-size: 12px; font-weight: 600; color: var(--text); opacity: .8; margin-top: 1px; }
-  .tier-badge {
-    flex-shrink: 0; font-size: 10px; font-weight: 700; padding: 2px 7px;
-    border-radius: 10px; text-transform: uppercase; letter-spacing: .05em;
-  }
-  .tier-inner { background: rgba(255,215,0,.15); color: var(--gold2); border: 1px solid rgba(255,215,0,.35); }
-  .tier-1 { background: rgba(240,180,41,.1); color: var(--gold); border: 1px solid rgba(240,180,41,.2); }
-  .tier-2 { background: rgba(79,142,247,.1); color: var(--blue); border: 1px solid rgba(79,142,247,.2); }
-  .tier-3 { background: rgba(52,211,153,.1); color: var(--green); border: 1px solid rgba(52,211,153,.2); }
-  .tier-mentor { background: rgba(167,139,250,.1); color: var(--purple); border: 1px solid rgba(167,139,250,.2); }
+  .card:hover { border-color: rgba(240,180,41,.4); background: var(--surface2); }
+  .inner-circle .card { border-color: rgba(240,180,41,.15); }
 
-  .card-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .card-row1 { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card-info { min-width: 0; flex: 1; }
+  .cname { font-size: 14px; font-weight: 700; color: var(--text); }
+  .ctitle { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+  .corg { font-size: 11.5px; font-weight: 600; color: #b0b0d0; margin-top: 1px; }
+  .cnote { font-size: 11px; color: var(--gold); margin-top: 3px; font-style: italic; }
+
+  .tbadge {
+    flex-shrink: 0; font-size: 9.5px; font-weight: 800; padding: 2px 7px;
+    border-radius: 20px; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap;
+  }
+  .t-inner { background: rgba(255,208,96,.12); color: var(--gold2); border: 1px solid rgba(255,208,96,.3); }
+  .t-1 { background: rgba(240,180,41,.1); color: var(--gold); border: 1px solid rgba(240,180,41,.2); }
+  .t-2 { background: rgba(79,142,247,.1); color: var(--blue); border: 1px solid rgba(79,142,247,.2); }
+  .t-3 { background: rgba(52,211,153,.08); color: var(--green); border: 1px solid rgba(52,211,153,.15); }
+  .t-mentor { background: rgba(167,139,250,.1); color: var(--purple); border: 1px solid rgba(167,139,250,.2); }
+
+  .card-actions { display: flex; gap: 5px; flex-wrap: wrap; }
   .btn {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 6px;
-    border: none; cursor: pointer; text-decoration: none; transition: opacity .15s;
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 6px;
+    border: none; cursor: pointer; text-decoration: none; transition: opacity .12s;
   }
-  .btn:hover { opacity: .8; }
-  .btn-li { background: var(--li-blue); color: #fff; }
-  .btn-email { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .btn-email:hover { border-color: var(--gold); color: var(--gold); }
-  .btn-copy { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); padding: 5px 8px; }
+  .btn:hover { opacity: .75; }
+  .btn-li { background: var(--li); color: #fff; }
+  .btn-mail { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-copy { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); padding: 4px 7px; }
+  .btn-mail:hover { border-color: var(--gold); color: var(--gold); }
 
-  .card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-  .tag { font-size: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; color: var(--muted); }
-
-  .filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-  .filter-btn {
-    font-size: 12px; padding: 5px 12px; border-radius: 20px;
-    border: 1px solid var(--border); background: var(--surface); color: var(--muted);
-    cursor: pointer; transition: all .15s;
-  }
-  .filter-btn:hover { color: var(--text); border-color: var(--muted); }
-  .filter-btn.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 700; }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag { font-size: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--muted); }
 
   .toast {
-    position: fixed; bottom: 24px; right: 24px; background: var(--green); color: #000;
-    padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
-    opacity: 0; transform: translateY(10px); transition: all .2s; pointer-events: none; z-index: 999;
+    position: fixed; bottom: 20px; right: 20px;
+    background: var(--green); color: #000; font-weight: 700; font-size: 12px;
+    padding: 8px 14px; border-radius: 8px;
+    opacity: 0; transform: translateY(8px); transition: all .18s; pointer-events: none; z-index: 999;
   }
   .toast.show { opacity: 1; transform: translateY(0); }
+  .empty { padding: 60px; text-align: center; color: var(--muted); font-size: 14px; }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="topbar-brand">Omer Barak — <span>Network</span></div>
+  <div class="brand">Omer Barak — <span>Network</span></div>
   <div class="search-wrap">
-    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" id="searchInput" placeholder="Search… (press /)" autocomplete="off">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="search" type="text" placeholder="Search contacts… (press /)" autocomplete="off">
   </div>
-  <div class="topbar-stats">
-    <div class="tstat">LinkedIn <b>1,767</b></div>
-    <div class="tstat">Emails <b id="emailCount">0</b></div>
-    <div class="tstat">Inner Circle <b>11</b></div>
+  <div class="topbar-meta">
+    <div class="meta-item">LinkedIn <b>1,767</b></div>
+    <div class="meta-item">Emails found <b id="emailCount">—</b></div>
+    <div class="meta-item">Inner Circle <b>11</b></div>
   </div>
 </div>
 
 <div class="layout">
-<div class="sidebar">
-  <div class="sidebar-label">Browse</div>
-  <div class="sidebar-item active" data-cat="all">All Contacts <span class="sidebar-count" id="sc-all">0</span></div>
-  <div class="sidebar-label" style="margin-top:12px">Priority</div>
-  <div class="sidebar-item" data-cat="Inner Circle">Inner Circle <span class="sidebar-count" id="sc-ic">0</span></div>
-  <div class="sidebar-item" data-cat="Tier 1 Network">Tier 1 Network <span class="sidebar-count" id="sc-t1">0</span></div>
-  <div class="sidebar-label" style="margin-top:12px">Sectors</div>
-  <div class="sidebar-item" data-cat="Finance / Banking">Finance / Banking <span class="sidebar-count" id="sc-fin">0</span></div>
-  <div class="sidebar-item" data-cat="Private Equity / VC">PE / VC <span class="sidebar-count" id="sc-pe">0</span></div>
-  <div class="sidebar-item" data-cat="Goldman Sachs">Goldman Sachs <span class="sidebar-count" id="sc-gs">0</span></div>
-  <div class="sidebar-item" data-cat="Blackstone / Apollo">Blackstone / Apollo <span class="sidebar-count" id="sc-bk">0</span></div>
-  <div class="sidebar-item" data-cat="Tech / AI">Tech / AI <span class="sidebar-count" id="sc-tech">0</span></div>
-  <div class="sidebar-item" data-cat="Law">Law <span class="sidebar-count" id="sc-law">0</span></div>
-  <div class="sidebar-item" data-cat="Consumer / Retail">Consumer / Retail <span class="sidebar-count" id="sc-con">0</span></div>
-  <div class="sidebar-item" data-cat="Real Estate">Real Estate <span class="sidebar-count" id="sc-re">0</span></div>
-  <div class="sidebar-item" data-cat="Healthcare">Healthcare <span class="sidebar-count" id="sc-hc">0</span></div>
-  <div class="sidebar-label" style="margin-top:12px">Community</div>
-  <div class="sidebar-item" data-cat="JHP Mentors">JHP Mentors <span class="sidebar-count" id="sc-jhp">0</span></div>
-  <div class="sidebar-item" data-cat="Penn / Wharton">Penn / Wharton <span class="sidebar-count" id="sc-penn">0</span></div>
-  <div class="sidebar-item" data-cat="Israel Network">Israel Network <span class="sidebar-count" id="sc-isr">0</span></div>
-  <div class="sidebar-item" data-cat="Athletics">Athletics <span class="sidebar-count" id="sc-ath">0</span></div>
-</div>
+<nav class="sidebar">
+  <div class="slabel">View</div>
+  <div class="sitem active" data-cat="all">All <span class="scount" id="sc-all"></span></div>
+  <div class="slabel">Priority</div>
+  <div class="sitem" data-cat="Inner Circle">Inner Circle <span class="scount" id="sc-0"></span></div>
+  <div class="sitem" data-cat="Power Network">Power Network <span class="scount" id="sc-1"></span></div>
+  <div class="slabel">Sector</div>
+  <div class="sitem" data-cat="Goldman Sachs">Goldman Sachs <span class="scount" id="sc-2"></span></div>
+  <div class="sitem" data-cat="Finance">Finance <span class="scount" id="sc-3"></span></div>
+  <div class="sitem" data-cat="PE / VC">PE / VC <span class="scount" id="sc-4"></span></div>
+  <div class="sitem" data-cat="Tech / AI">Tech / AI <span class="scount" id="sc-5"></span></div>
+  <div class="sitem" data-cat="Law">Law <span class="scount" id="sc-6"></span></div>
+  <div class="sitem" data-cat="Consumer">Consumer <span class="scount" id="sc-7"></span></div>
+  <div class="sitem" data-cat="Healthcare">Healthcare <span class="scount" id="sc-8"></span></div>
+  <div class="slabel">Community</div>
+  <div class="sitem" data-cat="JHP Mentors">JHP Mentors <span class="scount" id="sc-9"></span></div>
+  <div class="sitem" data-cat="Penn Peers">Penn Peers <span class="scount" id="sc-10"></span></div>
+  <div class="sitem" data-cat="Israel">Israel <span class="scount" id="sc-11"></span></div>
+  <div class="sitem" data-cat="Athletics">Athletics <span class="scount" id="sc-12"></span></div>
+</nav>
 
 <div class="main">
   <div class="filters">
-    <button class="filter-btn active" data-tier="all">All</button>
-    <button class="filter-btn" data-tier="inner">⭐ Inner Circle</button>
-    <button class="filter-btn" data-tier="tier-1">Tier 1</button>
-    <button class="filter-btn" data-tier="tier-2">Tier 2</button>
-    <button class="filter-btn" data-tier="tier-mentor">JHP Mentors</button>
+    <button class="fbtn active" data-tier="all">All</button>
+    <button class="fbtn" data-tier="inner">⭐ Inner Circle</button>
+    <button class="fbtn" data-tier="t-1">Power Network</button>
+    <button class="fbtn" data-tier="t-2">Senior</button>
+    <button class="fbtn" data-tier="t-mentor">JHP Mentors</button>
+    <button class="fbtn" data-tier="t-3">Peers</button>
   </div>
-  <div id="contactsRoot"></div>
+  <div id="root"></div>
 </div>
 </div>
 
 <div class="toast" id="toast">Copied!</div>
 
 <script>
-const CONTACTS = [
-  // INNER CIRCLE
-  { name:'Gal Gadot', title:'Actress & Entrepreneur', org:'Wonder Woman / Rivka Tequila', cat:'Inner Circle', tier:'inner', email:'', li:'https://www.linkedin.com/in/gal-gadot/', tags:['Family','Entertainment'] },
-  { name:'Joe DeSena', title:'Founder & CEO', org:'Spartan Race', cat:'Inner Circle', tier:'inner', email:'joe@spartan.com', li:'https://www.linkedin.com/in/joedesena/', tags:['Entrepreneur','Fitness'] },
-  { name:'Rich Handler', title:'Chairman & CEO', org:'Jefferies Financial Group', cat:'Inner Circle', tier:'inner', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Rich+Handler+Jefferies', tags:['Banking','CEO'] },
-  { name:'Jeff Epstein', title:'Partner (former CFO, Oracle)', org:'Bessemer Venture Partners', cat:'Inner Circle', tier:'inner', email:'', li:'https://www.linkedin.com/in/jeffepstein1/', tags:['VC','SaaS','Oracle'] },
-  { name:'Roy Rosin', title:'Chief Innovation Officer', org:'Penn Medicine / First Round Capital', cat:'Inner Circle', tier:'inner', email:'', li:'https://www.linkedin.com/in/royrosin/', tags:['VC','Penn','Health'] },
-  { name:'Dan Blank', title:'Co-Chair, M&A', org:'Goldman Sachs', cat:'Inner Circle', tier:'inner', email:'dan.blank@gs.com', li:'https://www.linkedin.com/search/results/people/?keywords=Dan+Blank+Goldman+Sachs+MA', tags:['Goldman','M&A'] },
-  { name:'Andrew Barkan', title:'Partner & Co-Head, Capital Markets', org:'Fried Frank', cat:'Inner Circle', tier:'inner', email:'andrew.barkan@friedfrank.com', li:'https://www.linkedin.com/search/results/people/?keywords=Andrew+Barkan+Fried+Frank', tags:['Law','Capital Markets'] },
-  { name:'Joe Harpaz', title:'CEO', org:'ModMed', cat:'Inner Circle', tier:'inner', email:'', li:'https://www.linkedin.com/in/joeharpaz/', tags:['HealthTech','CEO'] },
-  { name:'Bobby Jain', title:'Founder & CIO', org:'Jain Global ($5.3B AUM)', cat:'Inner Circle', tier:'inner', email:'', li:'https://www.linkedin.com/in/bobby-jain/', tags:['Hedge Fund','Millennium'] },
-  { name:'David Blitzer', title:'Senior Managing Director', org:'Blackstone / Philadelphia 76ers / NJ Devils', cat:'Inner Circle', tier:'inner', email:'', li:'https://www.linkedin.com/in/dave-blitzer-12aa192a2/', tags:['Blackstone','Sports','PE'] },
-  { name:'Ivan Bergstein', title:'Entrepreneur & Investor', org:'Multiple Ventures', cat:'Inner Circle', tier:'inner', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Ivan+Bergstein+entrepreneur', tags:['Entrepreneur','Israel'] },
+// ─── CONTACTS ────────────────────────────────────────────────────────────────
+// tier: "inner" | "t-1" | "t-2" | "t-3" | "t-mentor"
+// email confirmed from Gmail where noted
+const C = [
 
-  // TIER 1 NETWORK
-  { name:'William P. Lauder', title:'Executive Chairman', org:'Estée Lauder Companies', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=William+Lauder+Estee+Lauder', tags:['Consumer','Chairman','Brand'] },
-  { name:'Josh Harris', title:'Co-Founder', org:'Apollo Global / 76ers / Commanders', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Josh+Harris+Apollo+Global', tags:['Apollo','PE','Sports'] },
-  { name:'Scott Dahnke', title:'Global Co-CEO', org:'L Catterton', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Scott+Dahnke+L+Catterton', tags:['PE','Consumer','LVMH'] },
-  { name:'Lionel Assant', title:'European PE Co-Head & Co-CIO', org:'Blackstone', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Lionel+Assant+Blackstone', tags:['Blackstone','PE'] },
-  { name:'Robert Steven Kaplan', title:'Vice Chairman & Partner', org:'Goldman Sachs (former Dallas Fed President)', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Robert+Kaplan+Goldman+Sachs+Fed', tags:['Goldman','Fed'] },
-  { name:'Adrian Jones', title:'Chairman, Global Private Equity', org:'Goldman Sachs', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Adrian+Jones+Goldman+Sachs+PE', tags:['Goldman','PE'] },
-  { name:'Jim Esposito', title:'President', org:'Citadel Securities', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Jim+Esposito+Citadel+Securities', tags:['Citadel','Trading'] },
-  { name:'David Ulevitch', title:'General Partner', org:'a16z (Andreessen Horowitz)', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/in/davidulevitch/', tags:['a16z','VC','Tech'] },
-  { name:'Eytan Elbaz', title:'Co-Creator, AdSense / Angel Investor', org:'Google / Various', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Eytan+Elbaz+Google+AdSense', tags:['Google','Entrepreneur'] },
-  { name:'Kris Meulen', title:'Chief Digital Officer', org:'The Hershey Company', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Kris+Meulen+Hershey', tags:['Consumer','CDO'] },
-  { name:'Dr. Uri Geiger', title:'Entrepreneur & Investor', org:'Medigus / Multiple Ventures', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Uri+Geiger+Medigus', tags:['MedTech','Israel'] },
-  { name:'Richard Baker', title:'Founder & Executive Chairman', org:'HBC / Saks Fifth Avenue', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Richard+Baker+Saks+HBC', tags:['Retail','Luxury'] },
-  { name:'Logan Goodman', title:'General Partner', org:'Vine Ventures', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Logan+Goodman+Vine+Ventures', tags:['VC','Vine'] },
-  { name:'Mo Koyfman', title:'Founder & GP', org:'Shine Capital', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Mo+Koyfman+Shine+Capital', tags:['VC','Seed'] },
-  { name:'Jeff Weinstein', title:'Partner', org:'FJ Labs', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Jeff+Weinstein+FJ+Labs', tags:['VC','Marketplace'] },
-  { name:'Richard Mack', title:'CEO & Co-Founder', org:'Mack Real Estate Group', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Richard+Mack+Real+Estate+Group', tags:['Real Estate','PE'] },
-  { name:'Stephan Feldguise', title:'Co-Head, Global M&A', org:'Goldman Sachs', cat:'Tier 1 Network', tier:'tier-1', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Stephan+Feldguise+Goldman+Sachs', tags:['Goldman','M&A'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// INNER CIRCLE
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Gal Gadot', title: 'Actress & Entrepreneur', org: 'Wonder Woman / Rivka Tequila',
+  cat: 'Inner Circle', tier: 'inner', note: 'Aunt',
+  email: '', li: 'https://www.linkedin.com/in/gal-gadot/',
+  tags: ['Family', 'Entertainment', 'Brand']
+},
+{
+  name: 'Joe DeSena', title: 'Founder & CEO', org: 'Spartan Race',
+  cat: 'Inner Circle', tier: 'inner',
+  email: 'joe@spartan.com', li: 'https://www.linkedin.com/in/joedesena/',
+  tags: ['Entrepreneur', 'Fitness', 'Events']
+},
+{
+  name: 'Rich Handler', title: 'Chairman & CEO', org: 'Jefferies Financial Group',
+  cat: 'Inner Circle', tier: 'inner', note: 'Replied in 28 min — "Carey will make sure you have an interview."',
+  email: 'rhandler@jefferies.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Richard+Handler+Jefferies+CEO',
+  tags: ['Banking', 'CEO', 'Jefferies']
+},
+{
+  name: 'Jeff Epstein', title: 'Partner (former CFO, Oracle)', org: 'Bessemer Venture Partners',
+  cat: 'Inner Circle', tier: 'inner',
+  email: 'jeff@bvp.com', li: 'https://www.linkedin.com/in/jeffepstein1/',
+  tags: ['VC', 'Bessemer', 'Oracle']
+},
+{
+  name: 'Roy Rosin', title: 'Chief Innovation Officer', org: 'Penn Medicine / First Round Capital',
+  cat: 'Inner Circle', tier: 'inner',
+  email: 'rrosin@firstround.com', li: 'https://www.linkedin.com/in/royrosin/',
+  tags: ['VC', 'First Round', 'Penn']
+},
+{
+  name: 'Dan Blank', title: 'Co-Chairman, Global M&A', org: 'Goldman Sachs',
+  cat: 'Inner Circle', tier: 'inner', note: '"Will keep your resume in front of our folks."',
+  email: 'dan.blank@gs.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Dan+Blank+Goldman+Sachs+MA',
+  tags: ['Goldman', 'M&A', 'Banking']
+},
+{
+  name: 'Andrew Barkan', title: 'Partner & Co-Head, Capital Markets', org: 'Fried Frank',
+  cat: 'Inner Circle', tier: 'inner', note: 'JHP Mentor — active relationship',
+  email: 'andrew.barkan@friedfrank.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Andrew+Barkan+Fried+Frank',
+  tags: ['Law', 'Capital Markets', 'JHP']
+},
+{
+  name: 'Joe Harpaz', title: 'Co-CEO', org: 'ModMed ($5.3B — Clearlake acquisition)',
+  cat: 'Inner Circle', tier: 'inner', note: '"I am proud of you." — set up shadowing at HQ',
+  email: 'joe.harpaz@modmed.com', li: 'https://www.linkedin.com/in/joe-harpaz/',
+  tags: ['HealthTech', 'CEO', '$5.3B']
+},
+{
+  name: 'Bobby Jain', title: 'Founder & CIO', org: 'Jain Global ($5.3B AUM)',
+  cat: 'Inner Circle', tier: 'inner',
+  email: '', li: 'https://www.linkedin.com/in/bobby-jain/',
+  tags: ['Hedge Fund', 'Millennium', 'Credit Suisse']
+},
+{
+  name: 'David Blitzer', title: 'Senior Managing Director', org: 'Blackstone / 76ers / NJ Devils',
+  cat: 'Inner Circle', tier: 'inner',
+  email: '', li: 'https://www.linkedin.com/in/dave-blitzer-12aa192a2/',
+  tags: ['Blackstone', 'Sports', 'PE']
+},
+{
+  name: 'Ivan Bergstein', title: 'Entrepreneur & Investor', org: 'Multiple Ventures',
+  cat: 'Inner Circle', tier: 'inner',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Ivan+Bergstein+entrepreneur',
+  tags: ['Entrepreneur', 'Israel']
+},
 
-  // GOLDMAN SACHS
-  { name:'Mark Kohn', title:'Managing Director', org:'Wells Fargo (former Goldman Sachs)', cat:'Goldman Sachs', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Mark+Kohn+Wells+Fargo+Goldman', tags:['Banking'] },
-  { name:'Larry Portman', title:'Managing Director', org:'Goldman Sachs', cat:'Goldman Sachs', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Larry+Portman+Goldman+Sachs', tags:['Goldman'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// POWER NETWORK
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Stephan Feldguise', title: 'Global Head of M&A', org: 'Goldman Sachs',
+  cat: 'Power Network', tier: 't-1', note: 'Replied immediately, set up call',
+  email: 'stephan.feldgoise@gs.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Stephan+Feldguise+Goldman+Sachs+MA',
+  tags: ['Goldman', 'M&A']
+},
+{
+  name: 'Jeff Weinstein', title: 'Partner', org: 'FJ Labs',
+  cat: 'Power Network', tier: 't-1',
+  email: 'jeff@fjlabs.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Jeff+Weinstein+FJ+Labs',
+  tags: ['VC', 'Marketplace', 'Seed']
+},
+{
+  name: 'Kris Meulen', title: 'Chief Digital Officer', org: 'The Hershey Company',
+  cat: 'Power Network', tier: 't-1', note: 'Connected Omer to Jefferies; Avenir M&A target',
+  email: 'kmeulen@gmail.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Kris+Meulen+Hershey+CDO',
+  tags: ['Consumer', 'CDO', 'Digital']
+},
+{
+  name: 'Larry Portman', title: 'Managing Director, Israel Group', org: 'Jefferies',
+  cat: 'Power Network', tier: 't-1', note: '"Any friend of Kris is worth meeting."',
+  email: 'lportman@jefferies.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Larry+Portman+Jefferies+Israel',
+  tags: ['Jefferies', 'Israel', 'Banking']
+},
+{
+  name: 'William P. Lauder', title: 'Executive Chairman', org: 'Estée Lauder Companies',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=William+Lauder+Estee+Lauder',
+  tags: ['Consumer', 'Chairman', 'Brand']
+},
+{
+  name: 'Josh Harris', title: 'Co-Founder', org: 'Apollo Global / 76ers / Commanders',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Josh+Harris+Apollo+Global',
+  tags: ['Apollo', 'PE', 'Sports']
+},
+{
+  name: 'Richard Baker', title: 'Founder & Executive Chairman', org: 'HBC / Saks Fifth Avenue',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Richard+Baker+Saks+HBC',
+  tags: ['Retail', 'Luxury', 'Consumer']
+},
+{
+  name: 'Richard Mack', title: 'CEO & Co-Founder', org: 'Mack Real Estate Group',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Richard+Mack+Real+Estate+Group',
+  tags: ['Real Estate', 'PE']
+},
+{
+  name: 'Scott Dahnke', title: 'Global Co-CEO', org: 'L Catterton (LVMH-backed)',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Scott+Dahnke+L+Catterton',
+  tags: ['PE', 'Consumer', 'LVMH']
+},
+{
+  name: 'Mo Koyfman', title: 'Founder & GP', org: 'Shine Capital',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Mo+Koyfman+Shine+Capital',
+  tags: ['VC', 'Seed']
+},
+{
+  name: 'Logan Goodman', title: 'General Partner', org: 'Vine Ventures',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Logan+Goodman+Vine+Ventures',
+  tags: ['VC', 'Vine']
+},
+{
+  name: 'Kristen Rossi', title: 'Executive', org: 'Entrepreneurship / Israel',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Kristen+Rossi+entrepreneur+Israel',
+  tags: ['Israel', 'Business']
+},
+{
+  name: 'Lionel Assant', title: 'European PE Co-Head & Co-CIO', org: 'Blackstone',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Lionel+Assant+Blackstone',
+  tags: ['Blackstone', 'PE', 'Europe']
+},
+{
+  name: 'Danny Ackerman', title: 'Managing Director', org: 'Key1 Capital',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Danny+Ackerman+Key1+Capital',
+  tags: ['PE', 'Finance']
+},
 
-  // PRIVATE EQUITY / VC
-  { name:'Raz Alon', title:'Investor', org:'Point72 Ventures', cat:'Private Equity / VC', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Raz+Alon+Point72', tags:['VC','Israel'] },
-  { name:'Eric Reiner', title:'General Partner', org:'Vine Ventures ($140M Fund II)', cat:'Private Equity / VC', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Eric+Reiner+Vine+Ventures', tags:['VC','Vine'] },
-  { name:'Daniel Povitsky', title:'Co-Founder', org:'Vine Ventures', cat:'Private Equity / VC', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Daniel+Povitsky+Vine+Ventures', tags:['VC','Vine'] },
-  { name:'Danny Ackerman', title:'Managing Director', org:'Key1 Capital', cat:'Private Equity / VC', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Danny+Ackerman+Key1+Capital', tags:['PE'] },
-  { name:'Adam Teatle', title:'Managing Director', org:'Lazard', cat:'Private Equity / VC', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Adam+Teatle+Lazard', tags:['Lazard','M&A'] },
-  { name:'Adam Rothenberg', title:'Partner', org:'BoxGroup', cat:'Private Equity / VC', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Adam+Rothenberg+BoxGroup', tags:['VC','Seed','JHP'] },
-  { name:'Ryan Josephson', title:'Principal', org:'Stonecroft Management', cat:'Private Equity / VC', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Ryan+Josephson+Stonecroft', tags:['PE','Family Office','JHP'] },
-  { name:'Jonathon Granowitz', title:'Senior Associate', org:'Lovell Minnick Partners', cat:'Private Equity / VC', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Jonathon+Granowitz+Lovell+Minnick', tags:['PE','JHP'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// GOLDMAN SACHS
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Robert Steven Kaplan', title: 'Vice Chairman & Partner', org: 'Goldman Sachs (former Dallas Fed President)',
+  cat: 'Goldman Sachs', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Robert+Kaplan+Goldman+Sachs+Fed',
+  tags: ['Goldman', 'Fed', 'Finance']
+},
+{
+  name: 'Adrian Jones', title: 'Chairman, Global Private Equity', org: 'Goldman Sachs',
+  cat: 'Goldman Sachs', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Adrian+Jones+Goldman+Sachs+PE',
+  tags: ['Goldman', 'PE']
+},
 
-  // BLACKSTONE / APOLLO
-  { name:'David Prizlutsky', title:'Principal', org:'Avenir Growth Capital', cat:'Blackstone / Apollo', tier:'tier-2', email:'dprilutsky@avenirgrowth.com', li:'https://www.linkedin.com/search/results/people/?keywords=David+Prilutsky+Avenir+Growth', tags:['Avenir','PE'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// FINANCE
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Jim Esposito', title: 'President', org: 'Citadel Securities',
+  cat: 'Finance', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Jim+Esposito+Citadel+Securities',
+  tags: ['Citadel', 'Trading', 'Markets']
+},
+{
+  name: 'Adam Teatle', title: 'Managing Director', org: 'Lazard',
+  cat: 'Finance', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Adam+Teatle+Lazard',
+  tags: ['Lazard', 'M&A']
+},
+{
+  name: 'David Schneid', title: 'GM & Head of Product, Aladdin Accounting', org: 'BlackRock',
+  cat: 'Finance', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=David+Schneid+BlackRock+Aladdin',
+  tags: ['BlackRock', 'JHP']
+},
 
-  // FINANCE / BANKING
-  { name:'Daniel Viener', title:'Head of Investments', org:'BlackRock', cat:'Finance / Banking', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Daniel+Viener+BlackRock', tags:['BlackRock'] },
-  { name:'David Schneid', title:'GM & Head of Product, Aladdin Accounting', org:'BlackRock', cat:'Finance / Banking', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=David+Schneid+BlackRock+Aladdin', tags:['BlackRock','JHP'] },
-  { name:'Steve Miller', title:'Executive Director, FX Options Trading', org:'JP Morgan', cat:'Finance / Banking', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Steve+Miller+JP+Morgan+FX+Options', tags:['JPM','Trading','JHP'] },
-  { name:'Ilan Kaufthal', title:'Chairman', org:'East Windsor Advisors', cat:'Finance / Banking', tier:'tier-mentor', email:'', li:'', tags:['Banking','Advisory','JHP'] },
-  { name:'Reuben Cohen', title:'Director, Financial Crime Compliance', org:'Atlas SP Partners', cat:'Finance / Banking', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Reuben+Cohen+Atlas+SP+Partners', tags:['Compliance','JHP'] },
-  { name:'Randy Epstein', title:'CFO', org:'Single Family Office', cat:'Finance / Banking', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Randy+Epstein+Family+Office+CFO', tags:['Family Office','JHP'] },
-  { name:'Adam Phillips', title:'Managing Partner', org:'Capital Advisory Ventures', cat:'Finance / Banking', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Adam+Phillips+Capital+Advisory+Ventures', tags:['PE','AI','JHP'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// PE / VC
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'David Ulevitch', title: 'General Partner', org: 'a16z (Andreessen Horowitz)',
+  cat: 'PE / VC', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/in/davidulevitch/',
+  tags: ['a16z', 'VC', 'Tech']
+},
+{
+  name: 'Raz Alon', title: 'Investor', org: 'Point72 Ventures',
+  cat: 'PE / VC', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Raz+Alon+Point72',
+  tags: ['VC', 'Israel', 'Point72']
+},
+{
+  name: 'Adam Rothenberg', title: 'Partner', org: 'BoxGroup',
+  cat: 'PE / VC', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Adam+Rothenberg+BoxGroup',
+  tags: ['VC', 'Seed', 'JHP']
+},
+{
+  name: 'Ryan Josephson', title: 'Principal', org: 'Stonecroft Management',
+  cat: 'PE / VC', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Ryan+Josephson+Stonecroft+Management',
+  tags: ['PE', 'Family Office', 'JHP']
+},
+{
+  name: 'Jonathon Granowitz', title: 'Senior Associate', org: 'Lovell Minnick Partners',
+  cat: 'PE / VC', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Jonathon+Granowitz+Lovell+Minnick',
+  tags: ['PE', 'JHP']
+},
+{
+  name: 'Cole Bianco', title: 'Vice President (Healthcare PE)', org: 'Warburg Pincus',
+  cat: 'PE / VC', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Cole+Bianco+Warburg+Pincus',
+  tags: ['PE', 'Healthcare', 'JHP']
+},
 
-  // TECH / AI
-  { name:'Vardhan Agnihotri', title:'AI Engineer', org:'xAI (UPenn M&T \'26)', cat:'Tech / AI', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Vardhan+Agnihotri+xAI+Penn', tags:['xAI','AI','Penn M&T'] },
-  { name:'Yuvraj Lakhotia', title:'Engineer', org:'xAI / SpaceX (UPenn M&T \'26)', cat:'Tech / AI', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Yuvraj+Lakhotia+xAI+SpaceX', tags:['xAI','SpaceX','Penn M&T'] },
-  { name:'Daniel Kalimi', title:'Go-to-Market / Office of CEO', org:'Palantir', cat:'Tech / AI', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Daniel+Kalimi+Palantir', tags:['Palantir','AI'] },
-  { name:'Eric Kalimi', title:'Business Development', org:'Palantir', cat:'Tech / AI', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Eric+Kalimi+Palantir', tags:['Palantir','AI'] },
-  { name:'Daniel Winston', title:'Office of the CEO', org:'Palantir', cat:'Tech / AI', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Daniel+Winston+Palantir', tags:['Palantir','AI','JHP'] },
-  { name:'Sarah Holmes', title:'Founder & CEO', org:'Aquara AI', cat:'Tech / AI', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Sarah+Holmes+Aquara+AI', tags:['AI','Startup'] },
-  { name:'Aria Eghbali', title:'AI Strategist', org:'Distyl', cat:'Tech / AI', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Aria+Eghbali+Distyl', tags:['AI','JHP'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// TECH / AI
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Vardhan Agnihotri', title: 'AI Engineer', org: 'xAI — Elon Musk (UPenn M&T \'26)',
+  cat: 'Tech / AI', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Vardhan+Agnihotri+xAI+Penn',
+  tags: ['xAI', 'AI', 'Penn M&T', 'Peer']
+},
+{
+  name: 'Yuvraj Lakhotia', title: 'Engineer', org: 'xAI / SpaceX (UPenn M&T \'26)',
+  cat: 'Tech / AI', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Yuvraj+Lakhotia+xAI+SpaceX',
+  tags: ['xAI', 'SpaceX', 'Penn M&T', 'Peer']
+},
+{
+  name: 'Daniel Kalimi', title: 'GTM / Office of CEO', org: 'Palantir',
+  cat: 'Tech / AI', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Daniel+Kalimi+Palantir',
+  tags: ['Palantir', 'AI', 'Defense']
+},
+{
+  name: 'Eric Kalimi', title: 'Business Development', org: 'Palantir',
+  cat: 'Tech / AI', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Eric+Kalimi+Palantir',
+  tags: ['Palantir', 'AI']
+},
+{
+  name: 'Daniel Winston', title: 'Office of the CEO', org: 'Palantir',
+  cat: 'Tech / AI', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Daniel+Winston+Palantir',
+  tags: ['Palantir', 'AI', 'JHP']
+},
+{
+  name: 'Eytan Elbaz', title: 'Co-Creator, AdSense / Investor', org: 'Google / Various',
+  cat: 'Tech / AI', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Eytan+Elbaz+Google+AdSense',
+  tags: ['Google', 'Entrepreneur', 'AdSense']
+},
+{
+  name: 'Aria Eghbali', title: 'AI Strategist', org: 'Distyl',
+  cat: 'Tech / AI', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Aria+Eghbali+Distyl',
+  tags: ['AI', 'JHP']
+},
 
-  // LAW
-  { name:'Andrew Barkan', title:'Partner & Co-Head, Capital Markets', org:'Fried Frank', cat:'Law', tier:'inner', email:'andrew.barkan@friedfrank.com', li:'https://www.linkedin.com/search/results/people/?keywords=Andrew+Barkan+Fried+Frank', tags:['JHP','Capital Markets'] },
-  { name:'Ross Fieldston', title:'Partner', org:'Paul, Weiss', cat:'Law', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Ross+Fieldston+Paul+Weiss', tags:['Law','JHP'] },
-  { name:'Jesse Roth', title:'General Counsel', org:'Xposure', cat:'Law', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Jesse+Roth+Xposure+Counsel', tags:['Law','Entertainment','JHP'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// LAW
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Ross Fieldston', title: 'Partner', org: 'Paul, Weiss',
+  cat: 'Law', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Ross+Fieldston+Paul+Weiss',
+  tags: ['Law', 'JHP']
+},
+{
+  name: 'Jesse Roth', title: 'General Counsel', org: 'Xposure',
+  cat: 'Law', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Jesse+Roth+Xposure+General+Counsel',
+  tags: ['Law', 'Entertainment', 'JHP']
+},
 
-  // CONSUMER / RETAIL
-  { name:'Adam Sloan', title:'Executive', org:'Creative Artists Agency (CAA)', cat:'Consumer / Retail', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Adam+Sloan+CAA', tags:['Entertainment','Sports','JHP'] },
-  { name:'Gary Trock', title:'SVP, Retail Services', org:'CBRE', cat:'Consumer / Retail', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Gary+Trock+CBRE+Retail', tags:['Real Estate','Retail','JHP'] },
-  { name:'Aliza Licht', title:'Founder', org:'Leave Your Mark', cat:'Consumer / Retail', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Aliza+Licht+Leave+Your+Mark', tags:['Brand','JHP'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// CONSUMER
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Adam Sloan', title: 'Executive', org: 'Creative Artists Agency (CAA)',
+  cat: 'Consumer', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Adam+Sloan+CAA+Creative+Artists',
+  tags: ['Entertainment', 'Sports', 'JHP']
+},
+{
+  name: 'Paul Germain', title: 'President', org: 'Stone Ridge Asset Management',
+  cat: 'Consumer', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Paul+Germain+Stone+Ridge+Asset',
+  tags: ['Asset Mgmt', 'JHP']
+},
+{
+  name: 'Aliza Licht', title: 'Founder', org: 'Leave Your Mark',
+  cat: 'Consumer', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Aliza+Licht+Leave+Your+Mark',
+  tags: ['Brand', 'Consulting', 'JHP']
+},
+{
+  name: 'Gary Trock', title: 'SVP, Retail Services', org: 'CBRE',
+  cat: 'Consumer', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Gary+Trock+CBRE+Retail',
+  tags: ['Real Estate', 'Retail', 'JHP']
+},
 
-  // REAL ESTATE
-  { name:'Laura Rapaport', title:'Founder & CEO', org:'North Bridge', cat:'Real Estate', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Laura+Rapaport+North+Bridge', tags:['Lending','JHP'] },
-  { name:'Dan Haroun', title:'Co-Founder & Partner', org:'Catalyst Investment Partners', cat:'Real Estate', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Dan+Haroun+Catalyst+Investment+Partners', tags:['PE','JHP'] },
-  { name:'Robert Lobel', title:'President of Development Group', org:'Bell Rock', cat:'Real Estate', tier:'tier-mentor', email:'', li:'', tags:['Development','JHP'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// HEALTHCARE
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Dr. Uri Geiger', title: 'Entrepreneur & Investor', org: 'Medigus / Multiple Ventures',
+  cat: 'Healthcare', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Uri+Geiger+Medigus+Israel',
+  tags: ['MedTech', 'Israel', 'Entrepreneur']
+},
+{
+  name: 'Ian Lentnek', title: 'Medical Director', org: 'Siemens Healthineers',
+  cat: 'Healthcare', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Ian+Lentnek+Siemens+Healthineers',
+  tags: ['MedTech', 'JHP']
+},
+{
+  name: 'Matthew Sherman', title: 'Strategic Finance & Corp Dev', org: 'WHOOP',
+  cat: 'Healthcare', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Matthew+Sherman+WHOOP',
+  tags: ['HealthTech', 'JHP']
+},
 
-  // HEALTHCARE
-  { name:'Ian Lentnek', title:'Medical Director', org:'Siemens Healthineers', cat:'Healthcare', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Ian+Lentnek+Siemens+Healthineers', tags:['MedTech','JHP'] },
-  { name:'Matthew Sherman', title:'Strategic Finance & Corp Dev', org:'WHOOP', cat:'Healthcare', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Matthew+Sherman+WHOOP', tags:['HealthTech','JHP'] },
-  { name:'Cole Bianco', title:'Vice President (Healthcare PE)', org:'Warburg Pincus', cat:'Healthcare', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Cole+Bianco+Warburg+Pincus', tags:['PE','Healthcare','JHP'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// JHP MENTORS (remaining not in other categories)
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Steve Miller', title: 'Executive Director, FX Options Trading', org: 'JP Morgan',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Steve+Miller+JP+Morgan+FX+Options',
+  tags: ['JPM', 'Trading', 'JHP']
+},
+{
+  name: 'Adam Phillips', title: 'Managing Partner', org: 'Capital Advisory Ventures',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Adam+Phillips+Capital+Advisory+Ventures',
+  tags: ['PE', 'AI', 'JHP']
+},
+{
+  name: 'Ilan Kaufthal', title: 'Chairman', org: 'East Windsor Advisors',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: '',
+  tags: ['Banking', 'Advisory', 'JHP']
+},
+{
+  name: 'Laura Rapaport', title: 'Founder & CEO', org: 'North Bridge (Real Estate Lending)',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Laura+Rapaport+North+Bridge+Lending',
+  tags: ['Real Estate', 'JHP']
+},
+{
+  name: 'Dan Haroun', title: 'Co-Founder & Partner', org: 'Catalyst Investment Partners',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Dan+Haroun+Catalyst+Investment',
+  tags: ['Real Estate', 'PE', 'JHP']
+},
+{
+  name: 'Joe Richards', title: 'National Director', org: 'AIPAC',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Joe+Richards+AIPAC',
+  tags: ['Policy', 'Israel', 'JHP']
+},
+{
+  name: 'Randy Epstein', title: 'CFO', org: 'Single Family Office',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Randy+Epstein+Family+Office+CFO',
+  tags: ['Family Office', 'JHP']
+},
+{
+  name: 'Reuben Cohen', title: 'Director, Financial Crime Compliance', org: 'Atlas SP Partners',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Reuben+Cohen+Atlas+SP+Partners',
+  tags: ['Compliance', 'Finance', 'JHP']
+},
+{
+  name: 'Rachel Nieman Barone', title: 'Luxury Travel Designer', org: 'In the Know Experiences',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Rachel+Nieman+Barone',
+  tags: ['Hospitality', 'JHP']
+},
+{
+  name: 'Gabrielle Solomon', title: 'Founder', org: "Franklin's Forum",
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Gabrielle+Solomon+Franklins+Forum',
+  tags: ['Consulting', 'JHP']
+},
+{
+  name: 'Samantha Bauer Stavis', title: 'Independent Consultant', org: 'Manor Park Consulting',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Samantha+Bauer+Stavis',
+  tags: ['Consulting', 'JHP']
+},
 
-  // JHP MENTORS
-  { name:'Paul Germain', title:'President', org:'Stone Ridge Asset Management', cat:'JHP Mentors', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Paul+Germain+Stone+Ridge+Asset', tags:['Asset Mgmt','JHP'] },
-  { name:'Joe Richards', title:'National Director', org:'AIPAC', cat:'JHP Mentors', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Joe+Richards+AIPAC', tags:['Policy','Israel','JHP'] },
-  { name:'Rachel Nieman Barone', title:'Luxury Travel Designer', org:'In the Know Experiences', cat:'JHP Mentors', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Rachel+Nieman+Barone', tags:['Hospitality','JHP'] },
-  { name:'Gabrielle Solomon', title:'Founder', org:"Franklin's Forum", cat:'JHP Mentors', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Gabrielle+Solomon+Franklins+Forum', tags:['Consulting','JHP'] },
-  { name:'Sophie Rodney', title:'Senior Coordinator', org:'NFL', cat:'JHP Mentors', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Sophie+Rodney+NFL', tags:['Sports','JHP'] },
-  { name:'Samantha Bauer Stavis', title:'Independent Consultant', org:'Manor Park Consulting', cat:'JHP Mentors', tier:'tier-mentor', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Samantha+Bauer+Stavis', tags:['Consulting','JHP'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// PENN PEERS — same circle, reachable
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Akshayan Nagarajah', title: 'Student, M&T \'26', org: 'UPenn',
+  cat: 'Penn Peers', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Akshayan+Nagarajah+Penn+MT',
+  tags: ['Penn M&T', 'Peer']
+},
+{
+  name: 'Sashwat Ravishankar', title: 'Student, M&T \'26', org: 'UPenn / a16z',
+  cat: 'Penn Peers', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Sashwat+Ravishankar+Penn',
+  tags: ['Penn M&T', 'a16z', 'Peer']
+},
+{
+  name: 'Pradyumn Bonu', title: 'Penn Presidential Scholar', org: 'UPenn',
+  cat: 'Penn Peers', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Pradyumn+Bonu+Penn',
+  tags: ['Penn', 'Scholar', 'Peer']
+},
+{
+  name: 'Zachary Harpaz', title: 'Student', org: 'UPenn',
+  cat: 'Penn Peers', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Zachary+Harpaz+Penn',
+  tags: ['Penn', 'Peer']
+},
+{
+  name: 'Gad Allon', title: 'Director, M&T Program / Professor', org: 'Wharton School',
+  cat: 'Penn Peers', tier: 't-2',
+  email: 'gallon@wharton.upenn.edu', li: 'https://www.linkedin.com/in/gad-allon-2543b25/',
+  tags: ['Wharton', 'M&T', 'Professor']
+},
 
-  // PENN / WHARTON
-  { name:'Gad Allon', title:'Director, M&T Program / Professor', org:'Wharton School', cat:'Penn / Wharton', tier:'tier-2', email:'gallon@wharton.upenn.edu', li:'https://www.linkedin.com/in/gad-allon-2543b25/', tags:['Wharton','M&T'] },
-  { name:'Itay Goldstein', title:'Professor of Finance', org:'Wharton School', cat:'Penn / Wharton', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Itay+Goldstein+Wharton+Finance', tags:['Wharton','Finance'] },
-  { name:'Guy David', title:'Professor', org:'Wharton School', cat:'Penn / Wharton', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Guy+David+Wharton+Penn', tags:['Wharton','Healthcare'] },
-  { name:'Sashwat Ravishankar', title:'Student, M&T \'26', org:'UPenn / a16z', cat:'Penn / Wharton', tier:'tier-3', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Sashwat+Ravishankar+Penn', tags:['Penn M&T','a16z'] },
-  { name:'Akshayan Nagarajah', title:'Student, M&T \'26', org:'UPenn', cat:'Penn / Wharton', tier:'tier-3', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Akshayan+Nagarajah+Penn', tags:['Penn M&T'] },
-  { name:'Pradyumn Bonu', title:'Penn Presidential Scholar', org:'UPenn', cat:'Penn / Wharton', tier:'tier-3', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Pradyumn+Bonu+Penn', tags:['Penn','Scholar'] },
-  { name:'Zachary Harpaz', title:'Student', org:'UPenn', cat:'Penn / Wharton', tier:'tier-3', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Zachary+Harpaz+Penn', tags:['Penn'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// ISRAEL
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Yossi Aloni', title: 'Cybersecurity Entrepreneur & Investor', org: 'Israel (Raanana)',
+  cat: 'Israel', tier: 't-2', note: 'Cybersecurity / deep tech — worth exploring',
+  email: '', li: 'https://www.linkedin.com/in/yossialoni/',
+  tags: ['Israel', 'Cyber', 'Entrepreneur']
+},
+{
+  name: 'Tamir Kaaz', title: 'Founder & CEO', org: 'Key1 Capital',
+  cat: 'Israel', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Tamir+Kaaz+Key1',
+  tags: ['Israel', 'Finance', 'Entrepreneur']
+},
 
-  // ISRAEL NETWORK
-  { name:'Yossi Aloni', title:'Entrepreneur & Investor', org:'Israel', cat:'Israel Network', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Yossi+Aloni+Israel', tags:['Israel'] },
-  { name:'Tamir Kaaz', title:'Founder & CEO', org:'Key1 Capital', cat:'Israel Network', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Tamir+Kaaz+Key1', tags:['Israel','Finance'] },
-  { name:'Yossi Faroh', title:'Founder', org:'Tefillin Israel', cat:'Israel Network', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Yossi+Faroh+Tefillin', tags:['Israel','Community'] },
-  { name:'Kristen Rossi', title:'Executive', org:'Israel / Entrepreneurship', cat:'Israel Network', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Kristen+Rossi+Israel', tags:['Israel'] },
+// ══════════════════════════════════════════════════════════════════════════════
+// ATHLETICS
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Ted Schlein', title: 'General Partner', org: 'Kleiner Perkins / Penn Wrestling',
+  cat: 'Athletics', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Ted+Schlein+Kleiner+Perkins',
+  tags: ['VC', 'Penn Wrestling', 'Cybersecurity']
+},
+{
+  name: 'David Pottruck', title: 'Former CEO, Charles Schwab', org: 'Penn Wrestling Benefactor',
+  cat: 'Athletics', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=David+Pottruck+Charles+Schwab',
+  tags: ['Finance', 'Penn Wrestling', 'CEO']
+},
+{
+  name: 'Om Shastri', title: 'Student-Athlete', org: 'UPenn Wrestling',
+  cat: 'Athletics', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Om+Shastri+Penn+Wrestling',
+  tags: ['Penn', 'Wrestling', 'Peer']
+},
+{
+  name: 'Sohum Parekh', title: 'Student-Athlete', org: 'UPenn Wrestling',
+  cat: 'Athletics', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Sohum+Penn+Wrestling',
+  tags: ['Penn', 'Wrestling', 'Peer']
+},
 
-  // ATHLETICS
-  { name:'Ted Schlein', title:'General Partner', org:'Kleiner Perkins (Penn Wrestling)', cat:'Athletics', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Ted+Schlein+Kleiner+Perkins', tags:['VC','Penn Wrestling'] },
-  { name:'David Pottruck', title:'Former CEO, Charles Schwab', org:'Penn Wrestling Benefactor', cat:'Athletics', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=David+Pottruck+Charles+Schwab', tags:['Finance','Penn Wrestling'] },
-  { name:'Josh Harris', title:'Co-Founder (Penn Wrestling Alum)', org:'Apollo Global', cat:'Athletics', tier:'tier-2', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Josh+Harris+Apollo+Penn+Wrestling', tags:['Apollo','Penn Wrestling'] },
-  { name:'Om Shastri', title:'Student-Athlete', org:'UPenn Wrestling', cat:'Athletics', tier:'tier-3', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Om+Shastri+Penn+Wrestling', tags:['Penn','Wrestling'] },
-  { name:'Sohum Parekh', title:'Student-Athlete', org:'UPenn Wrestling', cat:'Athletics', tier:'tier-3', email:'', li:'https://www.linkedin.com/search/results/people/?keywords=Sohum+Penn+Wrestling', tags:['Penn','Wrestling'] },
 ];
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
-let activeCategory = 'all';
+let activeCat = 'all';
 let activeTier = 'all';
-let searchQuery = '';
+let query = '';
 
 const CAT_ORDER = [
-  'Inner Circle','Tier 1 Network','Goldman Sachs','Private Equity / VC',
-  'Blackstone / Apollo','Finance / Banking','Tech / AI','Law',
-  'Consumer / Retail','Real Estate','Healthcare',
-  'JHP Mentors','Penn / Wharton','Israel Network','Athletics'
+  'Inner Circle', 'Power Network', 'Goldman Sachs', 'Finance', 'PE / VC',
+  'Tech / AI', 'Law', 'Consumer', 'Healthcare',
+  'JHP Mentors', 'Penn Peers', 'Israel', 'Athletics'
 ];
 
-const CAT_IDS = {
-  'Inner Circle':'sc-ic','Tier 1 Network':'sc-t1','Finance / Banking':'sc-fin',
-  'Private Equity / VC':'sc-pe','Goldman Sachs':'sc-gs','Blackstone / Apollo':'sc-bk',
-  'Tech / AI':'sc-tech','Law':'sc-law','Consumer / Retail':'sc-con',
-  'Real Estate':'sc-re','Healthcare':'sc-hc','JHP Mentors':'sc-jhp',
-  'Penn / Wharton':'sc-penn','Israel Network':'sc-isr','Athletics':'sc-ath'
+const CAT_SC = {
+  'Inner Circle': 'sc-0', 'Power Network': 'sc-1', 'Goldman Sachs': 'sc-2',
+  'Finance': 'sc-3', 'PE / VC': 'sc-4', 'Tech / AI': 'sc-5',
+  'Law': 'sc-6', 'Consumer': 'sc-7', 'Healthcare': 'sc-8',
+  'JHP Mentors': 'sc-9', 'Penn Peers': 'sc-10', 'Israel': 'sc-11', 'Athletics': 'sc-12'
 };
 
-function tierLabel(t) {
-  const m = {
-    'inner':  ['tier-inner','⭐ Inner Circle'],
-    'tier-1': ['tier-1','Tier 1'],
-    'tier-2': ['tier-2','Tier 2'],
-    'tier-3': ['tier-3','Peer'],
-    'tier-mentor': ['tier-mentor','JHP Mentor'],
-  };
-  return m[t] || ['tier-3', t];
-}
-
-function copy(text) {
-  navigator.clipboard.writeText(text);
-  const t = document.getElementById('toast');
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
-}
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+const TIER_MAP = {
+  'inner':    ['t-inner', '⭐ Inner Circle'],
+  't-1':      ['t-1', 'Power Network'],
+  't-2':      ['t-2', 'Senior'],
+  't-3':      ['t-3', 'Peer'],
+  't-mentor': ['t-mentor', 'JHP Mentor'],
+};
 
 function liIcon() {
-  return `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>`;
+  return `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>`;
 }
-function emailIcon() {
-  return `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`;
+function mailIcon() {
+  return `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`;
 }
 function copyIcon() {
-  return `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+  return `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
 }
 
-function getFiltered() {
-  return CONTACTS.filter(c => {
-    if (activeCategory !== 'all' && c.cat !== activeCategory) return false;
+function copyText(t) {
+  navigator.clipboard.writeText(t);
+  const el = document.getElementById('toast');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+// ─── FILTER ──────────────────────────────────────────────────────────────────
+function filtered() {
+  return C.filter(c => {
+    if (activeCat !== 'all' && c.cat !== activeCat) return false;
     if (activeTier !== 'all' && c.tier !== activeTier) return false;
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      const fields = [c.name, c.title, c.org, ...(c.tags||[])];
-      if (!fields.some(f => f && f.toLowerCase().includes(q))) return false;
+    if (query) {
+      const q = query.toLowerCase();
+      if (![c.name, c.title, c.org, ...(c.tags||[]), c.note||''].some(s => s && s.toLowerCase().includes(q))) return false;
     }
     return true;
   });
 }
 
+// ─── RENDER ──────────────────────────────────────────────────────────────────
 function render() {
-  const data = getFiltered();
-  const root = document.getElementById('contactsRoot');
+  const data = filtered();
+  const root = document.getElementById('root');
   root.innerHTML = '';
 
-  // Group by category
+  const catsToShow = activeCat === 'all' ? CAT_ORDER : [activeCat];
   const groups = {};
   CAT_ORDER.forEach(cat => groups[cat] = []);
   data.forEach(c => { if (groups[c.cat]) groups[c.cat].push(c); });
 
-  let totalRendered = 0;
-  const catsToShow = activeCategory === 'all' ? CAT_ORDER : [activeCategory];
-
+  let total = 0;
   catsToShow.forEach(cat => {
     const items = groups[cat];
     if (!items || items.length === 0) return;
-    totalRendered += items.length;
+    total += items.length;
 
     const sec = document.createElement('div');
     sec.className = 'section' + (cat === 'Inner Circle' ? ' inner-circle' : '');
 
-    const gridId = 'g-' + cat.replace(/[^a-z0-9]/gi, '');
-    sec.innerHTML = `<div class="section-header"><span class="section-title">${cat}</span><span class="section-count">${items.length}</span></div><div class="grid" id="${gridId}"></div>`;
+    const gid = 'g' + cat.replace(/[^a-zA-Z0-9]/g, '');
+    sec.innerHTML = `<div class="sec-head"><span class="sec-title">${cat}</span><span class="sec-count">${items.length}</span></div><div class="grid" id="${gid}"></div>`;
     root.appendChild(sec);
 
-    const grid = document.getElementById(gridId);
+    const grid = document.getElementById(gid);
     items.forEach(c => {
-      const [tc, tl] = tierLabel(c.tier);
+      const [tc, tl] = TIER_MAP[c.tier] || ['t-3', c.tier];
       const liUrl = c.li || `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(c.name)}`;
       const tags = (c.tags||[]).map(t => `<span class="tag">${t}</span>`).join('');
-      const emailBtns = c.email
-        ? `<a class="btn btn-email" href="mailto:${c.email}" onclick="event.stopPropagation()">${emailIcon()} ${c.email}</a><button class="btn btn-copy" onclick="copy('${c.email}');event.stopPropagation()" title="Copy email">${copyIcon()}</button>`
+      const emailPart = c.email
+        ? `<a class="btn btn-mail" href="mailto:${c.email}" onclick="event.stopPropagation()">${mailIcon()} ${c.email}</a><button class="btn btn-copy" onclick="copyText('${c.email}');event.stopPropagation()" title="Copy">${copyIcon()}</button>`
         : '';
+      const notePart = c.note ? `<div class="cnote">"${c.note}"</div>` : '';
 
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
-        <div class="card-top">
+        <div class="card-row1">
           <div class="card-info">
-            <div class="card-name">${c.name}</div>
-            <div class="card-title">${c.title}</div>
-            <div class="card-org">${c.org}</div>
+            <div class="cname">${c.name}</div>
+            <div class="ctitle">${c.title}</div>
+            <div class="corg">${c.org}</div>
+            ${notePart}
           </div>
-          <span class="tier-badge ${tc}">${tl}</span>
+          <span class="tbadge ${tc}">${tl}</span>
         </div>
         <div class="card-actions">
           <a class="btn btn-li" href="${liUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${liIcon()} LinkedIn</a>
-          ${emailBtns}
+          ${emailPart}
         </div>
-        ${tags ? `<div class="card-tags">${tags}</div>` : ''}
+        ${tags ? `<div class="tags">${tags}</div>` : ''}
       `;
       grid.appendChild(card);
     });
   });
 
-  if (totalRendered === 0) {
-    root.innerHTML = '<div style="padding:60px;text-align:center;color:var(--muted);font-size:14px">No contacts found.</div>';
+  if (total === 0) {
+    root.innerHTML = '<div class="empty">No contacts found.</div>';
   }
 
-  // Update sidebar counts
-  document.getElementById('sc-all').textContent = getFiltered().length;
-  Object.entries(CAT_IDS).forEach(([cat, id]) => {
+  // update sidebar counts
+  document.getElementById('sc-all').textContent = total;
+  Object.entries(CAT_SC).forEach(([cat, id]) => {
     const el = document.getElementById(id);
-    if (el) el.textContent = CONTACTS.filter(c => c.cat === cat).length;
+    if (el) el.textContent = C.filter(c => c.cat === cat).length;
   });
-  document.getElementById('emailCount').textContent = CONTACTS.filter(c => c.email).length;
+  document.getElementById('emailCount').textContent = C.filter(c => c.email).length;
 }
 
 // ─── EVENTS ──────────────────────────────────────────────────────────────────
-document.querySelectorAll('.sidebar-item').forEach(item => {
-  item.addEventListener('click', () => {
-    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-    item.classList.add('active');
-    activeCategory = item.dataset.cat;
+document.querySelectorAll('.sitem').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.sitem').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    activeCat = el.dataset.cat;
     render();
   });
 });
 
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeTier = btn.dataset.tier;
+document.querySelectorAll('.fbtn').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    activeTier = el.dataset.tier;
     render();
   });
 });
 
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', e => { searchQuery = e.target.value; render(); });
+const searchEl = document.getElementById('search');
+searchEl.addEventListener('input', e => { query = e.target.value; render(); });
 document.addEventListener('keydown', e => {
-  if (e.key === '/' && document.activeElement !== searchInput) { e.preventDefault(); searchInput.focus(); }
-  if (e.key === 'Escape') searchInput.blur();
+  if (e.key === '/' && document.activeElement !== searchEl) { e.preventDefault(); searchEl.focus(); }
+  if (e.key === 'Escape') searchEl.blur();
 });
 
 render();
