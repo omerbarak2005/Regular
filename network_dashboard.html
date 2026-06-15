@@ -198,15 +198,11 @@
 // tier: "inner" | "t-1" | "t-2" | "t-3" | "t-mentor"
 // email confirmed from Gmail where noted
 const C = [
-
-// ══════════════════════════════════════════════════════════════════════════════
-// INNER CIRCLE
-// ══════════════════════════════════════════════════════════════════════════════
 {
-  name: 'Gal Gadot', title: 'Actress & Entrepreneur', org: 'Wonder Woman / Rivka Tequila',
-  cat: 'Inner Circle', tier: 'inner', note: 'Aunt',
-  email: '', li: 'https://www.linkedin.com/in/gal-gadot/',
-  tags: ['Family', 'Entertainment', 'Brand']
+  name: 'Kris Meulen', title: 'Chief Digital Officer', org: 'The Hershey Company',
+  cat: 'Inner Circle', tier: 'inner', note: 'Key mentor — connected Omer to Jefferies; current Avenir focus',
+  email: 'kmeulen@gmail.com', li: 'https://www.linkedin.com/in/kris-meulen-b091b',
+  tags: ['Consumer', 'CDO', 'Digital']
 },
 {
   name: 'Joe DeSena', title: 'Founder & CEO', org: 'Spartan Race',
@@ -215,10 +211,10 @@ const C = [
   tags: ['Entrepreneur', 'Fitness', 'Events']
 },
 {
-  name: 'Rich Handler', title: 'Chairman & CEO', org: 'Jefferies Financial Group',
-  cat: 'Power Network', tier: 't-1', note: '"Carey will make sure you have an interview." — replied in 28 min',
-  email: 'rhandler@jefferies.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Richard+Handler+Jefferies+CEO',
-  tags: ['Banking', 'CEO', 'Jefferies']
+  name: 'Joe Harpaz', title: 'Co-CEO', org: 'ModMed ($5.3B — Clearlake acquisition)',
+  cat: 'Inner Circle', tier: 'inner', note: 'Former intern supervisor — interned at ModMed HQ under Joe',
+  email: 'joe.harpaz@modmed.com', li: 'https://www.linkedin.com/in/joe-harpaz/',
+  tags: ['HealthTech', 'CEO', '$5.3B', 'Former Employer']
 },
 {
   name: 'Jeff Epstein', title: 'Partner (former CFO, Oracle)', org: 'Bessemer Venture Partners',
@@ -239,28 +235,22 @@ const C = [
   tags: ['Goldman', 'M&A', 'Banking']
 },
 {
+  name: 'Stephan Feldguise', title: 'Global Head of M&A', org: 'Goldman Sachs',
+  cat: 'Inner Circle', tier: 'inner', note: 'Replied immediately, set up call',
+  email: 'stephan.feldgoise@gs.com', li: 'https://www.linkedin.com/in/stephan-feldgoise',
+  tags: ['Goldman', 'M&A']
+},
+{
   name: 'Andrew Barkan', title: 'Partner & Co-Head, Capital Markets', org: 'Fried Frank',
   cat: 'Inner Circle', tier: 'inner', note: 'JHP Mentor — active relationship',
   email: 'andrew.barkan@friedfrank.com', li: 'https://www.linkedin.com/in/andrew-barkan-2666825',
   tags: ['Law', 'Capital Markets', 'JHP']
 },
 {
-  name: 'Joe Harpaz', title: 'Co-CEO', org: 'ModMed ($5.3B — Clearlake acquisition)',
-  cat: 'Inner Circle', tier: 'inner', note: 'Former intern supervisor — interned at ModMed HQ under Joe',
-  email: 'joe.harpaz@modmed.com', li: 'https://www.linkedin.com/in/joe-harpaz/',
-  tags: ['HealthTech', 'CEO', '$5.3B', 'Former Employer']
-},
-{
   name: 'Bobby Jain', title: 'Founder & CIO', org: 'Jain Global ($5.3B AUM)',
   cat: 'Inner Circle', tier: 'inner',
   email: '', li: 'https://www.linkedin.com/in/bobby-jain/',
   tags: ['Hedge Fund', 'Millennium', 'Credit Suisse']
-},
-{
-  name: 'David Blitzer', title: 'Senior Managing Director', org: 'Blackstone / 76ers / NJ Devils',
-  cat: 'Power Network', tier: 't-1',
-  email: '', li: 'https://www.linkedin.com/in/dave-blitzer-12aa192a2/',
-  tags: ['Blackstone', 'Sports', 'PE']
 },
 {
   name: 'Ivan Bergstein', title: 'Entrepreneur & Investor', org: 'Multiple Ventures',
@@ -271,24 +261,42 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // POWER NETWORK
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
-  name: 'Stephan Feldguise', title: 'Global Head of M&A', org: 'Goldman Sachs',
-  cat: 'Power Network', tier: 't-1', note: 'Replied immediately, set up call',
-  email: 'stephan.feldgoise@gs.com', li: 'https://www.linkedin.com/in/stephan-feldgoise',
-  tags: ['Goldman', 'M&A']
+  name: 'Daniel Kalimi', title: 'GTM / Office of CEO', org: 'Palantir',
+  cat: 'Inner Circle', tier: 'inner',
+  email: '', li: 'https://www.linkedin.com/in/daniel-kalimi-86a956220',
+  tags: ['Palantir', 'AI', 'Penn']
+},
+{
+  name: 'Yuvraj Lakhotia', title: 'Engineer', org: 'xAI / SpaceX (UPenn M&T \'26)',
+  cat: 'Inner Circle', tier: 'inner',
+  email: '', li: 'https://www.linkedin.com/in/yuvraj-lakhotia',
+  tags: ['xAI', 'SpaceX', 'Penn M&T']
+},
+{
+  name: 'Gal Gadot', title: 'Actress & Entrepreneur', org: 'Wonder Woman / Rivka Tequila',
+  cat: 'Inner Circle', tier: 'inner', note: 'Aunt',
+  email: '', li: 'https://www.linkedin.com/in/gal-gadot/',
+  tags: ['Family', 'Entertainment', 'Brand']
+},
+{
+  name: 'Rich Handler', title: 'Chairman & CEO', org: 'Jefferies Financial Group',
+  cat: 'Power Network', tier: 't-1', note: '"Carey will make sure you have an interview." — replied in 28 min',
+  email: 'rhandler@jefferies.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Richard+Handler+Jefferies+CEO',
+  tags: ['Banking', 'CEO', 'Jefferies']
+},
+{
+  name: 'David Blitzer', title: 'Senior Managing Director', org: 'Blackstone / 76ers / NJ Devils',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/in/dave-blitzer-12aa192a2/',
+  tags: ['Blackstone', 'Sports', 'PE']
 },
 {
   name: 'Jeff Weinstein', title: 'Partner', org: 'FJ Labs',
   cat: 'Power Network', tier: 't-1',
   email: 'jeff@fjlabs.com', li: 'https://www.linkedin.com/in/jeffreysweinstein',
   tags: ['VC', 'Marketplace', 'Seed']
-},
-{
-  name: 'Kris Meulen', title: 'Chief Digital Officer', org: 'The Hershey Company',
-  cat: 'Power Network', tier: 't-1', note: 'Connected Omer to Jefferies; Avenir M&A target',
-  email: 'kmeulen@gmail.com', li: 'https://www.linkedin.com/in/kris-meulen-b091b',
-  tags: ['Consumer', 'CDO', 'Digital']
 },
 {
   name: 'Larry Portman', title: 'Managing Director, Israel Group', org: 'Jefferies',
@@ -359,7 +367,7 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // GOLDMAN SACHS
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'Robert Steven Kaplan', title: 'Vice Chairman & Partner', org: 'Goldman Sachs (former Dallas Fed President)',
   cat: 'Goldman Sachs', tier: 't-2',
@@ -375,7 +383,7 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // FINANCE
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'Jim Esposito', title: 'President', org: 'Citadel Securities',
   cat: 'Finance', tier: 't-2',
@@ -397,7 +405,7 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // PE / VC
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'David Ulevitch', title: 'General Partner', org: 'a16z (Andreessen Horowitz)',
   cat: 'PE / VC', tier: 't-2',
@@ -437,24 +445,12 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // TECH / AI
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'Vardhan Agnihotri', title: 'AI Engineer', org: 'xAI — Elon Musk (UPenn M&T \'26)',
   cat: 'Tech / AI', tier: 't-3',
   email: '', li: 'https://www.linkedin.com/in/agno3',
   tags: ['xAI', 'AI', 'Penn M&T', 'Peer']
-},
-{
-  name: 'Yuvraj Lakhotia', title: 'Engineer', org: 'xAI / SpaceX (UPenn M&T \'26)',
-  cat: 'Inner Circle', tier: 'inner',
-  email: '', li: 'https://www.linkedin.com/in/yuvraj-lakhotia',
-  tags: ['xAI', 'SpaceX', 'Penn M&T']
-},
-{
-  name: 'Daniel Kalimi', title: 'GTM / Office of CEO', org: 'Palantir',
-  cat: 'Inner Circle', tier: 'inner',
-  email: '', li: 'https://www.linkedin.com/in/daniel-kalimi-86a956220',
-  tags: ['Palantir', 'AI', 'Penn']
 },
 {
   name: 'Eric Kalimi', title: 'Business Development', org: 'Palantir',
@@ -483,7 +479,7 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // LAW
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'Ross Fieldston', title: 'Partner', org: 'Paul, Weiss',
   cat: 'Law', tier: 't-mentor',
@@ -499,7 +495,7 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // CONSUMER
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'Adam Sloan', title: 'Executive', org: 'Creative Artists Agency (CAA)',
   cat: 'Consumer', tier: 't-mentor',
@@ -527,7 +523,7 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // HEALTHCARE
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'Dr. Uri Geiger', title: 'Entrepreneur & Investor', org: 'Medigus / Multiple Ventures',
   cat: 'Healthcare', tier: 't-1',
@@ -549,7 +545,7 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // JHP MENTORS (remaining not in other categories)
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'Steve Miller', title: 'Executive Director, FX Options Trading', org: 'JP Morgan',
   cat: 'JHP Mentors', tier: 't-mentor',
@@ -619,7 +615,7 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // PENN PEERS — same circle, reachable
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'Akshayan Nagarajah', title: 'Student, M&T \'26', org: 'UPenn',
   cat: 'Penn Peers', tier: 't-3',
@@ -671,7 +667,7 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // ISRAEL
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'Yossi Aloni', title: 'Cybersecurity Expert & Investor', org: 'Israel — Deep Defense & Cyber Network',
   cat: 'Israel', tier: 't-2', note: 'Elite cyber expert, deep IDF/intelligence connections in Israel',
@@ -687,7 +683,7 @@ const C = [
 
 // ══════════════════════════════════════════════════════════════════════════════
 // ATHLETICS
-// ══════════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════════,
 {
   name: 'Ted Schlein', title: 'General Partner', org: 'Kleiner Perkins / Penn Wrestling',
   cat: 'Athletics', tier: 't-2',
@@ -712,7 +708,6 @@ const C = [
   email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Sohum+Penn+Wrestling',
   tags: ['Penn', 'Wrestling', 'Peer']
 },
-
 ];
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
