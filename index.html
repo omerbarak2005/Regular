@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omer Barak</title>
+<meta name="description" content="Omer Barak — Division I Wrestler, Penn '27, Avenir Growth. Trilingual student-athlete representing Israel on the world stage.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --black: #060810;
+  --dark:  #0d1117;
+  --card:  #111827;
+  --card2: #161f2e;
+  --border:#1e2d45;
+  --blue:  #3b82f6;
+  --blue2: #60a5fa;
+  --gold:  #f59e0b;
+  --gold2: #fbbf24;
+  --green: #10b981;
+  --red:   #ef4444;
+  --purple:#8b5cf6;
+  --white: #f1f5f9;
+  --gray:  #94a3b8;
+  --gray2: #64748b;
+  --radius:14px;
+  --font:  'Inter', system-ui, sans-serif;
+  --serif: 'Playfair Display', Georgia, serif;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; }
+::selection { background: rgba(59,130,246,0.35); }
+
+/* ── SCROLLBAR ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── NAV ────────────────────────────────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 999;
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(6,8,16,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.3s;
+}
+.nav-logo {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, #fff, var(--blue2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.nav-links {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+}
+.nav-links a {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray);
+  transition: all 0.2s;
+}
+.nav-links a:hover,
+.nav-links a.active { color: #fff; background: rgba(255,255,255,0.07); }
+.nav-cta {
+  background: var(--blue);
+  color: #fff !important;
+  border-radius: 8px;
+  padding: 7px 16px !important;
+  font-weight: 600 !important;
+}
+.nav-cta:hover { background: #2563eb !important; }
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+.hamburger span {
+  width: 24px; height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* ── HERO ───────────────────────────────────────────────────────────────── */
+#home {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 80px 40px 60px;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 60% 40%, rgba(59,130,246,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 20% 80%, rgba(245,158,11,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 90%, rgba(139,92,246,0.06) 0%, transparent 50%);
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+}
+.hero-inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 60px;
+  align-items: center;
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.25);
+  color: var(--gold2);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 24px;
+}
+.hero-tag .dot {
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.5; transform:scale(0.8); }
+}
+.hero-name {
+  font-family: var(--serif);
+  font-size: clamp(48px, 7vw, 88px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  margin-bottom: 16px;
+}
+.hero-name .highlight {
+  background: linear-gradient(135deg, var(--blue2), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 19px;
+  color: var(--gray);
+  max-width: 520px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+.hero-sub strong { color: var(--white); font-weight: 600; }
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+.pill {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pill .icon { font-size: 14px; }
+.hero-btns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+  padding: 13px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary:hover { background: #2563eb; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.35); }
+.btn-outline {
+  background: transparent;
+  color: var(--white);
+  padding: 13px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-outline:hover { border-color: var(--blue); color: var(--blue2); }
+
+/* HERO CARD */
+.hero-card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hero-stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s;
+}
+.hero-stat-card:hover { border-color: var(--blue); transform: translateX(4px); }
+.hsc-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.hsc-info h4 { font-size: 15px; font-weight: 600; }
+.hsc-info p { font-size: 12px; color: var(--gray); margin-top: 2px; }
+.hsc-badge {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ── SECTION COMMON ─────────────────────────────────────────────────────── */
+section {
+  padding: 100px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::before {
+  content: '';
+  width: 20px; height: 2px;
+  background: var(--blue);
+  border-radius: 1px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+.section-sub {
+  font-size: 17px;
+  color: var(--gray);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: 60px;
+}
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 0 auto;
+}
+
+/* ── ABOUT ──────────────────────────────────────────────────────────────── */
+#about { padding-top: 120px; }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+.about-text p {
+  font-size: 16px;
+  color: var(--gray);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+.about-text p strong { color: var(--white); font-weight: 600; }
+.about-text p .flag { font-size: 18px; }
+.lang-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+.lang-chip {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.about-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.stat-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.stat-block:hover { border-color: var(--blue); }
+.stat-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue), var(--purple));
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.stat-block .num {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--white), var(--blue2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.stat-block .desc { font-size: 14px; color: var(--gray); margin-top: 6px; }
+.stats-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ── EXPERIENCE ─────────────────────────────────────────────────────────── */
+#experience { padding-top: 0; }
+.exp-timeline {
+  position: relative;
+  padding-left: 32px;
+}
+.exp-timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--blue), var(--purple), transparent);
+  border-radius: 1px;
+}
+.exp-item {
+  position: relative;
+  margin-bottom: 40px;
+}
+.exp-item::before {
+  content: '';
+  position: absolute;
+  left: -28px;
+  top: 20px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--blue);
+  border: 2px solid var(--black);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+}
+.exp-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  transition: all 0.2s;
+}
+.exp-card:hover { border-color: var(--blue); transform: translateX(4px); }
+.exp-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.exp-org-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-bottom: 12px;
+}
+.exp-title { font-size: 16px; font-weight: 700; }
+.exp-company { font-size: 14px; color: var(--blue2); font-weight: 500; margin-top: 2px; }
+.exp-date {
+  font-size: 11px;
+  color: var(--gray2);
+  background: var(--card2);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.exp-desc {
+  font-size: 14px;
+  color: var(--gray);
+  line-height: 1.7;
+  margin-top: 10px;
+}
+.exp-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+.exp-tag {
+  background: rgba(59,130,246,0.1);
+  border: 1px solid rgba(59,130,246,0.2);
+  color: var(--blue2);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.exp-current {
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
+  color: var(--green);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* ── EDUCATION ──────────────────────────────────────────────────────────── */
+#education { padding-top: 0; }
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.edu-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.edu-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+}
+.edu-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+.edu-icon { font-size: 36px; margin-bottom: 16px; }
+.edu-school { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.edu-degree { font-size: 14px; color: var(--blue2); font-weight: 500; margin-bottom: 4px; }
+.edu-date { font-size: 12px; color: var(--gray2); margin-bottom: 16px; }
+.edu-activities {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.6;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin-top: 14px;
+}
+
+/* ── ATHLETICS ──────────────────────────────────────────────────────────── */
+#athletics {
+  padding-top: 0;
+  background: linear-gradient(135deg, rgba(245,158,11,0.03), transparent);
+}
+.athletics-inner {
+  background: linear-gradient(135deg, var(--card), var(--card2));
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.athletics-inner::before {
+  content: '🏆';
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  font-size: 160px;
+  opacity: 0.04;
+}
+.athletics-title {
+  font-family: var(--serif);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.athletics-sub {
+  font-size: 15px;
+  color: var(--gray);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.ath-stat-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.ath-stat {
+  text-align: center;
+}
+.ath-stat .n {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.ath-stat .l { font-size: 11px; color: var(--gray2); margin-top: 2px; }
+.ath-flags {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.ath-flag-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.ath-flag-card:hover { border-color: var(--gold); }
+.ath-flag-card .emoji { font-size: 32px; margin-bottom: 8px; }
+.ath-flag-card .label { font-size: 13px; font-weight: 600; }
+.ath-flag-card .sub { font-size: 11px; color: var(--gray2); margin-top: 3px; }
+
+/* ── NETWORK TEASER ─────────────────────────────────────────────────────── */
+#network { padding-top: 0; }
+.network-marquee-wrap {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 60px;
+}
+.network-marquee-wrap::before,
+.network-marquee-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; width: 100px;
+  z-index: 2;
+}
+.network-marquee-wrap::before { left: 0; background: linear-gradient(90deg, var(--black), transparent); }
+.network-marquee-wrap::after  { right: 0; background: linear-gradient(-90deg, var(--black), transparent); }
+.network-marquee {
+  display: flex;
+  gap: 12px;
+  animation: marquee 30s linear infinite;
+  width: max-content;
+}
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.network-pill {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gray);
+  transition: all 0.2s;
+}
+.network-pill:hover { border-color: var(--blue); color: var(--white); }
+.np-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.network-cta-box {
+  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08));
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 20px;
+  padding: 48px;
+  text-align: center;
+}
+.network-cta-box h3 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.network-cta-box p {
+  font-size: 16px;
+  color: var(--gray);
+  max-width: 500px;
+  margin: 0 auto 28px;
+  line-height: 1.7;
+}
+
+/* ── AVENIR SECTION ─────────────────────────────────────────────────────── */
+#avenir { padding-top: 0; }
+.avenir-hero {
+  background: linear-gradient(135deg, #0d1117, #111827);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
+}
+.avenir-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(245,158,11,0.08), transparent 60%);
+}
+.avenir-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.3);
+  color: var(--gold2);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+.avenir-title {
+  font-family: var(--serif);
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+.avenir-desc {
+  font-size: 16px;
+  color: var(--gray);
+  line-height: 1.8;
+  max-width: 660px;
+  margin-bottom: 40px;
+}
+.avenir-work {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  position: relative;
+}
+.avenir-work-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s;
+}
+.avenir-work-card:hover { border-color: var(--gold); background: rgba(245,158,11,0.04); }
+.aw-icon { font-size: 24px; margin-bottom: 10px; }
+.aw-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.aw-desc { font-size: 12px; color: var(--gray2); line-height: 1.5; }
+
+/* ── CONTACT ────────────────────────────────────────────────────────────── */
+#contact {
+  padding-top: 0;
+  padding-bottom: 120px;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 40px;
+  align-items: start;
+}
+.contact-info h3 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+.contact-info p {
+  font-size: 15px;
+  color: var(--gray);
+  line-height: 1.7;
+  margin-bottom: 32px;
+  max-width: 460px;
+}
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.contact-link:hover { border-color: var(--blue); transform: translateX(4px); }
+.cl-icon {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.cl-info h4 { font-size: 14px; font-weight: 600; }
+.cl-info p { font-size: 12px; color: var(--gray2); margin-top: 2px; }
+.cl-arrow { margin-left: auto; color: var(--gray2); font-size: 16px; }
+
+/* CONTACT FORM */
+.contact-form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+}
+.contact-form h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--white);
+  font-size: 14px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--blue); }
+.form-group select option { background: var(--card2); }
+.form-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+  font-family: var(--font);
+}
+.form-submit:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+
+/* ── FOOTER ─────────────────────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.footer-logo {
+  font-size: 16px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #fff, var(--blue2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+.footer-links a {
+  font-size: 13px;
+  color: var(--gray2);
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--white); }
+.footer-copy { font-size: 12px; color: var(--gray2); }
+
+/* ── MOBILE NAV OVERLAY ─────────────────────────────────────────────────── */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background: rgba(6,8,16,0.97);
+  backdrop-filter: blur(10px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  font-size: 28px;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 12px;
+  transition: all 0.2s;
+  color: var(--gray);
+}
+.mobile-nav a:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+
+/* ── FADE-IN ANIMATION ──────────────────────────────────────────────────── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  section { padding: 60px 20px; }
+  #home { padding: 100px 20px 60px; }
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-card-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .about-grid { grid-template-columns: 1fr; }
+  .athletics-inner { grid-template-columns: 1fr; padding: 32px; }
+  .avenir-work { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .avenir-hero { padding: 32px; }
+  footer { padding: 24px 20px; flex-direction: column; text-align: center; }
+}
+@media (max-width: 600px) {
+  .hero-name { letter-spacing: -1px; }
+  .hero-card-stack { grid-template-columns: 1fr; }
+  .stats-2col { grid-template-columns: 1fr 1fr; }
+  .ath-flags { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────────────────────── -->
+<nav id="navbar">
+  <a href="#home" class="nav-logo">Omer Barak</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#athletics">Athletics</a></li>
+    <li><a href="#avenir">Avenir</a></li>
+    <li><a href="#network">Network</a></li>
+    <li><a href="#contact" class="nav-cta">Connect</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMobileNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="#about"      onclick="toggleMobileNav()">About</a>
+  <a href="#experience" onclick="toggleMobileNav()">Experience</a>
+  <a href="#education"  onclick="toggleMobileNav()">Education</a>
+  <a href="#athletics"  onclick="toggleMobileNav()">Athletics</a>
+  <a href="#avenir"     onclick="toggleMobileNav()">Avenir</a>
+  <a href="#network"    onclick="toggleMobileNav()">Network</a>
+  <a href="#contact"    onclick="toggleMobileNav()" style="color:var(--blue2)">Connect</a>
+</div>
+
+<!-- ── HERO ──────────────────────────────────────────────────────────────────── -->
+<section id="home" style="padding:0; max-width:none;">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner" style="padding:100px 40px 60px; max-width:1200px; margin:0 auto; width:100%; position:relative; display:grid; grid-template-columns:1fr 420px; gap:60px; align-items:center;">
+    <div class="hero-left">
+      <div class="hero-tag">
+        <div class="dot"></div>
+        Available · Avenir Growth · Summer 2026
+      </div>
+      <h1 class="hero-name">
+        Omer<br><span class="highlight">Barak</span>
+      </h1>
+      <p class="hero-sub">
+        <strong>Division I Wrestler · Penn '27 · Israeli National Team.</strong><br>
+        Trilingual student-athlete at the intersection of finance, technology, and performance. Building at Avenir Growth.
+      </p>
+      <div class="hero-pills">
+        <div class="pill"><span class="icon">🏫</span> University of Pennsylvania</div>
+        <div class="pill"><span class="icon">🤼</span> Div I Wrestling</div>
+        <div class="pill"><span class="icon">🇮🇱</span> Israeli National Team</div>
+        <div class="pill"><span class="icon">🌐</span> EN · HE · ES</div>
+        <div class="pill"><span class="icon">🏛️</span> Wharton</div>
+      </div>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-primary">✉ Get in Touch</a>
+        <a href="#experience" class="btn-outline">View Experience →</a>
+      </div>
+    </div>
+    <div class="hero-card-stack">
+      <div class="hero-stat-card">
+        <div class="hsc-icon" style="background:rgba(245,158,11,0.12)">🥇</div>
+        <div class="hsc-info">
+          <h4>Israeli National Team</h4>
+          <p>International Wrestler · Competed in Guatemala 2025</p>
+        </div>
+        <span class="hsc-badge" style="background:rgba(245,158,11,0.12);color:#fbbf24">National</span>
+      </div>
+      <div class="hero-stat-card">
+        <div class="hsc-icon" style="background:rgba(59,130,246,0.12)">🏛️</div>
+        <div class="hsc-info">
+          <h4>Avenir Growth</h4>
+          <p>Deal Origination & Portfolio Strategy</p>
+        </div>
+        <span class="hsc-badge" style="background:rgba(16,185,129,0.12);color:#10b981">Current</span>
+      </div>
+      <div class="hero-stat-card">
+        <div class="hsc-icon" style="background:rgba(139,92,246,0.12)">📚</div>
+        <div class="hsc-info">
+          <h4>Biology + Wharton</h4>
+          <p>Healthcare Management & Consumer Psychology</p>
+        </div>
+        <span class="hsc-badge" style="background:rgba(139,92,246,0.12);color:#a78bfa">Penn '27</span>
+      </div>
+      <div class="hero-stat-card">
+        <div class="hsc-icon" style="background:rgba(16,185,129,0.12)">🤝</div>
+        <div class="hsc-info">
+          <h4>45+ Network Contacts</h4>
+          <p>VCs, CEOs, Bankers & Global Leaders</p>
+        </div>
+        <span class="hsc-badge" style="background:rgba(16,185,129,0.12);color:#10b981">Growing</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 40px;"><div class="section-divider"></div></div>
+
+<!-- ── ABOUT ──────────────────────────────────────────────────────────────────── -->
+<section id="about">
+  <div class="section-label">About Me</div>
+  <h2 class="section-title">Three countries.<br>One relentless drive.</h2>
+  <div class="about-grid fade-in">
+    <div class="about-text">
+      <p>
+        I was born in <span class="flag">🇮🇱</span> <strong>Israel</strong>, raised in <span class="flag">🇲🇽</span> <strong>Mexico</strong>, and now competing on the mat and in the boardroom in <span class="flag">🇺🇸</span> <strong>the United States</strong> as a Division I wrestler at the University of Pennsylvania.
+      </p>
+      <p>
+        Growing up across three cultures gave me something most people can't learn in a classroom: <strong>the ability to connect with anyone, anywhere.</strong> I'm fluent in English, Hebrew, and Spanish — and I carry the mindset of an athlete into every room I walk into.
+      </p>
+      <p>
+        At Penn, I'm majoring in <strong>Biology</strong> with minors in <strong>Healthcare Management</strong> and <strong>Consumer Psychology</strong> through Wharton. I'm driven by the intersection of healthcare, technology, and capital — where the biggest problems meet the biggest opportunities.
+      </p>
+      <p>
+        My network spans <strong>Bessemer Venture Partners, Goldman Sachs, First Round Capital, Jefferies, BlackRock, Morgan Stanley,</strong> and beyond. Every relationship is built on authenticity, relentlessness, and a genuine desire to create value.
+      </p>
+      <div class="lang-row">
+        <div class="lang-chip">🇺🇸 English <span style="color:var(--green);font-size:11px">Native</span></div>
+        <div class="lang-chip">🇮🇱 Hebrew <span style="color:var(--green);font-size:11px">Native</span></div>
+        <div class="lang-chip">🇲🇽 Spanish <span style="color:var(--blue2);font-size:11px">Fluent</span></div>
+      </div>
+    </div>
+    <div class="about-stats">
+      <div class="stats-2col">
+        <div class="stat-block">
+          <div class="num">3</div>
+          <div class="desc">Countries lived in — Israel, Mexico, USA</div>
+        </div>
+        <div class="stat-block">
+          <div class="num">D1</div>
+          <div class="desc">Division I Varsity Wrestler, Penn</div>
+        </div>
+        <div class="stat-block">
+          <div class="num">3x</div>
+          <div class="desc">Languages — English, Hebrew, Spanish</div>
+        </div>
+        <div class="stat-block">
+          <div class="num">45+</div>
+          <div class="desc">Network contacts across VC, PE, finance & tech</div>
+        </div>
+      </div>
+      <div class="stat-block" style="margin-top:0">
+        <div class="num" style="font-size:28px">🇮🇱 National Team</div>
+        <div class="desc" style="margin-top:8px">Represents Israel internationally in wrestling. Competed in Guatemala 2025. Athlete identity fuels everything — discipline, resilience, and execution under pressure.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 40px;"><div class="section-divider"></div></div>
+
+<!-- ── EXPERIENCE ──────────────────────────────────────────────────────────────── -->
+<section id="experience">
+  <div class="section-label">Experience</div>
+  <h2 class="section-title">Where I've worked.</h2>
+  <p class="section-sub">From deal origination at a growth equity firm to elite finance internships — always closing.</p>
+
+  <div class="exp-timeline fade-in">
+
+    <div class="exp-item">
+      <div class="exp-card">
+        <div class="exp-org-icon" style="background:rgba(245,158,11,0.12)">⚡</div>
+        <div class="exp-top">
+          <div>
+            <div class="exp-title">Investment Intern — Deal Origination & Portfolio Strategy</div>
+            <div class="exp-company">Avenir Growth</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+            <span class="exp-current">● CURRENT</span>
+            <span class="exp-date">Jun 2026 – Present</span>
+          </div>
+        </div>
+        <div class="exp-desc">
+          Building proprietary deal sourcing pipelines across QSR, Silver Tsunami, Distressed Targets, and PE buyer databases. Leading M&A market analysis and outreach strategy for growth-stage acquisitions. Leveraging a 45+ contact network spanning Goldman Sachs, Bessemer, First Round, BlackRock, and Jefferies to surface proprietary deal flow.
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">Deal Origination</span>
+          <span class="exp-tag">M&A Research</span>
+          <span class="exp-tag">Pipeline Management</span>
+          <span class="exp-tag">Growth Equity</span>
+          <span class="exp-tag">Network Intelligence</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-card">
+        <div class="exp-org-icon" style="background:rgba(239,68,68,0.12)">🏛️</div>
+        <div class="exp-top">
+          <div>
+            <div class="exp-title">Baker House Internship Program</div>
+            <div class="exp-company">Baker House · Founded by Richard Baker (Saks Fifth Avenue)</div>
+          </div>
+          <span class="exp-date">Jun 2026 – Present</span>
+        </div>
+        <div class="exp-desc">
+          Selective program founded by retail magnate Richard Baker (founder of HBC / Saks Fifth Avenue). Covering retail strategy, consumer brand building, and real estate. Direct access to Baker House's network of entrepreneurs and operators.
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">Retail Strategy</span>
+          <span class="exp-tag">Consumer</span>
+          <span class="exp-tag">Entrepreneurship</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-card">
+        <div class="exp-org-icon" style="background:rgba(59,130,246,0.12)">🏦</div>
+        <div class="exp-top">
+          <div>
+            <div class="exp-title">GBM Private Wealth Management — Superday Candidate</div>
+            <div class="exp-company">Goldman Sachs</div>
+          </div>
+          <span class="exp-date">Feb–May 2026</span>
+        </div>
+        <div class="exp-desc">
+          Advanced to Superday for Goldman Sachs Private Wealth Management internship. Networked directly with Bobby Shepard (GS IBD), Dan Blank (Co-Chairman Global M&A), and Stephan Feldguise. Received direct interview guarantee from CEO Rich Handler at Jefferies simultaneously.
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">Investment Banking</span>
+          <span class="exp-tag">Private Wealth</span>
+          <span class="exp-tag">Goldman Sachs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-card">
+        <div class="exp-org-icon" style="background:rgba(16,185,129,0.12)">🤼</div>
+        <div class="exp-top">
+          <div>
+            <div class="exp-title">Division I Varsity Wrestler</div>
+            <div class="exp-company">University of Pennsylvania</div>
+          </div>
+          <span class="exp-date">2023 – Present</span>
+        </div>
+        <div class="exp-desc">
+          Competing at the highest level of collegiate athletics while maintaining academic excellence across Biology and Wharton coursework. Wrestling teaches elite time management, discipline under pressure, and the relentless pursuit of improvement.
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">D1 Athletics</span>
+          <span class="exp-tag">Leadership</span>
+          <span class="exp-tag">Performance</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-card">
+        <div class="exp-org-icon" style="background:rgba(139,92,246,0.12)">🇮🇱</div>
+        <div class="exp-top">
+          <div>
+            <div class="exp-title">International Wrestler — Israeli National Team</div>
+            <div class="exp-company">Israel Wrestling Federation</div>
+          </div>
+          <span class="exp-date">2023 – Present</span>
+        </div>
+        <div class="exp-desc">
+          Represents the State of Israel in international wrestling competitions. Competed in Guatemala in 2025, traveling internationally to compete while maintaining D1 Penn schedule. One of very few athletes to simultaneously compete at D1 college level and on a national team.
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">International Competition</span>
+          <span class="exp-tag">Israel</span>
+          <span class="exp-tag">National Team</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 40px;"><div class="section-divider"></div></div>
+
+<!-- ── EDUCATION ──────────────────────────────────────────────────────────────── -->
+<section id="education">
+  <div class="section-label">Education</div>
+  <h2 class="section-title">Built in the classroom.<br>Forged on the mat.</h2>
+  <p class="section-sub">Penn's dual-track: rigorous science + Wharton business — exactly the combination that makes me dangerous in any room.</p>
+
+  <div class="edu-grid fade-in">
+    <div class="edu-card" style="border-top:3px solid var(--blue)">
+      <div class="edu-icon">🏛️</div>
+      <div class="edu-school">University of Pennsylvania</div>
+      <div class="edu-degree">B.A. Biology — College of Arts & Sciences</div>
+      <div class="edu-date">Class of 2027 · Philadelphia, PA</div>
+      <div class="edu-activities">
+        <strong style="color:var(--white);font-size:13px">Activities & Honors</strong><br><br>
+        · Division I Varsity Wrestling (NCAA)<br>
+        · Penn JHP (Jewish Heritage Program)<br>
+        · Penn JHP Mentoring Program<br>
+        · Baker House Internship Program<br>
+        · Wharton coursework via dual-track
+      </div>
+    </div>
+
+    <div class="edu-card" style="border-top:3px solid var(--gold)">
+      <div class="edu-icon">📊</div>
+      <div class="edu-school">Wharton School, UPenn</div>
+      <div class="edu-degree">Minor · Healthcare Management</div>
+      <div class="edu-date">In progress · Class of 2027</div>
+      <div class="edu-activities">
+        <strong style="color:var(--white);font-size:13px">Courses & Focus</strong><br><br>
+        · Healthcare economics & policy<br>
+        · Health systems strategy<br>
+        · Medical technology markets<br>
+        · Health management operations<br>
+        · Profs: Guy David, Itay Goldstein (Finance)
+      </div>
+    </div>
+
+    <div class="edu-card" style="border-top:3px solid var(--purple)">
+      <div class="edu-icon">🧠</div>
+      <div class="edu-school">Wharton School, UPenn</div>
+      <div class="edu-degree">Minor · Consumer Psychology</div>
+      <div class="edu-date">In progress · Class of 2027</div>
+      <div class="edu-activities">
+        <strong style="color:var(--white);font-size:13px">Focus Areas</strong><br><br>
+        · Consumer behavior & decision-making<br>
+        · Brand strategy & market positioning<br>
+        · Behavioral economics<br>
+        · Qualitative & quantitative research<br>
+        · Applied in Avenir deal thesis work
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 40px;"><div class="section-divider"></div></div>
+
+<!-- ── ATHLETICS ──────────────────────────────────────────────────────────────── -->
+<section id="athletics">
+  <div class="section-label">Athletics</div>
+  <div class="athletics-inner fade-in">
+    <div>
+      <h2 class="athletics-title">The mat teaches<br>what the classroom can't.</h2>
+      <p class="athletics-sub">
+        Wrestling is a sport of pure accountability. No teammates to hide behind, no clock to run out — just you, your opponent, and everything you've put in. That mindset is what I bring to every deal, every conversation, every opportunity.
+      </p>
+      <div class="ath-stat-row">
+        <div class="ath-stat">
+          <div class="n">D1</div>
+          <div class="l">Penn Varsity</div>
+        </div>
+        <div class="ath-stat">
+          <div class="n">🇮🇱</div>
+          <div class="l">National Team</div>
+        </div>
+        <div class="ath-stat">
+          <div class="n">3+</div>
+          <div class="l">Countries Competed</div>
+        </div>
+        <div class="ath-stat">
+          <div class="n">305</div>
+          <div class="l">Mobile · FL Base</div>
+        </div>
+      </div>
+    </div>
+    <div class="ath-flags">
+      <div class="ath-flag-card">
+        <div class="emoji">🏛️</div>
+        <div class="label">Penn Quakers</div>
+        <div class="sub">Division I NCAA Wrestling</div>
+      </div>
+      <div class="ath-flag-card">
+        <div class="emoji">🇮🇱</div>
+        <div class="label">Israeli National Team</div>
+        <div class="sub">International Competition</div>
+      </div>
+      <div class="ath-flag-card">
+        <div class="emoji">🌎</div>
+        <div class="label">Guatemala 2025</div>
+        <div class="sub">International Tournament</div>
+      </div>
+      <div class="ath-flag-card">
+        <div class="emoji">🥊</div>
+        <div class="label">National Preps</div>
+        <div class="sub">Elite HS Wrestling</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 40px;margin-top:80px;"><div class="section-divider"></div></div>
+
+<!-- ── AVENIR ──────────────────────────────────────────────────────────────────── -->
+<section id="avenir">
+  <div class="section-label">Avenir Growth</div>
+  <div class="avenir-hero fade-in">
+    <div class="avenir-badge">⚡ CURRENT ROLE · SUMMER 2026</div>
+    <h2 class="avenir-title">Where I'm building<br>right now.</h2>
+    <p class="avenir-desc">
+      At Avenir Growth, I'm focused on finding and closing the deals that others miss. Working at the intersection of data-driven sourcing and human relationship capital — leveraging a network spanning Goldman Sachs, Bessemer, First Round, and 40+ senior leaders to bring proprietary deal flow to the table.
+    </p>
+    <div class="avenir-work">
+      <div class="avenir-work-card">
+        <div class="aw-icon">🔍</div>
+        <div class="aw-title">Deal Sourcing</div>
+        <div class="aw-desc">Building Silver Tsunami, QSR, and Distressed Targets pipelines. 200+ companies researched and tiered.</div>
+      </div>
+      <div class="avenir-work-card">
+        <div class="aw-icon">🧮</div>
+        <div class="aw-title">M&A Analysis</div>
+        <div class="aw-desc">PE buyer databases, CIM development (Project Alpine), competitive market mapping.</div>
+      </div>
+      <div class="avenir-work-card">
+        <div class="aw-icon">🤝</div>
+        <div class="aw-title">Network Capital</div>
+        <div class="aw-desc">Warm intros via 45+ verified senior contacts across VC, PE, banking, and strategic players.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 40px;"><div class="section-divider"></div></div>
+
+<!-- ── NETWORK ──────────────────────────────────────────────────────────────────── -->
+<section id="network">
+  <div class="section-label">Network</div>
+  <h2 class="section-title">Relationships are<br>the real asset.</h2>
+  <p class="section-sub">45+ verified contacts across VC, PE, IB, tech, healthcare, law, and entrepreneurship — built through authenticity and relentlessness.</p>
+
+  <!-- Marquee Row 1 -->
+  <div class="network-marquee-wrap" style="margin-bottom:12px">
+    <div class="network-marquee">
+      <div class="network-pill"><div class="np-dot" style="background:#f59e0b"></div>Jeff Epstein · Bessemer VP</div>
+      <div class="network-pill"><div class="np-dot" style="background:#3b82f6"></div>Dan Blank · Goldman Sachs Co-Chair M&A</div>
+      <div class="network-pill"><div class="np-dot" style="background:#10b981"></div>Roy Rosin · First Round Capital</div>
+      <div class="network-pill"><div class="np-dot" style="background:#8b5cf6"></div>Daniel Veiner · BlackRock Head of Investments</div>
+      <div class="network-pill"><div class="np-dot" style="background:#ec4899"></div>Joe DeSena · Spartan CEO</div>
+      <div class="network-pill"><div class="np-dot" style="background:#f97316"></div>Jeff Weinstein · FJ Labs</div>
+      <div class="network-pill"><div class="np-dot" style="background:#14b8a6"></div>Andrew Barkan · Fried Frank Partner</div>
+      <div class="network-pill"><div class="np-dot" style="background:#f59e0b"></div>Rich Handler · Jefferies CEO</div>
+      <!-- Duplicate for seamless loop -->
+      <div class="network-pill"><div class="np-dot" style="background:#f59e0b"></div>Jeff Epstein · Bessemer VP</div>
+      <div class="network-pill"><div class="np-dot" style="background:#3b82f6"></div>Dan Blank · Goldman Sachs Co-Chair M&A</div>
+      <div class="network-pill"><div class="np-dot" style="background:#10b981"></div>Roy Rosin · First Round Capital</div>
+      <div class="network-pill"><div class="np-dot" style="background:#8b5cf6"></div>Daniel Veiner · BlackRock Head of Investments</div>
+      <div class="network-pill"><div class="np-dot" style="background:#ec4899"></div>Joe DeSena · Spartan CEO</div>
+      <div class="network-pill"><div class="np-dot" style="background:#f97316"></div>Jeff Weinstein · FJ Labs</div>
+      <div class="network-pill"><div class="np-dot" style="background:#14b8a6"></div>Andrew Barkan · Fried Frank Partner</div>
+      <div class="network-pill"><div class="np-dot" style="background:#f59e0b"></div>Rich Handler · Jefferies CEO</div>
+    </div>
+  </div>
+  <!-- Marquee Row 2 (reverse) -->
+  <div class="network-marquee-wrap">
+    <div class="network-marquee" style="animation-direction:reverse;animation-duration:25s">
+      <div class="network-pill"><div class="np-dot" style="background:#6366f1"></div>Kristen Rossi · Morgan Stanley MD</div>
+      <div class="network-pill"><div class="np-dot" style="background:#f59e0b"></div>Richard Baker · Saks / HBC Founder</div>
+      <div class="network-pill"><div class="np-dot" style="background:#10b981"></div>Joe Harpaz · ModMed CEO</div>
+      <div class="network-pill"><div class="np-dot" style="background:#3b82f6"></div>Josh Harris · Apollo Co-Founder</div>
+      <div class="network-pill"><div class="np-dot" style="background:#8b5cf6"></div>Kris Meulen · Hershey CDO</div>
+      <div class="network-pill"><div class="np-dot" style="background:#ec4899"></div>Paul Germain · StoneRidge AM</div>
+      <div class="network-pill"><div class="np-dot" style="background:#14b8a6"></div>Bobby Jain · Jain Global CIO</div>
+      <div class="network-pill"><div class="np-dot" style="background:#f97316"></div>David Blitzer · Blackstone</div>
+      <div class="network-pill"><div class="np-dot" style="background:#6366f1"></div>Kristen Rossi · Morgan Stanley MD</div>
+      <div class="network-pill"><div class="np-dot" style="background:#f59e0b"></div>Richard Baker · Saks / HBC Founder</div>
+      <div class="network-pill"><div class="np-dot" style="background:#10b981"></div>Joe Harpaz · ModMed CEO</div>
+      <div class="network-pill"><div class="np-dot" style="background:#3b82f6"></div>Josh Harris · Apollo Co-Founder</div>
+      <div class="network-pill"><div class="np-dot" style="background:#8b5cf6"></div>Kris Meulen · Hershey CDO</div>
+      <div class="network-pill"><div class="np-dot" style="background:#ec4899"></div>Paul Germain · StoneRidge AM</div>
+      <div class="network-pill"><div class="np-dot" style="background:#14b8a6"></div>Bobby Jain · Jain Global CIO</div>
+      <div class="network-pill"><div class="np-dot" style="background:#f97316"></div>David Blitzer · Blackstone</div>
+    </div>
+  </div>
+
+  <div class="network-cta-box fade-in" style="margin-top:48px">
+    <h3>🔗 Want to explore the full network?</h3>
+    <p>45+ contacts with verified emails, relationship context, and Avenir Growth value notes — all in one place.</p>
+    <a href="network_dashboard.html" class="btn-primary" style="display:inline-flex;margin:0 auto">
+      Open Network Dashboard →
+    </a>
+  </div>
+</section>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 40px;"><div class="section-divider"></div></div>
+
+<!-- ── CONTACT ──────────────────────────────────────────────────────────────────── -->
+<section id="contact">
+  <div class="section-label">Contact</div>
+  <h2 class="section-title">Let's connect.</h2>
+  <div class="contact-grid fade-in">
+    <div class="contact-info">
+      <p>
+        I'm always open to conversations about deal flow, finance, healthcare technology, wrestling, or anything in between. If you're building something interesting or want to explore how we can create value together — reach out.
+      </p>
+      <div class="contact-links">
+        <a class="contact-link" href="mailto:barakom@sas.upenn.edu">
+          <div class="cl-icon" style="background:rgba(59,130,246,0.12)">✉️</div>
+          <div class="cl-info">
+            <h4>Email</h4>
+            <p>barakom@sas.upenn.edu</p>
+          </div>
+          <span class="cl-arrow">→</span>
+        </a>
+        <a class="contact-link" href="tel:+13053350029">
+          <div class="cl-icon" style="background:rgba(16,185,129,0.12)">📱</div>
+          <div class="cl-info">
+            <h4>Phone</h4>
+            <p>305-335-0029</p>
+          </div>
+          <span class="cl-arrow">→</span>
+        </a>
+        <a class="contact-link" href="https://linkedin.com/in/omerbarak2005" target="_blank">
+          <div class="cl-icon" style="background:rgba(99,102,241,0.12)">💼</div>
+          <div class="cl-info">
+            <h4>LinkedIn</h4>
+            <p>linkedin.com/in/omerbarak2005</p>
+          </div>
+          <span class="cl-arrow">→</span>
+        </a>
+        <a class="contact-link" href="network_dashboard.html">
+          <div class="cl-icon" style="background:rgba(245,158,11,0.12)">⚡</div>
+          <div class="cl-info">
+            <h4>Network Dashboard</h4>
+            <p>Explore Omer's full contact network</p>
+          </div>
+          <span class="cl-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <h4>Send a Message</h4>
+      <form onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="Full name" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Organization</label>
+          <input type="text" placeholder="Company / School">
+        </div>
+        <div class="form-group">
+          <label>Reason for Reaching Out</label>
+          <select>
+            <option value="">Select...</option>
+            <option>Investment / Deal Flow</option>
+            <option>Internship / Career</option>
+            <option>Intro / Warm Referral</option>
+            <option>Avenir Growth</option>
+            <option>Wrestling / Athletics</option>
+            <option>Partnership Opportunity</option>
+            <option>Just Connecting</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="4" placeholder="What's on your mind?"></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────────────────────── -->
+<div style="max-width:1200px;margin:0 auto;"><div class="section-divider"></div></div>
+<footer>
+  <div class="footer-logo">Omer Barak</div>
+  <nav class="footer-links">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#athletics">Athletics</a>
+    <a href="#avenir">Avenir</a>
+    <a href="network_dashboard.html">Network</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="footer-copy">© 2026 · Penn '27 · 🇮🇱 🇲🇽 🇺🇸</div>
+</footer>
+
+<script>
+// ── MOBILE NAV ──────────────────────────────────────────────────────────────
+function toggleMobileNav() {
+  const nav = document.getElementById('mobile-nav');
+  nav.classList.toggle('open');
+}
+
+// ── SCROLL EFFECTS ──────────────────────────────────────────────────────────
+const fadeEls = document.querySelectorAll('.fade-in');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+fadeEls.forEach(el => observer.observe(el));
+
+// ── ACTIVE NAV ──────────────────────────────────────────────────────────────
+const sections = document.querySelectorAll('section[id], div[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(sec => {
+    if (window.scrollY >= sec.offsetTop - 120) current = sec.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+  });
+
+  // Navbar shadow on scroll
+  const navbar = document.getElementById('navbar');
+  if (window.scrollY > 40) {
+    navbar.style.borderBottomColor = 'rgba(30,45,69,0.8)';
+    navbar.style.boxShadow = '0 4px 30px rgba(0,0,0,0.4)';
+  } else {
+    navbar.style.borderBottomColor = 'rgba(255,255,255,0.05)';
+    navbar.style.boxShadow = 'none';
+  }
+});
+
+// ── FORM SUBMIT ──────────────────────────────────────────────────────────────
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = '✓ Message Sent!';
+  btn.style.background = '#10b981';
+  setTimeout(() => {
+    btn.textContent = 'Send Message →';
+    btn.style.background = '';
+    e.target.reset();
+  }, 3000);
+}
+
+// ── HERO CARD DELAY ──────────────────────────────────────────────────────────
+document.querySelectorAll('.hero-stat-card').forEach((card, i) => {
+  card.style.opacity = '0';
+  card.style.transform = 'translateX(30px)';
+  card.style.transition = 'all 0.6s ease';
+  setTimeout(() => {
+    card.style.opacity = '1';
+    card.style.transform = 'none';
+  }, 400 + i * 120);
+});
+</script>
+</body>
+</html>
