@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omer Barak — Network Intelligence Dashboard</title>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d45;
+    --accent: #3b82f6;
+    --accent2: #6366f1;
+    --gold: #f59e0b;
+    --green: #10b981;
+    --red: #ef4444;
+    --purple: #8b5cf6;
+    --pink: #ec4899;
+    --teal: #14b8a6;
+    --orange: #f97316;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* TOP BANNER */
+  .banner {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .banner-left h1 {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+  .banner-left p {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+  .banner-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .avenir-tag {
+    background: linear-gradient(135deg, var(--gold), #d97706);
+    color: #000;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .stat-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .stat-pill span { color: var(--accent); font-weight: 700; }
+
+  /* CONTROLS */
+  .controls {
+    padding: 20px 32px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+  .search-box {
+    flex: 1;
+    min-width: 220px;
+    max-width: 380px;
+    position: relative;
+  }
+  .search-box input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px 10px 40px;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-box input:focus { border-color: var(--accent); }
+  .search-box::before {
+    content: '⌕';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text3);
+    font-size: 18px;
+  }
+  .filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text2);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .view-toggle {
+    display: flex;
+    gap: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+  }
+  .view-btn {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    background: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .view-btn.active { background: var(--accent); color: #fff; }
+
+  /* STATS ROW */
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    padding: 20px 32px;
+    overflow-x: auto;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 22px;
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+  .stat-card .num {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-card .label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* GRID */
+  #contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 16px;
+    padding: 0 32px 32px;
+  }
+  #contact-grid.list-view {
+    grid-template-columns: 1fr;
+  }
+
+  /* CONTACT CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(59,130,246,0.15);
+  }
+  .card-header {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .card-info h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .card-info .title {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+  .card-info .org {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 1px;
+  }
+  .cat-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin-bottom: 10px;
+  }
+  .email-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 12px;
+    margin-bottom: 10px;
+  }
+  .email-row .email-icon { font-size: 13px; }
+  .email-row .email-text {
+    font-size: 12px;
+    color: var(--accent);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: monospace;
+  }
+  .email-row .copy-btn {
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px;
+    transition: color 0.2s;
+  }
+  .email-row .copy-btn:hover { color: var(--accent); }
+  .no-email {
+    font-size: 11px;
+    color: var(--text3);
+    font-style: italic;
+    margin-bottom: 10px;
+    padding: 4px 0;
+  }
+  .avenir-note {
+    background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.03));
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: #fbbf24;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .avenir-note .note-label {
+    font-weight: 700;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 3px;
+    opacity: 0.7;
+  }
+  .strength-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+  .strength-label { font-size: 10px; color: var(--text3); }
+  .strength-dots {
+    display: flex;
+    gap: 3px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .dot.filled { background: var(--green); }
+  .dot.warm { background: var(--gold); }
+  .dot.medium { background: var(--accent); }
+  .card-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .action-btn {
+    flex: 1;
+    padding: 7px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text2);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .action-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .action-btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .action-btn.primary:hover { background: #2563eb; }
+
+  /* SECTION HEADERS */
+  .section-header {
+    padding: 24px 32px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-header h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-count {
+    font-size: 11px;
+    color: var(--text3);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    width: 90%;
+    max-width: 560px;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text2);
+    font-size: 16px;
+  }
+  .modal-close:hover { color: var(--red); border-color: var(--red); }
+  .modal h2 { font-size: 20px; margin-bottom: 4px; }
+  .modal .m-title { color: var(--text2); font-size: 14px; margin-bottom: 16px; }
+  .modal-section { margin-bottom: 18px; }
+  .modal-section h4 {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text3);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .modal-section p { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  /* LIST VIEW */
+  .list-view .card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+  }
+  .list-view .card::before { display: none; }
+  .list-view .avatar { width: 40px; height: 40px; font-size: 15px; }
+  .list-view .card-info { flex: 1; }
+  .list-view .cat-badge { margin-bottom: 0; }
+  .list-view .avenir-note,
+  .list-view .card-actions,
+  .list-view .strength-row { display: none; }
+  .list-view .email-row { margin-bottom: 0; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--green);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2000;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .banner { padding: 14px 16px; }
+    .controls { padding: 14px 16px; }
+    #contact-grid { padding: 0 16px 24px; gap: 12px; }
+    .stats-row { padding: 14px 16px; }
+    .section-header { padding: 16px 16px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BANNER -->
+<div class="banner">
+  <div class="banner-left">
+    <h1>⚡ Omer Barak — Network Intelligence</h1>
+    <p>Avenir Growth · Strategic Network OS · June 2026</p>
+  </div>
+  <div class="banner-right">
+    <div class="avenir-tag">AVENIR GROWTH</div>
+    <div class="stat-pill"><span id="total-count">0</span> Contacts</div>
+    <div class="stat-pill"><span id="email-count">0</span> Emails Found</div>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Search name, firm, or keyword..." oninput="filterContacts()">
+  </div>
+  <div class="filter-group" id="filter-group">
+    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+    <button class="filter-btn" onclick="setFilter('VC / PE', this)">VC / PE</button>
+    <button class="filter-btn" onclick="setFilter('Finance / Banking', this)">Finance</button>
+    <button class="filter-btn" onclick="setFilter('Tech / AI', this)">Tech / AI</button>
+    <button class="filter-btn" onclick="setFilter('Entrepreneurship', this)">Founders</button>
+    <button class="filter-btn" onclick="setFilter('Healthcare', this)">Healthcare</button>
+    <button class="filter-btn" onclick="setFilter('Law', this)">Law</button>
+    <button class="filter-btn" onclick="setFilter('Athletics', this)">Athletics</button>
+    <button class="filter-btn" onclick="setFilter('Penn / Wharton', this)">Penn / Wharton</button>
+    <button class="filter-btn" onclick="setFilter('Entertainment', this)">Entertainment</button>
+  </div>
+  <div class="view-toggle">
+    <button class="view-btn active" onclick="setView('grid', this)" title="Grid">⊞</button>
+    <button class="view-btn" onclick="setView('list', this)" title="List">☰</button>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="num" style="color:#3b82f6" id="s-total">0</div>
+    <div class="label">Total Network</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color:#10b981" id="s-email">0</div>
+    <div class="label">Emails Verified</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color:#f59e0b" id="s-vc">0</div>
+    <div class="label">VC / PE</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color:#6366f1" id="s-finance">0</div>
+    <div class="label">Finance / Banking</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color:#14b8a6" id="s-tech">0</div>
+    <div class="label">Tech / AI</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color:#ec4899" id="s-founder">0</div>
+    <div class="label">Founders / CEOs</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color:#8b5cf6" id="s-hot">0</div>
+    <div class="label">🔥 Hot Intros</div>
+  </div>
+</div>
+
+<!-- GRID -->
+<div id="contact-grid"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modal-inner">
+    <div class="modal-close" onclick="closeModal()">✕</div>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+// ─── COLOR PALETTE ───────────────────────────────────────────────────────────
+const CAT_COLORS = {
+  'VC / PE':          { bg: '#f59e0b', text: '#78350f', bar: '#f59e0b' },
+  'Finance / Banking':{ bg: '#6366f1', text: '#fff',    bar: '#6366f1' },
+  'Tech / AI':        { bg: '#14b8a6', text: '#fff',    bar: '#14b8a6' },
+  'Entrepreneurship': { bg: '#ec4899', text: '#fff',    bar: '#ec4899' },
+  'Healthcare':       { bg: '#10b981', text: '#fff',    bar: '#10b981' },
+  'Law':              { bg: '#8b5cf6', text: '#fff',    bar: '#8b5cf6' },
+  'Athletics':        { bg: '#f97316', text: '#fff',    bar: '#f97316' },
+  'Penn / Wharton':   { bg: '#3b82f6', text: '#fff',    bar: '#3b82f6' },
+  'Entertainment':    { bg: '#e879f9', text: '#fff',    bar: '#e879f9' },
+  'Real Estate':      { bg: '#84cc16', text: '#000',    bar: '#84cc16' },
+};
+
+// ─── CONTACT DATABASE ─────────────────────────────────────────────────────────
+const CONTACTS = [
+  // VC / PE
+  {
+    name: 'Jeff Epstein',
+    title: 'Partner (Former CFO of Oracle)',
+    org: 'Bessemer Venture Partners',
+    cat: 'VC / PE',
+    email: 'jeff@bvp.com',
+    phone: '(203) 377-8346',
+    strength: 4,
+    tags: ['Bessemer', 'Oracle CFO', 'Enterprise SaaS', 'Jewish Network'],
+    lastContact: 'Sep 2025',
+    avenir: 'Direct line into Bessemer portfolio — enterprise software, growth-stage deals. Key intro for Avenir deal sourcing.',
+    intro: 'Father intro',
+    hot: true,
+  },
+  {
+    name: 'Roy Rosin',
+    title: 'Partner',
+    org: 'First Round Capital',
+    cat: 'VC / PE',
+    email: 'rrosin@firstround.com',
+    strength: 4,
+    tags: ['First Round', 'Early Stage', 'Tech', 'Seed'],
+    lastContact: 'Jan 2026',
+    avenir: 'Two calls already. First Round invests early — can co-source deals or refer portfolio companies needing growth equity.',
+    intro: 'Father intro',
+    hot: true,
+  },
+  {
+    name: 'Jeff Weinstein',
+    title: 'Partner',
+    org: 'FJ Labs',
+    cat: 'VC / PE',
+    email: 'jeff@fjlabs.com',
+    phone: '917-673-2386',
+    strength: 3,
+    tags: ['FJ Labs', 'Marketplace', 'Consumer Tech', 'PE'],
+    lastContact: 'Sep 2025',
+    avenir: 'FJ Labs does 200+ investments/yr. Great for consumer / marketplace deals and co-investment intros.',
+    intro: 'Father intro',
+    hot: false,
+  },
+  {
+    name: 'Mo Koyfman',
+    title: 'Founder & GP',
+    org: 'Shine Capital',
+    cat: 'VC / PE',
+    email: null,
+    strength: 2,
+    tags: ['Shine Capital', 'NY VC', 'Consumer', 'Early Stage'],
+    lastContact: 'Mentioned',
+    avenir: 'NY-based seed/Series A investor. Potential co-investment pipeline for Avenir consumer targets.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Logan Goodman',
+    title: 'Partner',
+    org: 'Vine Ventures',
+    cat: 'VC / PE',
+    email: null,
+    strength: 2,
+    tags: ['Vine Ventures', 'Growth', 'Tech'],
+    lastContact: 'Mentioned',
+    avenir: 'Vine Ventures — connect for deal flow sharing and co-investment.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Raz Alon',
+    title: 'Professional',
+    org: 'Point72',
+    cat: 'VC / PE',
+    email: null,
+    strength: 2,
+    tags: ['Point72', 'Hedge Fund', 'Quant'],
+    lastContact: 'Mentioned',
+    avenir: 'Point72 connection — hedge fund intelligence, alternative asset insights for Avenir.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Daniel Veiner',
+    title: 'Head of Investments',
+    org: 'BlackRock',
+    cat: 'VC / PE',
+    email: 'Daniel.Veiner@blackrock.com',
+    strength: 3,
+    tags: ['BlackRock', 'PE', 'Asset Management', 'JHP'],
+    lastContact: 'Mar 2026',
+    avenir: 'BlackRock head of investments. Critical relationship for large-cap deal co-investment and exit strategy intelligence.',
+    intro: 'JHP visit',
+    hot: true,
+  },
+  {
+    name: 'Bobby Jain',
+    title: 'Founder & CIO',
+    org: 'Jain Global',
+    cat: 'VC / PE',
+    email: null,
+    strength: 2,
+    tags: ['Jain Global', 'Hedge Fund', 'Macro'],
+    lastContact: 'Mentioned',
+    avenir: 'Former Credit Suisse co-CIO, launched Jain Global. Major LP / macro intelligence for Avenir.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+
+  // FINANCE / BANKING
+  {
+    name: 'Dan Blank',
+    title: 'Co-Chairman, Global M&A',
+    org: 'Goldman Sachs',
+    cat: 'Finance / Banking',
+    email: 'Dan.Blank@gs.com',
+    phone: '917-750-8216',
+    strength: 4,
+    tags: ['Goldman Sachs', 'M&A', 'IB', 'Global'],
+    lastContact: 'May 2026',
+    avenir: 'Co-chairs GS Global M&A. Invaluable for Avenir deal advisory, sell-side mandates, and M&A deal flow.',
+    intro: 'LinkedIn → warm',
+    hot: true,
+  },
+  {
+    name: 'Larry Portman',
+    title: 'Managing Director',
+    org: 'Jefferies',
+    cat: 'Finance / Banking',
+    email: 'LPORTMAN@jefferies.com',
+    strength: 4,
+    tags: ['Jefferies', 'IB', 'Israel', 'Middle Market'],
+    lastContact: 'Feb 2026',
+    avenir: 'Israel-focused Jefferies MD. Key intro for cross-border M&A and Israeli growth company mandates.',
+    intro: 'Kris Meulen intro',
+    hot: true,
+  },
+  {
+    name: 'Rich Handler',
+    title: 'CEO',
+    org: 'Jefferies Group',
+    cat: 'Finance / Banking',
+    email: null,
+    strength: 2,
+    tags: ['Jefferies', 'CEO', 'IB', 'Finance'],
+    lastContact: 'Mentioned',
+    avenir: 'Jefferies CEO — top-tier banking relationship for Avenir. Leverage Larry Portman as bridge.',
+    intro: 'Via Larry Portman',
+    hot: false,
+  },
+  {
+    name: 'Kristen Rossi',
+    title: 'Managing Director',
+    org: 'Morgan Stanley',
+    cat: 'Finance / Banking',
+    email: 'Kristen.Rossi@morganstanley.com',
+    strength: 3,
+    tags: ['Morgan Stanley', 'IB', 'Kris Meulen intro'],
+    lastContact: 'Nov 2025',
+    avenir: 'Morgan Stanley MD — intro via Kris Meulen. Can open MS advisory and deal flow for Avenir.',
+    intro: 'Kris Meulen intro',
+    hot: false,
+  },
+  {
+    name: 'Josh Harris',
+    title: 'Co-Founder',
+    org: 'Apollo Global Management',
+    cat: 'Finance / Banking',
+    email: null,
+    strength: 2,
+    tags: ['Apollo', 'PE', 'Sports', 'Penn Wrestling'],
+    lastContact: 'Mentioned',
+    avenir: 'Apollo co-founder and Philadelphia sports owner. Elite PE network — pursue via Penn Wrestling connection.',
+    intro: 'Penn Wrestling',
+    hot: true,
+  },
+  {
+    name: 'David Blitzer',
+    title: 'Senior Partner',
+    org: 'Blackstone',
+    cat: 'Finance / Banking',
+    email: null,
+    strength: 2,
+    tags: ['Blackstone', 'PE', 'Sports Ownership', 'Penn'],
+    lastContact: 'Mentioned',
+    avenir: 'Blackstone senior partner, sports team owner. Penn connection — critical for PE deal sourcing at scale.',
+    intro: 'Penn connection',
+    hot: false,
+  },
+  {
+    name: 'Paul Germain',
+    title: 'Partner',
+    org: 'StoneRidge Asset Management',
+    cat: 'Finance / Banking',
+    email: 'paul.germain@stoneridgeam.com',
+    strength: 3,
+    tags: ['StoneRidge', 'JHP', 'Asset Management'],
+    lastContact: 'Apr 2026',
+    avenir: 'JHP connection, asset management. Active mentor relationship — leverage for Avenir fund introductions.',
+    intro: 'JHP event',
+    hot: false,
+  },
+  {
+    name: 'Mark Kohn',
+    title: 'Managing Director',
+    org: 'Wells Fargo',
+    cat: 'Finance / Banking',
+    email: null,
+    strength: 2,
+    tags: ['Wells Fargo', 'Banking', 'Finance'],
+    lastContact: 'Mentioned',
+    avenir: 'WF MD — lending, credit relationships relevant for Avenir deal financing and leverage strategy.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Stephan Feldguise',
+    title: 'Partner',
+    org: 'Goldman Sachs',
+    cat: 'Finance / Banking',
+    email: null,
+    strength: 2,
+    tags: ['Goldman Sachs', 'PE', 'Finance'],
+    lastContact: 'Mentioned',
+    avenir: 'GS partner — pairs well with Dan Blank relationship for Goldman deal flow.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Adam Teatle',
+    title: 'Professional',
+    org: 'Lazard',
+    cat: 'Finance / Banking',
+    email: null,
+    strength: 1,
+    tags: ['Lazard', 'M&A', 'Advisory'],
+    lastContact: 'Mentioned',
+    avenir: 'Lazard M&A advisor — boutique advisory intelligence for Avenir deals.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Richard Mack',
+    title: 'CEO & Co-Founder',
+    org: 'Mack Real Estate Group',
+    cat: 'Finance / Banking',
+    email: null,
+    strength: 2,
+    tags: ['Real Estate', 'PE', 'NYC', 'Credit'],
+    lastContact: 'Mentioned',
+    avenir: 'Real estate PE — Avenir can explore crossover between consumer deals and commercial real estate.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Danny Ackerman',
+    title: 'Managing Partner',
+    org: 'Key1 Capital',
+    cat: 'Finance / Banking',
+    email: null,
+    strength: 2,
+    tags: ['Key1 Capital', 'PE', 'Growth Equity'],
+    lastContact: 'Mentioned',
+    avenir: 'Key1 Capital — PE growth equity. Potential co-investor or deal source for Avenir pipeline.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+
+  // TECH / AI
+  {
+    name: 'Vardhan (Vardy)',
+    title: 'Co-Creator, Fathom',
+    org: 'xAI / Wharton',
+    cat: 'Tech / AI',
+    email: 'vardy.mov@gmail.com',
+    strength: 3,
+    tags: ['xAI', 'AI', 'Wharton', 'Fathom', 'Startup'],
+    lastContact: 'Nov 2025',
+    avenir: 'Building AI product at xAI / Wharton. Inside view on frontier AI — valuable for Avenir AI deal thesis.',
+    intro: 'Wharton peer',
+    hot: false,
+  },
+  {
+    name: 'Yuvraj',
+    title: 'Professional',
+    org: 'xAI',
+    cat: 'Tech / AI',
+    email: null,
+    strength: 2,
+    tags: ['xAI', 'AI', 'Elon Musk'],
+    lastContact: 'Mentioned',
+    avenir: 'xAI team member — frontier AI insights, Grok product intel relevant for Avenir AI investments.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Daniel Kalimi',
+    title: 'Professional',
+    org: 'Palantir Technologies',
+    cat: 'Tech / AI',
+    email: null,
+    strength: 2,
+    tags: ['Palantir', 'AI', 'Defense Tech', 'Enterprise'],
+    lastContact: 'Jun 2026',
+    avenir: 'Palantir insider — visited NYC office. AI/enterprise software deals relevant for Avenir portfolio.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Eric Kalimi',
+    title: 'Professional',
+    org: 'Palantir Technologies',
+    cat: 'Tech / AI',
+    email: null,
+    strength: 2,
+    tags: ['Palantir', 'AI', 'Defense Tech', 'Enterprise'],
+    lastContact: 'Jun 2026',
+    avenir: 'Palantir — dual Kalimi contacts inside the firm strengthen relationship depth.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Sarah Holmes',
+    title: 'Student-Athlete / Founder',
+    org: 'UPenn SEAS / Aquara AI',
+    cat: 'Tech / AI',
+    email: 'holmes16@seas.upenn.edu',
+    strength: 3,
+    tags: ['Penn', 'AI', 'Aquara', 'Startup', 'Engineering'],
+    lastContact: 'Apr 2026',
+    avenir: 'Co-founder of Aquara AI. Peer entrepreneur — potential Avenir portfolio company, share deal intel.',
+    intro: 'Penn classmate',
+    hot: false,
+  },
+
+  // ENTREPRENEURSHIP / FOUNDERS
+  {
+    name: 'Joe DeSena',
+    title: 'Founder & CEO',
+    org: 'Spartan Race',
+    cat: 'Entrepreneurship',
+    email: 'joe@spartan.com',
+    strength: 5,
+    tags: ['Spartan', 'Fitness', 'Founder', 'Media', 'Global Brand'],
+    lastContact: 'Feb 2026',
+    avenir: 'CLOSEST connection. Direct email. Built $500M+ brand from scratch. Mentor, connector, and business builder. Invaluable for Avenir consumer/brand investments.',
+    intro: 'National Preps / Jack DeSena',
+    hot: true,
+  },
+  {
+    name: 'Richard Baker',
+    title: 'Founder',
+    org: 'HBC / Saks Fifth Avenue',
+    cat: 'Entrepreneurship',
+    email: null,
+    strength: 3,
+    tags: ['Saks', 'Retail', 'Real Estate', 'Baker House', 'Consumer'],
+    lastContact: 'Jun 2026',
+    avenir: 'Baker House program member. Retail empire builder. Critical for Avenir consumer/retail deal thesis and network.',
+    intro: 'Baker House',
+    hot: true,
+  },
+  {
+    name: 'Joe Harpaz',
+    title: 'CEO',
+    org: 'ModMed',
+    cat: 'Entrepreneurship',
+    email: 'joe.harpaz@modmed.com',
+    strength: 4,
+    tags: ['ModMed', 'Healthcare Tech', 'SaaS', 'CEO'],
+    lastContact: 'Jun 2025',
+    avenir: 'HealthTech CEO — ModMed is a major healthcare SaaS platform. Deal intel, M&A targets, PE intro in healthtech.',
+    intro: 'Zachary Harpaz family',
+    hot: false,
+  },
+  {
+    name: 'Ivan Bergstein',
+    title: 'Entrepreneur / Investor',
+    org: 'Independent',
+    cat: 'Entrepreneurship',
+    email: 'ivanbergstein5@gmail.com',
+    strength: 3,
+    tags: ['Penn Wrestling', 'Mentor', 'Entrepreneur'],
+    lastContact: 'Oct 2025',
+    avenir: 'Penn Wrestling mentor with business background. Warm relationship — leverage for network expansion.',
+    intro: 'Penn Wrestling mentor program',
+    hot: false,
+  },
+
+  // HEALTHCARE
+  {
+    name: 'Dr. Uri Greiger',
+    title: 'Acclaimed Physician',
+    org: 'Medical (Israel-linked)',
+    cat: 'Healthcare',
+    email: null,
+    strength: 2,
+    tags: ['Medicine', 'Israel', 'Healthcare'],
+    lastContact: 'Mentioned',
+    avenir: 'Medical connection — relevant for Avenir healthcare deal diligence and Israeli medical tech.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Kris Meulen',
+    title: 'CDO',
+    org: 'The Hershey Company',
+    cat: 'Healthcare',
+    email: 'kmeulen@gmail.com',
+    strength: 5,
+    tags: ['Hershey', 'Consumer', 'CPG', 'C-Suite', 'Super Connector'],
+    lastContact: 'Feb 2026',
+    avenir: 'SUPER CONNECTOR. Intro\'d Kristen Rossi (Morgan Stanley) and Larry Portman (Jefferies). Hershey CDO with massive CPG / consumer network. Essential Avenir ally.',
+    intro: 'Super connector',
+    hot: true,
+  },
+
+  // LAW
+  {
+    name: 'Andrew Barkan',
+    title: 'Partner',
+    org: 'Fried Frank Harris Shriver & Jacobson',
+    cat: 'Law',
+    email: 'Andrew.Barkan@friedfrank.com',
+    phone: '+1 212 859 8468',
+    strength: 4,
+    tags: ['Fried Frank', 'M&A Law', 'PE Law', 'JHP Mentor'],
+    lastContact: 'Apr 2026',
+    avenir: 'M&A lawyer at elite firm. Invaluable for Avenir deal legal review, term sheets, and PE transaction counsel.',
+    intro: 'JHP Mentor match',
+    hot: true,
+  },
+
+  // ATHLETICS
+  {
+    name: 'Ted Schlien',
+    title: 'Alumni / Investor',
+    org: 'Penn Wrestling Network',
+    cat: 'Athletics',
+    email: null,
+    strength: 2,
+    tags: ['Penn Wrestling', 'Alumni', 'Finance'],
+    lastContact: 'Mentioned',
+    avenir: 'Penn Wrestling network — high-net-worth alumni base, introductions into finance.',
+    intro: 'Penn Wrestling',
+    hot: false,
+  },
+  {
+    name: 'David Pottruck',
+    title: 'Former CEO',
+    org: 'Charles Schwab / Penn Wrestling',
+    cat: 'Athletics',
+    email: null,
+    strength: 2,
+    tags: ['Schwab', 'Penn Wrestling', 'CEO', 'Finance'],
+    lastContact: 'Mentioned',
+    avenir: 'Former Schwab CEO and Penn Wrestling supporter. Finance/retail brokerage network.',
+    intro: 'Penn Wrestling',
+    hot: false,
+  },
+  {
+    name: 'Zachary Harpaz',
+    title: 'Penn Wrestler / Friend',
+    org: 'UPenn',
+    cat: 'Athletics',
+    email: null,
+    strength: 4,
+    tags: ['Penn Wrestling', 'ModMed family', 'Friend'],
+    lastContact: 'Active',
+    avenir: 'Close friend + intro to Joe Harpaz (ModMed CEO). Bridge to healthcare/consumer network.',
+    intro: 'Penn Wrestling teammate',
+    hot: false,
+  },
+  {
+    name: 'Jack DeSena',
+    title: 'Stanford Varsity Wrestler',
+    org: 'Stanford University',
+    cat: 'Athletics',
+    email: 'jack.desena2005@gmail.com',
+    strength: 5,
+    tags: ['Spartan', 'Stanford', 'Wrestling', 'Joe DeSena son'],
+    lastContact: 'Jan 2026',
+    avenir: 'Joe DeSena\'s son — direct bridge to Spartan/DeSena network. Close peer connection.',
+    intro: 'Peer / National Preps',
+    hot: false,
+  },
+
+  // PENN / WHARTON
+  {
+    name: 'Itay Goldstein',
+    title: 'Professor of Finance',
+    org: 'Wharton School, UPenn',
+    cat: 'Penn / Wharton',
+    email: null,
+    strength: 2,
+    tags: ['Wharton', 'Finance', 'Academia', 'Research'],
+    lastContact: 'Mentioned',
+    avenir: 'Wharton Finance professor — academic network, research on financial markets relevant for Avenir thesis.',
+    intro: 'Wharton',
+    hot: false,
+  },
+  {
+    name: 'Guy David',
+    title: 'Professor',
+    org: 'Wharton School, UPenn',
+    cat: 'Penn / Wharton',
+    email: null,
+    strength: 2,
+    tags: ['Wharton', 'Healthcare', 'Policy', 'Academia'],
+    lastContact: 'Mentioned',
+    avenir: 'Wharton healthcare professor — connects academic insights to Avenir healthcare deal thesis.',
+    intro: 'Wharton',
+    hot: false,
+  },
+  {
+    name: 'Gad Alon',
+    title: 'Wharton Student / Peer',
+    org: 'UPenn / Wharton',
+    cat: 'Penn / Wharton',
+    email: null,
+    strength: 3,
+    tags: ['Wharton', 'Israel', 'Peer', 'Network'],
+    lastContact: 'Active',
+    avenir: 'Wharton peer with strong Israeli network — co-build deal sourcing pipeline.',
+    intro: 'Wharton peer',
+    hot: false,
+  },
+  {
+    name: 'Yossi Aloni',
+    title: 'Entrepreneur / Investor',
+    org: 'Israel Network',
+    cat: 'Penn / Wharton',
+    email: null,
+    strength: 2,
+    tags: ['Israel', 'VC', 'Entrepreneur'],
+    lastContact: 'Mentioned',
+    avenir: 'Israeli entrepreneur network — key for Avenir cross-border Israel-US deal flow.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Tamir Kaaz',
+    title: 'Professional',
+    org: 'Israel / Finance',
+    cat: 'Penn / Wharton',
+    email: null,
+    strength: 2,
+    tags: ['Israel', 'Finance'],
+    lastContact: 'Mentioned',
+    avenir: 'Israeli finance connection — cross-border deal intelligence.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Yossi Farro',
+    title: 'Founder',
+    org: 'Tefillin (Jewish Community)',
+    cat: 'Penn / Wharton',
+    email: null,
+    strength: 2,
+    tags: ['Jewish Network', 'Community', 'Israel'],
+    lastContact: 'Mentioned',
+    avenir: 'Jewish community connector — broad network across business leaders.',
+    intro: 'Community',
+    hot: false,
+  },
+
+  // ENTERTAINMENT
+  {
+    name: 'Gal Gadot',
+    title: 'Actress / Entrepreneur',
+    org: 'Wonder Woman / Pilot Wave',
+    cat: 'Entertainment',
+    email: null,
+    strength: 2,
+    tags: ['Actress', 'Israel', 'Brand', 'Media', 'Production'],
+    lastContact: 'Mentioned',
+    avenir: 'Israeli global superstar — brand partnership intelligence, media deal insights for Avenir consumer/media investments.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+
+  // OTHERS - Gordian, Andrea, J Goldman
+  {
+    name: 'Gordian Ventures',
+    title: 'Venture Fund',
+    org: 'Gordian Ventures',
+    cat: 'VC / PE',
+    email: null,
+    strength: 1,
+    tags: ['VC', 'Gordian', 'Growth'],
+    lastContact: 'Mentioned',
+    avenir: 'Gordian Ventures — co-investor and deal flow partner for Avenir.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+  {
+    name: 'Andrea Brener',
+    title: 'Professional',
+    org: 'J. Goldman & Co.',
+    cat: 'Finance / Banking',
+    email: null,
+    strength: 1,
+    tags: ['J. Goldman', 'Finance', 'Hedge Fund'],
+    lastContact: 'Mentioned',
+    avenir: 'J. Goldman & Co — hedge fund relationship for market intelligence.',
+    intro: 'Direct connection',
+    hot: false,
+  },
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let activeFilter = 'all';
+let activeView = 'grid';
+let activeContact = null;
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+function init() {
+  updateStats();
+  renderContacts(CONTACTS);
+}
+
+function updateStats() {
+  const total = CONTACTS.length;
+  const withEmail = CONTACTS.filter(c => c.email).length;
+  const vc = CONTACTS.filter(c => c.cat === 'VC / PE').length;
+  const finance = CONTACTS.filter(c => c.cat === 'Finance / Banking').length;
+  const tech = CONTACTS.filter(c => c.cat === 'Tech / AI').length;
+  const founders = CONTACTS.filter(c => c.cat === 'Entrepreneurship').length;
+  const hot = CONTACTS.filter(c => c.hot).length;
+
+  document.getElementById('total-count').textContent = total;
+  document.getElementById('email-count').textContent = withEmail;
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-email').textContent = withEmail;
+  document.getElementById('s-vc').textContent = vc;
+  document.getElementById('s-finance').textContent = finance;
+  document.getElementById('s-tech').textContent = tech;
+  document.getElementById('s-founder').textContent = founders;
+  document.getElementById('s-hot').textContent = hot;
+}
+
+function getInitials(name) {
+  return name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+}
+
+function getAvatarColor(name) {
+  const colors = ['#3b82f6','#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981','#14b8a6','#f97316','#ef4444','#84cc16'];
+  let hash = 0;
+  for (let c of name) hash = (hash * 31 + c.charCodeAt(0)) & 0xffffffff;
+  return colors[Math.abs(hash) % colors.length];
+}
+
+function renderStrength(s, type = 'green') {
+  let dots = '';
+  for (let i = 1; i <= 5; i++) {
+    const cls = i <= s ? (s >= 4 ? 'dot filled' : s >= 3 ? 'dot warm' : 'dot medium') : 'dot';
+    dots += `<div class="${cls}"></div>`;
+  }
+  return dots;
+}
+
+function renderCard(c, list = false) {
+  const cat = CAT_COLORS[c.cat] || CAT_COLORS['Finance / Banking'];
+  const avatar = `<div class="avatar" style="background:${getAvatarColor(c.name)}">${getInitials(c.name)}</div>`;
+
+  const emailBlock = c.email
+    ? `<div class="email-row">
+         <span class="email-icon">✉</span>
+         <span class="email-text">${c.email}</span>
+         <button class="copy-btn" onclick="copyEmail(event,'${c.email}')">⎘</button>
+       </div>`
+    : `<div class="no-email">Email not yet found in inbox</div>`;
+
+  const hotBadge = c.hot ? '🔥 ' : '';
+
+  return `
+  <div class="card" onclick="openModal(${CONTACTS.indexOf(c)})"
+       style="--bar-color:${cat.bar}; border-top: 3px solid ${cat.bar}">
+    <div class="card-header">
+      ${avatar}
+      <div class="card-info">
+        <h3>${hotBadge}${c.name}</h3>
+        <div class="title">${c.title}</div>
+        <div class="org">${c.org}</div>
+      </div>
+    </div>
+    <span class="cat-badge" style="background:${cat.bg}20; color:${cat.bg}; border:1px solid ${cat.bg}40">${c.cat}</span>
+    ${emailBlock}
+    <div class="avenir-note">
+      <span class="note-label">⚡ Avenir Value</span>
+      ${c.avenir}
+    </div>
+    <div class="strength-row">
+      <span class="strength-label">Relationship</span>
+      <div class="strength-dots">${renderStrength(c.strength)}</div>
+    </div>
+    <div class="card-actions">
+      <button class="action-btn" onclick="event.stopPropagation(); openModal(${CONTACTS.indexOf(c)})">View Profile</button>
+      ${c.email ? `<button class="action-btn primary" onclick="event.stopPropagation(); draftEmail('${c.name}','${c.email}')">✉ Draft Email</button>` : ''}
+    </div>
+  </div>`;
+}
+
+function renderContacts(list) {
+  const grid = document.getElementById('contact-grid');
+  if (list.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text3);">No contacts match your search.</div>`;
+    return;
+  }
+
+  // Group by category
+  const cats = {};
+  list.forEach(c => {
+    if (!cats[c.cat]) cats[c.cat] = [];
+    cats[c.cat].push(c);
+  });
+
+  let html = '';
+  // Hot contacts first
+  const hot = list.filter(c => c.hot);
+  if (hot.length && activeFilter === 'all') {
+    html += `<div class="section-header" style="grid-column:1/-1">
+      <h2>🔥 Priority Relationships</h2><div class="section-line"></div>
+      <span class="section-count">${hot.length}</span>
+    </div>`;
+    hot.forEach(c => html += renderCard(c));
+  }
+
+  // By category
+  const catOrder = ['VC / PE','Finance / Banking','Entrepreneurship','Tech / AI','Healthcare','Law','Athletics','Penn / Wharton','Entertainment','Real Estate'];
+  catOrder.forEach(cat => {
+    const items = (cats[cat] || []).filter(c => !c.hot || activeFilter !== 'all');
+    if (!items.length) return;
+    html += `<div class="section-header" style="grid-column:1/-1">
+      <h2>${cat}</h2><div class="section-line"></div>
+      <span class="section-count">${items.length}</span>
+    </div>`;
+    items.forEach(c => html += renderCard(c));
+  });
+
+  grid.innerHTML = html;
+}
+
+function filterContacts() {
+  const q = document.getElementById('search').value.toLowerCase();
+  let filtered = CONTACTS;
+  if (activeFilter !== 'all') filtered = filtered.filter(c => c.cat === activeFilter);
+  if (q) filtered = filtered.filter(c =>
+    c.name.toLowerCase().includes(q) ||
+    c.org.toLowerCase().includes(q) ||
+    c.title.toLowerCase().includes(q) ||
+    (c.email || '').toLowerCase().includes(q) ||
+    c.tags.some(t => t.toLowerCase().includes(q))
+  );
+  renderContacts(filtered);
+}
+
+function setFilter(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterContacts();
+}
+
+function setView(v, btn) {
+  activeView = v;
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const grid = document.getElementById('contact-grid');
+  if (v === 'list') grid.classList.add('list-view');
+  else grid.classList.remove('list-view');
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+function openModal(idx) {
+  const c = CONTACTS[idx];
+  activeContact = c;
+  const cat = CAT_COLORS[c.cat] || CAT_COLORS['Finance / Banking'];
+
+  document.getElementById('modal-content').innerHTML = `
+    <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px">
+      <div class="avatar" style="width:64px;height:64px;font-size:22px;background:${getAvatarColor(c.name)};border-radius:14px">${getInitials(c.name)}</div>
+      <div>
+        <h2>${c.name}</h2>
+        <div class="m-title">${c.title} · ${c.org}</div>
+        <span class="cat-badge" style="background:${cat.bg}20;color:${cat.bg};border:1px solid ${cat.bg}40">${c.cat}</span>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h4>Contact Info</h4>
+      ${c.email ? `<div class="email-row" style="max-width:100%">
+        <span class="email-icon">✉</span>
+        <span class="email-text">${c.email}</span>
+        <button class="copy-btn" onclick="copyEmail(event,'${c.email}')">⎘ Copy</button>
+      </div>` : '<p style="color:var(--text3);font-size:13px">Email not yet found in inbox — connect on LinkedIn to request.</p>'}
+      ${c.phone ? `<p style="font-size:13px;color:var(--text2);margin-top:8px">📞 ${c.phone}</p>` : ''}
+      <p style="font-size:12px;color:var(--text3);margin-top:6px">Last Contact: ${c.lastContact} · How Met: ${c.intro}</p>
+    </div>
+
+    <div class="modal-section">
+      <h4>Avenir Growth Value</h4>
+      <div class="avenir-note">${c.avenir}</div>
+    </div>
+
+    <div class="modal-section">
+      <h4>Tags</h4>
+      <div class="tag-list">${c.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+
+    <div class="modal-section">
+      <h4>Relationship Strength</h4>
+      <div class="strength-dots" style="gap:6px">${renderStrength(c.strength)}</div>
+    </div>
+
+    ${c.email ? `
+    <div style="display:flex;gap:8px;margin-top:20px">
+      <button class="action-btn primary" style="flex:2;padding:12px" onclick="draftEmail('${c.name}','${c.email}')">✉ Draft Avenir Intro Email</button>
+      <button class="action-btn" style="flex:1;padding:12px" onclick="copyEmail(event,'${c.email}')">Copy Email</button>
+    </div>` : ''}
+  `;
+
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal')) {
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+
+// ─── ACTIONS ─────────────────────────────────────────────────────────────────
+function copyEmail(e, email) {
+  if (e) e.stopPropagation();
+  navigator.clipboard.writeText(email).then(() => showToast('Copied: ' + email));
+}
+
+function draftEmail(name, email) {
+  const subject = encodeURIComponent(`Following Up — Omer Barak, Avenir Growth`);
+  const body = encodeURIComponent(`Hi ${name.split(' ')[0]},
+
+I hope you're doing well. I'm reaching out as I've recently joined Avenir Growth for the summer, where I'm focused on deal origination and portfolio strategy.
+
+I'd love to reconnect and share what I've been working on — I think there's real overlap with your work at [Organization] that could be mutually valuable.
+
+Would you have 15–20 minutes for a quick call in the coming weeks?
+
+Best,
+Omer Barak
+Avenir Growth | UPenn '27 | Division I Wrestler
+📱 305-335-0029 | barakom@sas.upenn.edu`);
+  window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ─── KEYBOARD ─────────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key === '/' && document.activeElement !== document.getElementById('search')) {
+    e.preventDefault();
+    document.getElementById('search').focus();
+  }
+});
+
+init();
+</script>
+</body>
+</html>
