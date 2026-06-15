@@ -3,856 +3,994 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Omer Barak — Network Intelligence OS</title>
+<title>Network</title>
 <style>
-:root {
-  --bg:#060810; --surface:#0f1623; --card:#111827; --card2:#161f2e;
-  --border:#1e2d45; --border2:#253347;
-  --blue:#3b82f6; --blue2:#60a5fa; --blue3:#93c5fd;
-  --gold:#f59e0b; --gold2:#fbbf24;
-  --green:#10b981; --red:#ef4444; --purple:#8b5cf6;
-  --pink:#ec4899; --teal:#14b8a6; --orange:#f97316;
-  --white:#f1f5f9; --gray:#94a3b8; --gray2:#64748b; --gray3:#475569;
-  --font:'Inter',system-ui,sans-serif;
-  --r:12px;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:var(--font);background:var(--bg);color:var(--white);overflow-x:hidden;}
-a{color:inherit;text-decoration:none;}
-::-webkit-scrollbar{width:5px;height:5px;}
-::-webkit-scrollbar-track{background:var(--surface);}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+  :root {
+    --bg: #09090e;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: #252530;
+    --gold: #f0b429;
+    --gold2: #ffd060;
+    --blue: #4f8ef7;
+    --green: #34d399;
+    --purple: #a78bfa;
+    --text: #e8e8f2;
+    --muted: #7878a0;
+    --li: #0a66c2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
 
-/* ── TOP BAR ───────────────────────────────────────────────────────────── */
-.topbar{
-  position:sticky;top:0;z-index:200;
-  background:rgba(6,8,16,0.92);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:16px;
-  padding:0 28px;height:60px;
-}
-.topbar-logo{
-  font-size:16px;font-weight:700;letter-spacing:-0.5px;
-  background:linear-gradient(90deg,#fff,var(--blue2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  white-space:nowrap;
-}
-.topbar-stat{
-  background:var(--card);border:1px solid var(--border);
-  padding:4px 12px;border-radius:20px;font-size:12px;color:var(--gray);
-  white-space:nowrap;
-}
-.topbar-stat b{color:var(--blue2);}
-.topbar-avenir{
-  background:linear-gradient(135deg,var(--gold),#d97706);
-  color:#000;font-size:10px;font-weight:700;padding:4px 10px;
-  border-radius:20px;letter-spacing:0.5px;white-space:nowrap;
-}
-.topbar-spacer{flex:1;}
+  /* TOP BAR */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(9,9,14,0.97); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 20px; padding: 0 24px; height: 54px;
+  }
+  .brand { font-size: 14px; font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
+  .brand span { color: var(--gold); }
+  .search-wrap { position: relative; flex: 1; max-width: 380px; }
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+  .search-wrap input {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); padding: 7px 12px 7px 32px; font-size: 13px; outline: none;
+  }
+  .search-wrap input:focus { border-color: var(--gold); }
+  .topbar-meta { margin-left: auto; display: flex; gap: 20px; }
+  .meta-item { font-size: 12px; color: var(--muted); }
+  .meta-item b { color: var(--text); font-weight: 700; }
 
-/* ── LAYOUT ────────────────────────────────────────────────────────────── */
-.shell{display:flex;min-height:calc(100vh - 60px);}
+  /* LAYOUT */
+  .layout { display: flex; }
 
-/* ── SIDEBAR ───────────────────────────────────────────────────────────── */
-.sidebar{
-  width:220px;flex-shrink:0;
-  border-right:1px solid var(--border);
-  padding:20px 0;
-  position:sticky;top:60px;height:calc(100vh - 60px);
-  overflow-y:auto;background:var(--surface);
-}
-.sidebar-section{padding:0 12px;margin-bottom:6px;}
-.sidebar-label{
-  font-size:9px;text-transform:uppercase;letter-spacing:1.5px;
-  color:var(--gray2);padding:8px 8px 4px;font-weight:600;
-}
-.sidebar-link{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 10px;border-radius:8px;
-  font-size:13px;color:var(--gray);cursor:pointer;
-  transition:all 0.15s;margin-bottom:1px;
-}
-.sidebar-link:hover{background:var(--card2);color:var(--white);}
-.sidebar-link.active{background:rgba(59,130,246,0.12);color:var(--blue2);}
-.sidebar-link .icon{font-size:14px;width:16px;text-align:center;flex-shrink:0;}
-.sidebar-link .count{
-  margin-left:auto;font-size:10px;
-  background:var(--card);border:1px solid var(--border);
-  padding:1px 7px;border-radius:10px;color:var(--gray2);
-}
-.sidebar-link.active .count{background:rgba(59,130,246,0.2);color:var(--blue2);border-color:rgba(59,130,246,0.3);}
-.sidebar-divider{height:1px;background:var(--border);margin:10px 12px;}
+  /* SIDEBAR */
+  .sidebar {
+    width: 210px; min-width: 210px; position: sticky; top: 54px;
+    height: calc(100vh - 54px); overflow-y: auto;
+    background: var(--surface); border-right: 1px solid var(--border); padding: 12px 0;
+  }
+  .sidebar::-webkit-scrollbar { width: 3px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .slabel { font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 10px 14px 4px; }
+  .sitem {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 14px; cursor: pointer; font-size: 12.5px; color: var(--muted);
+    border-left: 2px solid transparent; transition: all .12s; gap: 6px;
+  }
+  .sitem:hover { color: var(--text); background: var(--surface2); }
+  .sitem.active { color: var(--gold); border-left-color: var(--gold); background: rgba(240,180,41,.05); font-weight: 600; }
+  .scount { font-size: 10px; background: var(--surface2); padding: 1px 5px; border-radius: 8px; color: var(--muted); flex-shrink: 0; }
 
-/* ── MAIN ──────────────────────────────────────────────────────────────── */
-.main{flex:1;padding:24px;min-width:0;}
+  /* MAIN */
+  .main { flex: 1; padding: 20px 24px; min-width: 0; }
 
-/* ── CONTROLS ──────────────────────────────────────────────────────────── */
-.controls{
-  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
-  margin-bottom:20px;
-}
-.search-wrap{position:relative;flex:1;min-width:200px;max-width:360px;}
-.search-wrap input{
-  width:100%;background:var(--card);border:1px solid var(--border);
-  border-radius:10px;padding:9px 14px 9px 38px;
-  color:var(--white);font-size:13px;outline:none;
-  transition:border-color 0.2s;
-}
-.search-wrap input:focus{border-color:var(--blue);}
-.search-wrap::before{
-  content:'⌕';position:absolute;left:12px;top:50%;
-  transform:translateY(-50%);color:var(--gray2);font-size:17px;
-  pointer-events:none;
-}
-.view-btns{display:flex;background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
-.view-btn{
-  padding:7px 12px;border:none;background:none;
-  color:var(--gray2);cursor:pointer;font-size:15px;transition:all 0.15s;
-}
-.view-btn.active{background:var(--blue);color:#fff;}
-.sort-select{
-  background:var(--card);border:1px solid var(--border);border-radius:8px;
-  padding:7px 12px;color:var(--gray);font-size:12px;outline:none;
-  cursor:pointer;
-}
-.sort-select option{background:var(--card);}
+  /* TIER FILTERS */
+  .filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .fbtn {
+    font-size: 12px; padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--border); background: transparent; color: var(--muted);
+    cursor: pointer; transition: all .12s;
+  }
+  .fbtn:hover { color: var(--text); border-color: var(--muted); }
+  .fbtn.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 700; }
 
-/* ── STATS BAR ─────────────────────────────────────────────────────────── */
-.stats-bar{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
-  gap:10px;margin-bottom:24px;
-}
-.stat-card{
-  background:var(--card);border:1px solid var(--border);border-radius:10px;
-  padding:14px 16px;cursor:pointer;transition:all 0.2s;
-}
-.stat-card:hover{border-color:var(--blue);}
-.stat-card .n{font-size:26px;font-weight:800;line-height:1;}
-.stat-card .l{font-size:10px;color:var(--gray2);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px;}
+  /* SECTION */
+  .section { margin-bottom: 36px; }
+  .sec-head {
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 14px;
+  }
+  .sec-title { font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .sec-count { font-size: 11px; color: var(--muted); }
+  .inner-circle .sec-title { color: var(--gold); }
+  .inner-circle .sec-head { border-bottom-color: rgba(240,180,41,.25); }
 
-/* ── TIER BADGE ─────────────────────────────────────────────────────────── */
-.tier{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;
-  letter-spacing:0.5px;text-transform:uppercase;
-}
-.tier-1{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);}
-.tier-2{background:rgba(59,130,246,0.12);color:var(--blue2);border:1px solid rgba(59,130,246,0.25);}
-.tier-3{background:rgba(16,185,129,0.1);color:#6ee7b7;border:1px solid rgba(16,185,129,0.2);}
-.tier-peer{background:rgba(139,92,246,0.1);color:#c4b5fd;border:1px solid rgba(139,92,246,0.2);}
+  /* GRID */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 10px; }
 
-/* ── CARD GRID ──────────────────────────────────────────────────────────── */
-#grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
-  gap:14px;
-}
-#grid.list{grid-template-columns:1fr;}
+  /* CARD */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px;
+    transition: border-color .12s, background .12s;
+  }
+  .card:hover { border-color: rgba(240,180,41,.4); background: var(--surface2); }
+  .inner-circle .card { border-color: rgba(240,180,41,.15); }
 
-/* ── CONTACT CARD ───────────────────────────────────────────────────────── */
-.c-card{
-  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
-  padding:18px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;
-}
-.c-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-}
-.c-card:hover{border-color:var(--blue2);transform:translateY(-2px);box-shadow:0 6px 24px rgba(59,130,246,0.12);}
-.c-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;}
-.avatar{
-  width:44px;height:44px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;font-weight:700;flex-shrink:0;color:#fff;
-}
-.c-name{font-size:14px;font-weight:700;line-height:1.3;margin-bottom:2px;}
-.c-title{font-size:11px;color:var(--blue2);font-weight:500;}
-.c-org{font-size:11px;color:var(--gray2);margin-top:1px;}
-.c-badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
-.c-email{
-  display:flex;align-items:center;gap:6px;
-  background:var(--card2);border:1px solid var(--border);border-radius:7px;
-  padding:5px 10px;margin-bottom:10px;
-}
-.c-email span{font-size:11px;color:var(--blue2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace;}
-.c-copy{background:none;border:none;color:var(--gray2);cursor:pointer;font-size:12px;padding:0 2px;transition:color 0.15s;}
-.c-copy:hover{color:var(--blue);}
-.no-email{font-size:10px;color:var(--gray2);font-style:italic;margin-bottom:10px;}
-.avenir-box{
-  background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);
-  border-radius:7px;padding:7px 10px;margin-bottom:10px;
-}
-.avenir-box .al{font-size:8px;text-transform:uppercase;letter-spacing:1px;color:rgba(251,191,36,0.6);font-weight:700;margin-bottom:3px;}
-.avenir-box p{font-size:11px;color:#fcd34d;line-height:1.5;}
-.c-strength{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
-.dots{display:flex;gap:3px;}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--border);}
-.dot.on{background:var(--green);}
-.dot.warm{background:var(--gold);}
-.dot.med{background:var(--blue);}
-.c-footer{display:flex;gap:6px;margin-top:10px;}
-.c-btn{
-  flex:1;padding:6px;border-radius:7px;border:1px solid var(--border);
-  background:var(--card2);color:var(--gray);font-size:11px;
-  cursor:pointer;text-align:center;transition:all 0.15s;
-}
-.c-btn:hover{border-color:var(--blue);color:var(--blue2);}
-.c-btn.pri{background:var(--blue);border-color:var(--blue);color:#fff;}
-.c-btn.pri:hover{background:#2563eb;}
-.li-badge{
-  font-size:9px;background:rgba(10,102,194,0.15);
-  border:1px solid rgba(10,102,194,0.3);color:#60a5fa;
-  padding:2px 7px;border-radius:10px;
-}
-/* list view */
-#grid.list .c-card{display:flex;align-items:center;gap:14px;padding:12px 16px;}
-#grid.list .c-head{margin-bottom:0;flex:1;}
-#grid.list .c-badges{margin-bottom:0;flex-shrink:0;}
-#grid.list .avenir-box,#grid.list .c-strength,#grid.list .c-email,#grid.list .no-email,#grid.list .c-footer{display:none;}
+  .card-row1 { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card-info { min-width: 0; flex: 1; }
+  .cname { font-size: 14px; font-weight: 700; color: var(--text); }
+  .ctitle { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+  .corg { font-size: 11.5px; font-weight: 600; color: #b0b0d0; margin-top: 1px; }
+  .cnote { font-size: 11px; color: var(--gold); margin-top: 3px; font-style: italic; }
 
-/* ── SECTION HEADER ─────────────────────────────────────────────────────── */
-.section-hdr{
-  display:flex;align-items:center;gap:10px;
-  grid-column:1/-1;padding:6px 0 4px;
-  margin-top:8px;
-}
-.section-hdr h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray2);}
-.section-line{flex:1;height:1px;background:var(--border);}
-.section-n{font-size:10px;color:var(--gray2);background:var(--card2);border:1px solid var(--border);padding:1px 8px;border-radius:10px;}
+  .tbadge {
+    flex-shrink: 0; font-size: 9.5px; font-weight: 800; padding: 2px 7px;
+    border-radius: 20px; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap;
+  }
+  .t-inner { background: rgba(255,208,96,.12); color: var(--gold2); border: 1px solid rgba(255,208,96,.3); }
+  .t-1 { background: rgba(240,180,41,.1); color: var(--gold); border: 1px solid rgba(240,180,41,.2); }
+  .t-2 { background: rgba(79,142,247,.1); color: var(--blue); border: 1px solid rgba(79,142,247,.2); }
+  .t-3 { background: rgba(52,211,153,.08); color: var(--green); border: 1px solid rgba(52,211,153,.15); }
+  .t-mentor { background: rgba(167,139,250,.1); color: var(--purple); border: 1px solid rgba(167,139,250,.2); }
 
-/* ── MODAL ──────────────────────────────────────────────────────────────── */
-.overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,0.75);z-index:500;
-  backdrop-filter:blur(5px);align-items:center;justify-content:center;
-}
-.overlay.open{display:flex;}
-.modal{
-  background:var(--card);border:1px solid var(--border2);border-radius:16px;
-  padding:28px;width:90%;max-width:540px;max-height:85vh;overflow-y:auto;position:relative;
-}
-.modal-x{
-  position:absolute;top:14px;right:14px;
-  background:var(--card2);border:1px solid var(--border);border-radius:7px;
-  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--gray);font-size:14px;transition:all 0.15s;
-}
-.modal-x:hover{color:var(--red);border-color:var(--red);}
-.modal h2{font-size:20px;font-weight:700;margin-bottom:4px;}
-.modal .m-role{font-size:14px;color:var(--blue2);margin-bottom:16px;}
-.m-sec{margin-bottom:16px;}
-.m-sec h4{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--gray2);font-weight:600;margin-bottom:7px;}
-.m-sec p{font-size:13px;color:var(--gray);line-height:1.6;}
-.tag-cloud{display:flex;flex-wrap:wrap;gap:5px;}
-.tag{background:var(--card2);border:1px solid var(--border);padding:3px 9px;border-radius:6px;font-size:11px;color:var(--gray);}
-.m-actions{display:flex;gap:8px;margin-top:18px;}
-.m-btn{
-  flex:1;padding:11px;border-radius:9px;border:1px solid var(--border);
-  background:var(--card2);color:var(--gray);font-size:13px;font-weight:500;
-  cursor:pointer;transition:all 0.15s;font-family:var(--font);
-}
-.m-btn:hover{border-color:var(--blue);color:var(--blue2);}
-.m-btn.pri{background:linear-gradient(135deg,var(--blue),var(--purple));border:none;color:#fff;}
-.m-btn.pri:hover{opacity:0.9;}
+  .card-actions { display: flex; gap: 5px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 6px;
+    border: none; cursor: pointer; text-decoration: none; transition: opacity .12s;
+  }
+  .btn:hover { opacity: .75; }
+  .btn-li { background: var(--li); color: #fff; }
+  .btn-mail { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-copy { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); padding: 4px 7px; }
+  .btn-mail:hover { border-color: var(--gold); color: var(--gold); }
 
-/* ── TOAST ──────────────────────────────────────────────────────────────── */
-.toast{
-  position:fixed;bottom:20px;right:20px;
-  background:var(--green);color:#fff;padding:9px 16px;
-  border-radius:9px;font-size:12px;font-weight:600;
-  opacity:0;transition:opacity 0.3s;z-index:1000;pointer-events:none;
-}
-.toast.show{opacity:1;}
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag { font-size: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--muted); }
 
-/* ── EMPTY ──────────────────────────────────────────────────────────────── */
-.empty{
-  grid-column:1/-1;text-align:center;padding:60px 20px;
-  color:var(--gray2);font-size:14px;
-}
-
-@media(max-width:768px){
-  .sidebar{display:none;}
-  .main{padding:14px;}
-  #grid{grid-template-columns:1fr;}
-}
+  .toast {
+    position: fixed; bottom: 20px; right: 20px;
+    background: var(--green); color: #000; font-weight: 700; font-size: 12px;
+    padding: 8px 14px; border-radius: 8px;
+    opacity: 0; transform: translateY(8px); transition: all .18s; pointer-events: none; z-index: 999;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .empty { padding: 60px; text-align: center; color: var(--muted); font-size: 14px; }
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
-  <div class="topbar-logo">⚡ Network OS</div>
-  <div class="topbar-stat">LinkedIn: <b id="li-count">1,767</b> connections</div>
-  <div class="topbar-stat">Emails verified: <b id="email-count">15</b></div>
-  <div class="topbar-stat">Tier 1 contacts: <b id="t1-count">0</b></div>
-  <div class="topbar-spacer"></div>
-  <div class="topbar-avenir">AVENIR GROWTH</div>
+  <div class="brand"><span>Network</span></div>
+  <div class="search-wrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="search" type="text" placeholder="Search contacts… (press /)" autocomplete="off">
+  </div>
 </div>
 
-<div class="shell">
-
-<!-- SIDEBAR -->
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-label">Filter by Category</div>
-  <div class="sidebar-section">
-    <div class="sidebar-link active" onclick="setFilter('all',this)">
-      <span class="icon">🌐</span> All Contacts <span class="count" id="cnt-all">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('🔥 Priority',this)">
-      <span class="icon">🔥</span> Priority <span class="count" id="cnt-hot">0</span>
-    </div>
-  </div>
-  <div class="sidebar-divider"></div>
-  <div class="sidebar-label">Industry</div>
-  <div class="sidebar-section">
-    <div class="sidebar-link" onclick="setFilter('VC / PE',this)">
-      <span class="icon">💰</span> VC / PE <span class="count" id="cnt-vc">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Goldman Sachs',this)">
-      <span class="icon">🏦</span> Goldman Sachs <span class="count" id="cnt-gs">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Finance / Banking',this)">
-      <span class="icon">💵</span> Finance / Banking <span class="count" id="cnt-fin">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Blackstone / Apollo',this)">
-      <span class="icon">🏛️</span> Blackstone / Apollo <span class="count" id="cnt-ba">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('BlackRock',this)">
-      <span class="icon">🖤</span> BlackRock <span class="count" id="cnt-br">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Tech / AI',this)">
-      <span class="icon">🤖</span> Tech / AI <span class="count" id="cnt-tech">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Consulting',this)">
-      <span class="icon">📊</span> Consulting <span class="count" id="cnt-con">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Entrepreneurship',this)">
-      <span class="icon">🚀</span> Founders / CEOs <span class="count" id="cnt-found">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Healthcare',this)">
-      <span class="icon">🏥</span> Healthcare <span class="count" id="cnt-health">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Law',this)">
-      <span class="icon">⚖️</span> Law <span class="count" id="cnt-law">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Athletics',this)">
-      <span class="icon">🤼</span> Athletics <span class="count" id="cnt-ath">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Penn / Wharton',this)">
-      <span class="icon">🏫</span> Penn / Wharton <span class="count" id="cnt-penn">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Consumer / Retail',this)">
-      <span class="icon">🛍️</span> Consumer / Retail <span class="count" id="cnt-cons">0</span>
-    </div>
-    <div class="sidebar-link" onclick="setFilter('Israel Network',this)">
-      <span class="icon">🇮🇱</span> Israel Network <span class="count" id="cnt-il">0</span>
-    </div>
-  </div>
-  <div class="sidebar-divider"></div>
-  <div class="sidebar-label">Quick Links</div>
-  <div class="sidebar-section">
-    <div class="sidebar-link" onclick="window.location.href='index.html'">
-      <span class="icon">🏠</span> Personal Site
-    </div>
-  </div>
+<div class="layout">
+<nav class="sidebar">
+  <div class="slabel">View</div>
+  <div class="sitem active" data-cat="all">All <span class="scount" id="sc-all"></span></div>
+  <div class="slabel">Priority</div>
+  <div class="sitem" data-cat="Inner Circle">Inner Circle <span class="scount" id="sc-0"></span></div>
+  <div class="sitem" data-cat="Power Network">Power Network <span class="scount" id="sc-1"></span></div>
+  <div class="slabel">Sector</div>
+  <div class="sitem" data-cat="Goldman Sachs">Goldman Sachs <span class="scount" id="sc-2"></span></div>
+  <div class="sitem" data-cat="Finance">Finance <span class="scount" id="sc-3"></span></div>
+  <div class="sitem" data-cat="PE / VC">PE / VC <span class="scount" id="sc-4"></span></div>
+  <div class="sitem" data-cat="Tech / AI">Tech / AI <span class="scount" id="sc-5"></span></div>
+  <div class="sitem" data-cat="Law">Law <span class="scount" id="sc-6"></span></div>
+  <div class="sitem" data-cat="Consumer">Consumer <span class="scount" id="sc-7"></span></div>
+  <div class="sitem" data-cat="Healthcare">Healthcare <span class="scount" id="sc-8"></span></div>
+  <div class="slabel">Community</div>
+  <div class="sitem" data-cat="JHP Mentors">JHP Mentors <span class="scount" id="sc-9"></span></div>
+  <div class="sitem" data-cat="Penn Peers">Penn Peers <span class="scount" id="sc-10"></span></div>
+  <div class="sitem" data-cat="Israel">Israel <span class="scount" id="sc-11"></span></div>
+  <div class="sitem" data-cat="Athletics">Athletics <span class="scount" id="sc-12"></span></div>
+  <div class="sitem" data-cat="Penn Wrestling">Penn Wrestling <span class="scount" id="sc-13"></span></div>
 </nav>
 
-<!-- MAIN CONTENT -->
-<main class="main">
-
-  <!-- STATS -->
-  <div class="stats-bar" id="stats-bar">
-    <div class="stat-card" onclick="setFilter('all',document.querySelector('.sidebar-link'))">
-      <div class="n" style="color:var(--blue2)" id="s-total">0</div>
-      <div class="l">Key Contacts</div>
-    </div>
-    <div class="stat-card">
-      <div class="n" style="color:var(--gold)">1,767</div>
-      <div class="l">LinkedIn Total</div>
-    </div>
-    <div class="stat-card">
-      <div class="n" style="color:var(--green)" id="s-email">0</div>
-      <div class="l">Emails Verified</div>
-    </div>
-    <div class="stat-card">
-      <div class="n" style="color:var(--gold)" id="s-t1">0</div>
-      <div class="l">Tier 1 Leaders</div>
-    </div>
-    <div class="stat-card">
-      <div class="n" style="color:var(--purple)" id="s-gs">0</div>
-      <div class="l">Goldman Sachs</div>
-    </div>
-    <div class="stat-card">
-      <div class="n" style="color:var(--teal)" id="s-bx">0</div>
-      <div class="l">Blackstone</div>
-    </div>
-    <div class="stat-card">
-      <div class="n" style="color:var(--orange)" id="s-ap">0</div>
-      <div class="l">Apollo</div>
-    </div>
+<div class="main">
+  <div class="filters">
+    <button class="fbtn active" data-tier="all">All</button>
+    <button class="fbtn" data-tier="inner">⭐ Inner Circle</button>
+    <button class="fbtn" data-tier="t-1">Power Network</button>
+    <button class="fbtn" data-tier="t-2">Senior</button>
+    <button class="fbtn" data-tier="t-mentor">JHP Mentors</button>
+    <button class="fbtn" data-tier="t-3">Peers</button>
   </div>
-
-  <!-- CONTROLS -->
-  <div class="controls">
-    <div class="search-wrap">
-      <input id="search" type="text" placeholder="Search name, firm, title, tag…" oninput="render()">
-    </div>
-    <select class="sort-select" id="sort" onchange="render()">
-      <option value="strength">Sort: Relationship</option>
-      <option value="tier">Sort: Tier</option>
-      <option value="name">Sort: A–Z</option>
-      <option value="recent">Sort: Recently Added</option>
-    </select>
-    <div class="view-btns">
-      <button class="view-btn active" onclick="setView('grid',this)" title="Grid">⊞</button>
-      <button class="view-btn" onclick="setView('list',this)" title="List">☰</button>
-    </div>
-  </div>
-
-  <!-- GRID -->
-  <div id="grid"></div>
-</main>
+  <div id="root"></div>
+</div>
 </div>
 
-<!-- MODAL -->
-<div class="overlay" id="modal" onclick="maybeClose(event)">
-  <div class="modal" id="modal-inner">
-    <div class="modal-x" onclick="closeModal()">✕</div>
-    <div id="modal-body"></div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast">Copied!</div>
 
 <script>
-// ─── HELPERS ────────────────────────────────────────────────────────────────
-const CAT_META = {
-  'VC / PE':           {color:'#f59e0b', icon:'💰'},
-  'Goldman Sachs':     {color:'#60a5fa', icon:'🏦'},
-  'Finance / Banking': {color:'#6366f1', icon:'💵'},
-  'Blackstone / Apollo':{color:'#8b5cf6',icon:'🏛️'},
-  'BlackRock':         {color:'#14b8a6', icon:'🖤'},
-  'Tech / AI':         {color:'#14b8a6', icon:'🤖'},
-  'Consulting':        {color:'#f97316', icon:'📊'},
-  'Entrepreneurship':  {color:'#ec4899', icon:'🚀'},
-  'Healthcare':        {color:'#10b981', icon:'🏥'},
-  'Law':               {color:'#a78bfa', icon:'⚖️'},
-  'Athletics':         {color:'#f97316', icon:'🤼'},
-  'Penn / Wharton':    {color:'#3b82f6', icon:'🏫'},
-  'Consumer / Retail': {color:'#e879f9', icon:'🛍️'},
-  'Israel Network':    {color:'#10b981', icon:'🇮🇱'},
-};
-function initials(n){return n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();}
-function avatarColor(n){
-  const cs=['#3b82f6','#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981','#14b8a6','#f97316','#ef4444','#0ea5e9'];
-  let h=0; for(let c of n)h=(h*31+c.charCodeAt(0))&0xffffffff;
-  return cs[Math.abs(h)%cs.length];
-}
-function dots(s){
-  let o='';
-  for(let i=1;i<=5;i++){
-    const cls=i<=s?(s>=4?'dot on':s>=3?'dot warm':'dot med'):'dot';
-    o+=`<div class="${cls}"></div>`;
-  }
-  return o;
-}
-function tierBadge(t){
-  if(t===1)return`<span class="tier tier-1">★ Tier 1</span>`;
-  if(t===2)return`<span class="tier tier-2">Tier 2</span>`;
-  if(t===3)return`<span class="tier tier-3">Tier 3</span>`;
-  return`<span class="tier tier-peer">Peer</span>`;
-}
+// ─── CONTACTS ────────────────────────────────────────────────────────────────
+// tier: "inner" | "t-1" | "t-2" | "t-3" | "t-mentor"
+// email confirmed from Gmail where noted
+const C = [
+{
+  name: 'Kris Meulen', title: 'Chief Digital Officer', org: 'The Hershey Company',
+  cat: 'Inner Circle', tier: 'inner', note: 'Key connector — Jefferies Israel Group',
+  email: 'kmeulen@gmail.com', li: 'https://www.linkedin.com/in/kris-meulen-b091b',
+  tags: ['Consumer', 'CDO', 'Digital']
+},
+{
+  name: 'Joe DeSena', title: 'Founder & CEO', org: 'Spartan Race',
+  cat: 'Inner Circle', tier: 'inner',
+  email: 'joe@spartan.com', li: 'https://www.linkedin.com/in/joedesena/',
+  tags: ['Entrepreneur', 'Fitness', 'Events']
+},
+{
+  name: 'Joe Harpaz', title: 'Co-CEO', org: 'ModMed ($5.3B — Clearlake acquisition)',
+  cat: 'Inner Circle', tier: 'inner', note: 'Former intern supervisor — interned at ModMed HQ under Joe',
+  email: 'joe.harpaz@modmed.com', li: 'https://www.linkedin.com/in/joe-harpaz/',
+  tags: ['HealthTech', 'CEO', '$5.3B', 'Former Employer']
+},
+{
+  name: 'Larry Portman', title: 'Managing Director, Israel Group', org: 'Jefferies',
+  cat: 'Inner Circle', tier: 'inner', note: '"Any friend of Kris is worth meeting."',
+  email: 'lportman@jefferies.com', li: 'https://www.linkedin.com/in/larry-portman-11044b3',
+  tags: ['Jefferies', 'Israel', 'Banking']
+},
+{
+  name: 'Steve Miller', title: 'Executive Director, FX Options Trading', org: 'JP Morgan',
+  cat: 'Inner Circle', tier: 'inner',
+  email: '', li: 'https://www.linkedin.com/in/steve-miller-43a9b7101',
+  tags: ['JPM', 'Trading', 'JHP']
+},
+{
+  name: 'Jeff Epstein', title: 'Partner (former CFO, Oracle)', org: 'Bessemer Venture Partners',
+  cat: 'Inner Circle', tier: 'inner',
+  email: 'jeff@bvp.com', li: 'https://www.linkedin.com/in/jeffepstein1/',
+  tags: ['VC', 'Bessemer', 'Oracle']
+},
+{
+  name: 'Roy Rosin', title: 'Chief Innovation Officer', org: 'Penn Medicine / First Round Capital',
+  cat: 'Inner Circle', tier: 'inner',
+  email: 'rrosin@firstround.com', li: 'https://www.linkedin.com/in/royrosin/',
+  tags: ['VC', 'First Round', 'Penn']
+},
+{
+  name: 'Dan Blank', title: 'Co-Chairman, Global M&A', org: 'Goldman Sachs',
+  cat: 'Inner Circle', tier: 'inner', note: '"Will keep your resume in front of our folks."',
+  email: 'dan.blank@gs.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Dan+Blank+Goldman+Sachs+MA',
+  tags: ['Goldman', 'M&A', 'Banking']
+},
+{
+  name: 'Stephan Feldguise', title: 'Global Head of M&A', org: 'Goldman Sachs',
+  cat: 'Inner Circle', tier: 'inner', note: 'Replied immediately, set up call',
+  email: 'stephan.feldgoise@gs.com', li: 'https://www.linkedin.com/in/stephan-feldgoise',
+  tags: ['Goldman', 'M&A']
+},
+{
+  name: 'Andrew Barkan', title: 'Partner & Co-Head, Capital Markets', org: 'Fried Frank',
+  cat: 'Inner Circle', tier: 'inner', note: 'JHP Mentor — active relationship',
+  email: 'andrew.barkan@friedfrank.com', li: 'https://www.linkedin.com/in/andrew-barkan-2666825',
+  tags: ['Law', 'Capital Markets', 'JHP']
+},
+{
+  name: 'Richard Baker', title: 'Founder & Executive Chairman', org: 'HBC / Saks Fifth Avenue',
+  cat: 'Inner Circle', tier: 'inner',
+  email: '', li: 'https://www.linkedin.com/in/richard-baker-162541240',
+  tags: ['Retail', 'Luxury', 'Consumer']
+},
+{
+  name: 'Bobby Jain', title: 'Founder & CIO', org: 'Jain Global ($5.3B AUM)',
+  cat: 'Inner Circle', tier: 'inner',
+  email: '', li: 'https://www.linkedin.com/in/bobby-jain/',
+  tags: ['Hedge Fund', 'Millennium', 'Credit Suisse']
+},
+{
+  name: 'Ivan Bergstein', title: 'CEO', org: 'Stemline Therapeutics',
+  cat: 'Inner Circle', tier: 'inner', note: 'Penn Wrestling mentor — paired directly with Omer',
+  email: 'ivanbergstein5@gmail.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Ivan+Bergstein+entrepreneur',
+  tags: ['Entrepreneur', 'Israel']
+},
 
-// ─── MASTER CONTACT LIST ─────────────────────────────────────────────────────
-const CONTACTS = [
-/* ═══════════════════════ TIER 1 — ELITE LEADERS ═══════════════════════════ */
-{name:'Joe DeSena',title:'Founder & CEO',org:'Spartan Race',cat:'Entrepreneurship',email:'joe@spartan.com',tier:1,strength:5,hot:true,li:true,tags:['Spartan','Fitness','Brand','Founder','National Preps'],avenir:'CLOSEST connection. Built $500M+ brand from scratch. Direct mentor & connector. Invaluable for Avenir consumer/brand deal thesis.',intro:'Jack DeSena / National Preps',date:'Feb 2026'},
-{name:'Dan Blank',title:'Co-Chairman, Global M&A',org:'Goldman Sachs',cat:'Goldman Sachs',email:'Dan.Blank@gs.com',tier:1,strength:4,hot:true,li:true,tags:['Goldman','M&A','Global','Partner'],avenir:'Co-chairs Goldman Sachs Global M&A. Critical for Avenir deal advisory, sell-side mandates, and sourcing Tier-1 M&A deal flow.',intro:'LinkedIn → warm',date:'Jan 2026'},
-{name:'Jeff Epstein',title:'Partner (Former CFO, Oracle)',org:'Bessemer Venture Partners',cat:'VC / PE',email:'jeff@bvp.com',phone:'(203) 377-8346',tier:1,strength:4,hot:true,li:true,tags:['Bessemer','Oracle CFO','Enterprise SaaS','VC'],avenir:'Direct line into Bessemer portfolio. Key intro for Avenir growth-stage enterprise and SaaS deals.',intro:'Father intro',date:'Sep 2025'},
-{name:'Roy Rosin',title:'Board Partner',org:'First Round Capital',cat:'VC / PE',email:'rrosin@firstround.com',tier:1,strength:4,hot:true,li:true,tags:['First Round','Early Stage','Seed'],avenir:'Two calls + calendar invites. First Round invests early — co-source deals or refer portfolio companies needing growth equity.',intro:'Father intro',date:'Oct 2025'},
-{name:'Robert Steven Kaplan',title:'Partner & Vice Chairman',org:'Goldman Sachs',cat:'Goldman Sachs',email:null,tier:1,strength:2,hot:true,li:true,tags:['Goldman','Vice Chairman','PE','Senior'],avenir:'Vice Chairman of Goldman Sachs. Elite relationship for deal advisory at the highest level.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'Adrian Jones',title:'Chairman, Global Private Equity',org:'Goldman Sachs Asset Management',cat:'Goldman Sachs',email:null,tier:1,strength:2,hot:true,li:true,tags:['Goldman','PE','Chairman','GSAM'],avenir:'Chairs Goldman Sachs Global PE. Access to GSAM deal flow, co-investments, and LP introductions.',intro:'LinkedIn',date:'May 2026'},
-{name:'William P. Lauder',title:'Chair, Board of Directors',org:'The Estée Lauder Companies',cat:'Consumer / Retail',email:null,tier:1,strength:2,hot:true,li:true,tags:['Estée Lauder','Consumer','Brand','Board Chair','Luxury'],avenir:'Chairs Estée Lauder Board. World-class consumer brand intel — perfect for Avenir consumer/brand deal thesis.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Lionel Assant',title:'Global Co-Chief Investment Officer',org:'Blackstone Private Equity',cat:'Blackstone / Apollo',email:null,tier:1,strength:2,hot:true,li:true,tags:['Blackstone','Co-CIO','PE','Global'],avenir:'Co-CIO of Blackstone PE globally. Access to largest PE firm intelligence and deal flow.',intro:'LinkedIn',date:'Feb 2026'},
-{name:'Jim Esposito',title:'President',org:'Citadel Securities',cat:'Finance / Banking',email:null,tier:1,strength:2,hot:false,li:true,tags:['Citadel','Markets','President','Trading'],avenir:'President of Citadel Securities — market intelligence, trading infrastructure insight for Avenir.',intro:'LinkedIn',date:'Jan 2026'},
-{name:'Scott Dahnke',title:'Global CEO',org:'L Catterton',cat:'VC / PE',email:null,tier:1,strength:2,hot:true,li:true,tags:['L Catterton','Consumer PE','Luxury','Global CEO'],avenir:'CEO of L Catterton — world\'s largest consumer-focused PE firm. Essential for Avenir consumer deal sourcing.',intro:'LinkedIn',date:'Jan 2026'},
-{name:'David Ulevitch',title:'General Partner',org:'Andreessen Horowitz (a16z)',cat:'VC / PE',email:null,tier:1,strength:2,hot:true,li:true,tags:['a16z','GP','Andreessen','American Dynamism'],avenir:'a16z GP — top tier VC. Co-investment opportunities and tech deal flow for Avenir portfolio.',intro:'LinkedIn',date:'May 2026'},
-{name:'Eytan Elbaz',title:'Co-creator of AdSense / Seed Investor',org:'Applied Semantics / Scopely',cat:'VC / PE',email:null,tier:1,strength:2,hot:true,li:true,tags:['AdSense','Oculus','Anduril','Seed','Scopely','Forbes Top 100 Seed'],avenir:'Co-created Google AdSense, founded Scopely, seeded Oculus & Anduril. Elite angel network — source deals & co-investments.',intro:'LinkedIn',date:'May 2026'},
-{name:'Richard Baker',title:'Founder & Executive Chairman',org:'HBC / Saks Fifth Avenue',cat:'Consumer / Retail',email:null,tier:1,strength:3,hot:true,li:true,tags:['Saks','HBC','Retail','Real Estate','Baker House'],avenir:'Baker House program — Saks founder. Deep retail empire knowledge. Essential for Avenir consumer/retail M&A thesis.',intro:'Baker House program',date:'Jun 2026'},
-{name:'Joe Harpaz',title:'CEO',org:'ModMed',cat:'Entrepreneurship',email:'joe.harpaz@modmed.com',tier:1,strength:4,hot:false,li:true,tags:['ModMed','HealthTech','SaaS','CEO'],avenir:'HealthTech CEO — ModMed major healthcare SaaS platform. Deal intel for healthtech M&A, PE intro opportunities.',intro:'Zachary Harpaz',date:'Jun 2025'},
-{name:'Rich Handler',title:'CEO',org:'Jefferies Group',cat:'Finance / Banking',email:'RHANDLER@jefferies.com',tier:1,strength:3,hot:true,li:true,tags:['Jefferies','CEO','IB','Israel'],avenir:'Jefferies CEO personally guaranteed an interview. Elite banking relationship — direct line for Avenir deal advisory.',intro:'Direct outreach → response',date:'May 2026'},
-{name:'Josh Harris',title:'Co-Founder',org:'Apollo Global Management',cat:'VC / PE',email:null,tier:1,strength:2,hot:true,li:false,tags:['Apollo','PE','Sports Owner','Penn Wrestling'],avenir:'Apollo co-founder and sports empire owner. Elite PE network — bridge via Penn Wrestling.',intro:'Penn Wrestling',date:'Active'},
-{name:'David Blitzer',title:'Senior Partner',org:'Blackstone',cat:'Blackstone / Apollo',email:null,tier:1,strength:2,hot:false,li:false,tags:['Blackstone','PE','Sports','Penn'],avenir:'Blackstone senior partner — PE deal sourcing at scale. Penn connection strengthens approach.',intro:'Penn connection',date:'Active'},
-{name:'Kris Meulen',title:'Chief Development Officer',org:'The Hershey Company',cat:'Consumer / Retail',email:'kmeulen@gmail.com',tier:1,strength:5,hot:true,li:true,tags:['Hershey','CPG','C-Suite','Super Connector'],avenir:'SUPER CONNECTOR. Already introduced Morgan Stanley (Kristen Rossi) and Jefferies (Larry Portman). CDO of Hershey — massive CPG network.',intro:'Super connector',date:'Jul 2025'},
-{name:'Daniel Veiner',title:'Head of Investments',org:'BlackRock',cat:'BlackRock',email:'Daniel.Veiner@blackrock.com',tier:1,strength:3,hot:true,li:true,tags:['BlackRock','PE','Investments Head','JHP'],avenir:'Head of Investments at BlackRock. Critical for large-cap deal co-investment and exit strategy intelligence.',intro:'JHP visit to BlackRock',date:'Mar 2026'},
-{name:'Asahi Pompey',title:'Global Head, Corporate Engagement',org:'Goldman Sachs',cat:'Goldman Sachs',email:null,tier:1,strength:2,hot:false,li:true,tags:['Goldman','Corporate Engagement','Urban Investment'],avenir:'GS Global Head of Corporate Engagement — unique channel for impact-focused deal partnerships.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'Daniel Winston',title:'Office of the CEO',org:'Palantir Technologies',cat:'Tech / AI',email:null,tier:1,strength:2,hot:true,li:true,tags:['Palantir','Office CEO','AI','Enterprise'],avenir:'Office of the CEO at Palantir — direct line to Palantir leadership for AI/enterprise deals and co-investments.',intro:'LinkedIn',date:'May 2026'},
-{name:'Dr. Uri Geiger',title:'Investor',org:'Independent',cat:'Israel Network',email:null,tier:1,strength:2,hot:false,li:true,tags:['Israel','Investor','Medical','VC'],avenir:'Acclaimed Israeli investor — cross-border Israel-US deal flow and medical tech network.',intro:'LinkedIn',date:'Dec 2025'},
+// ══════════════════════════════════════════════════════════════════════════════
+// POWER NETWORK
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'Daniel Kalimi', title: 'GTM / Office of CEO', org: 'Palantir',
+  cat: 'Inner Circle', tier: 'inner',
+  email: '', li: 'https://www.linkedin.com/in/daniel-kalimi-86a956220',
+  tags: ['Palantir', 'AI', 'Penn']
+},
+{
+  name: 'Yuvraj Lakhotia', title: 'Engineer', org: 'xAI / SpaceX (UPenn M&T \'26)',
+  cat: 'Inner Circle', tier: 'inner',
+  email: '', li: 'https://www.linkedin.com/in/yuvraj-lakhotia',
+  tags: ['xAI', 'SpaceX', 'Penn M&T']
+},
+{
+  name: 'Mark Kohn', title: 'Equity Derivatives', org: 'Wells Fargo',
+  cat: 'Inner Circle', tier: 'inner',
+  email: '', li: 'https://www.linkedin.com/in/mark-kohn',
+  tags: ['Wells Fargo', 'Derivatives', 'Finance']
+},
+{
+  name: 'Gal Gadot', title: 'Actress & Entrepreneur', org: 'Wonder Woman / Rivka Tequila',
+  cat: 'Inner Circle', tier: 'inner', note: 'Aunt',
+  email: '', li: 'https://www.linkedin.com/in/gal-gadot/',
+  tags: ['Family', 'Entertainment', 'Brand']
+},
+{
+  name: 'Rich Handler', title: 'Chairman & CEO', org: 'Jefferies Financial Group',
+  cat: 'Power Network', tier: 't-1', note: '"Carey will make sure you have an interview." — replied in 28 min',
+  email: 'rhandler@jefferies.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Richard+Handler+Jefferies+CEO',
+  tags: ['Banking', 'CEO', 'Jefferies']
+},
+{
+  name: 'David Blitzer', title: 'Senior Managing Director', org: 'Blackstone / 76ers / NJ Devils',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/in/dave-blitzer-12aa192a2/',
+  tags: ['Blackstone', 'Sports', 'PE']
+},
+{
+  name: 'Jeff Weinstein', title: 'Partner', org: 'FJ Labs',
+  cat: 'Power Network', tier: 't-1',
+  email: 'jeff@fjlabs.com', li: 'https://www.linkedin.com/in/jeffreysweinstein',
+  tags: ['VC', 'Marketplace', 'Seed']
+},
+{
+  name: 'William P. Lauder', title: 'Executive Chairman', org: 'Estée Lauder Companies',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/in/william-lauder',
+  tags: ['Consumer', 'Chairman', 'Brand']
+},
+{
+  name: 'Josh Harris', title: 'Co-Founder', org: 'Apollo Global / 76ers / Commanders',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/in/josh-harris-26n',
+  tags: ['Apollo', 'PE', 'Sports']
+},
+{
+  name: 'Richard Mack', title: 'CEO & Co-Founder', org: 'Mack Real Estate Group',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/in/richard-mack-a47898114',
+  tags: ['Real Estate', 'PE']
+},
+{
+  name: 'Scott Dahnke', title: 'Global Co-CEO', org: 'L Catterton (LVMH-backed)',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/in/scott-dahnke-24292b15',
+  tags: ['PE', 'Consumer', 'LVMH']
+},
+{
+  name: 'Mo Koyfman', title: 'Founder & GP', org: 'Shine Capital',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/in/mokoyfman',
+  tags: ['VC', 'Seed']
+},
+{
+  name: 'Logan Goodman', title: 'General Partner', org: 'Vine Ventures',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Logan+Goodman+Vine+Ventures',
+  tags: ['VC', 'Vine']
+},
+{
+  name: 'Kristen Rossi', title: 'Managing Director', org: 'Morgan Stanley',
+  cat: 'Power Network', tier: 't-1', note: 'Intro from Kris Meulen — reached out directly',
+  email: 'Kristen.Rossi@morganstanley.com', li: 'https://www.linkedin.com/in/kristen-rossi-5198697/',
+  tags: ['Israel', 'Business']
+},
+{
+  name: 'Lionel Assant', title: 'European PE Co-Head & Co-CIO', org: 'Blackstone',
+  cat: 'Power Network', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/in/lionel-assant-3225a810',
+  tags: ['Blackstone', 'PE', 'Europe']
+},
+{
+  name: 'Danny Ackerman', title: 'Managing Director', org: 'Key1 Capital (former JPM & GS)',
+  cat: 'Power Network', tier: 't-1', note: 'Intro through father — set up call',
+  email: 'Danny.Akerman@key1capital.com', li: 'https://www.linkedin.com/search/results/people/?keywords=Danny+Ackerman+Key1+Capital',
+  tags: ['PE', 'Finance']
+},
 
-/* ═══════════════════════ TIER 2 — SENIOR PROFESSIONALS ═══════════════════ */
-{name:'Larry Portman',title:'Managing Director',org:'Jefferies',cat:'Finance / Banking',email:'LPORTMAN@jefferies.com',tier:2,strength:4,hot:true,li:true,tags:['Jefferies','MD','Israel','IB'],avenir:'Israel-focused Jefferies MD. Key intro for cross-border M&A and Israeli growth company mandates.',intro:'Kris Meulen intro',date:'Feb 2026'},
-{name:'Andrew Barkan',title:'Partner',org:'Fried Frank Harris Shriver & Jacobson',cat:'Law',email:'Andrew.Barkan@friedfrank.com',phone:'+1 212 859 8468',tier:2,strength:4,hot:true,li:true,tags:['Fried Frank','M&A Law','PE Law','JHP Mentor'],avenir:'M&A partner at elite firm. Invaluable for Avenir deal legal review, PE transaction counsel, term sheets.',intro:'JHP Mentor match',date:'Mar 2026'},
-{name:'Paul Germain',title:'Partner',org:'StoneRidge Asset Management',cat:'Finance / Banking',email:'paul.germain@stoneridgeam.com',tier:2,strength:3,hot:false,li:true,tags:['StoneRidge','JHP','Asset Management'],avenir:'JHP connection — active mentor relationship. Leverage for Avenir fund introductions.',intro:'JHP event',date:'Feb 2026'},
-{name:'Kristen Rossi',title:'Managing Director',org:'Morgan Stanley',cat:'Finance / Banking',email:'Kristen.Rossi@morganstanley.com',tier:2,strength:3,hot:false,li:true,tags:['Morgan Stanley','MD','IB'],avenir:'Morgan Stanley MD — intro via Kris Meulen. Can open MS advisory and deal flow for Avenir.',intro:'Kris Meulen intro',date:'Oct 2025'},
-{name:'Jeff Weinstein',title:'Partner',org:'FJ Labs',cat:'VC / PE',email:'jeff@fjlabs.com',phone:'917-673-2386',tier:2,strength:3,hot:false,li:true,tags:['FJ Labs','Marketplace','Consumer Tech'],avenir:'FJ Labs does 200+ investments/yr. Great for consumer/marketplace deals and co-investment intros.',intro:'Father intro',date:'Sep 2025'},
-{name:'Roy Rosin',title:'Board Partner',org:'First Round Capital',cat:'VC / PE',email:'rrosin@firstround.com',tier:2,strength:4,hot:true,li:true,tags:['First Round','Seed','Early Stage'],avenir:'Two calls. First Round invests early — co-source or refer portfolio companies for growth equity.',intro:'Father intro',date:'Jan 2026'},
-{name:'Michael Bruun',title:'Partner, Global Co-Head of Private Equity',org:'Goldman Sachs Asset Management',cat:'Goldman Sachs',email:null,tier:2,strength:2,hot:false,li:true,tags:['Goldman','PE','Co-Head','GSAM'],avenir:'Global co-head GS PE — access to largest PE fund deal flow and co-investments.',intro:'LinkedIn',date:'Feb 2026'},
-{name:'Nicole Agnew',title:'Partner, Head Consumer & Consumer Services PE',org:'Goldman Sachs',cat:'Goldman Sachs',email:null,tier:2,strength:2,hot:true,li:true,tags:['Goldman','Consumer PE','Partner','Evergreen'],avenir:'GS consumer PE head — Avenir\'s most directly relevant GS contact. Consumer deal intelligence.',intro:'LinkedIn',date:'Feb 2026'},
-{name:'Lionel Assant',title:'Global Co-CIO',org:'Blackstone Private Equity',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:true,li:true,tags:['Blackstone','Co-CIO','PE'],avenir:'Blackstone Co-CIO. Premier PE relationship for exit intelligence and co-invest opportunities.',intro:'LinkedIn',date:'Feb 2026'},
-{name:'Eric Reiner',title:'Partner / GP ($140M Fund II)',org:'Vine Ventures',cat:'VC / PE',email:null,tier:2,strength:2,hot:true,li:true,tags:['Vine Ventures','GP','US-Israel','Growth'],avenir:'Vine Ventures GP — US-Israel focused fund. Direct co-investment and deal flow partner for Avenir.',intro:'LinkedIn',date:'May 2026'},
-{name:'Daniel Povitsky',title:'Co-Founder',org:'Vine Ventures',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Vine Ventures','Co-Founder','Israel','NYC','SF'],avenir:'Vine Ventures co-founder (NYC/TLV/SF). Israeli VC network for cross-border deal sourcing.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Gad Allon',title:'Director, Jerome Fisher M&T Program',org:'University of Pennsylvania',cat:'Penn / Wharton',email:null,tier:2,strength:2,hot:false,li:true,tags:['Wharton','M&T','Penn','Academic','Co-Founder AIC'],avenir:'Director of Penn M&T program — gateway to Penn\'s top engineering/business talent and entrepreneurship ecosystem.',intro:'LinkedIn',date:'Apr 2026'},
-{name:'Zachary Cion',title:'Managing Director',org:'Hudson Bay Capital Management',cat:'Finance / Banking',email:null,tier:2,strength:2,hot:false,li:true,tags:['Hudson Bay','Hedge Fund','MD'],avenir:'HBC MD — alternative investment intelligence, event-driven strategy for Avenir deal structuring.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Daniel Lerer',title:'Managing Director, Finance',org:'GFI Capital',cat:'Finance / Banking',email:null,tier:2,strength:2,hot:false,li:true,tags:['GFI Capital','Real Estate','Finance','MD'],avenir:'GFI Capital MD — real estate and private capital intelligence.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Christopher Santana',title:'CEO & Co-CIO',org:'Monarch Alternative Capital',cat:'Finance / Banking',email:null,tier:2,strength:2,hot:false,li:true,tags:['Monarch','Hedge Fund','CEO','Event Driven'],avenir:'CEO of Monarch Alternative Capital. Hedge fund deal perspective for Avenir strategy.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Ivan Bergstein',title:'Entrepreneur / Investor',org:'Independent',cat:'Athletics',email:'ivanbergstein5@gmail.com',tier:2,strength:3,hot:false,li:false,tags:['Penn Wrestling','Mentor','Entrepreneur'],avenir:'Penn Wrestling mentor — warm relationship. Leverage for broad network expansion.',intro:'Penn Wrestling mentor program',date:'Oct 2025'},
-{name:'Dan Blank',title:'Co-Chairman, Global M&A',org:'Goldman Sachs',cat:'Goldman Sachs',email:'Dan.Blank@gs.com',tier:1,strength:4,hot:true,li:true,tags:['Goldman','M&A','Global Co-Chair'],avenir:'Co-chairs GS Global M&A. Critical relationship for Avenir M&A deal advisory.',intro:'LinkedIn',date:'Jan 2026'},
-{name:'Matt Gibson',title:'Global Head, Client Business, AWM',org:'Goldman Sachs',cat:'Goldman Sachs',email:null,tier:2,strength:2,hot:false,li:true,tags:['Goldman','AWM','Client Business'],avenir:'GS global head of client relationships in AWM — connects Avenir to Goldman\'s LP/institutional base.',intro:'LinkedIn',date:'Feb 2026'},
-{name:'Martin Small',title:'Senior Managing Director',org:'BlackRock',cat:'BlackRock',email:null,tier:2,strength:2,hot:false,li:true,tags:['BlackRock','SMD','Senior'],avenir:'BlackRock Senior MD — breadth of BlackRock relationships for Avenir co-investments.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'Mike Pyle',title:'Sr Managing Director, Deputy Head Portfolio Mgmt',org:'BlackRock',cat:'BlackRock',email:null,tier:2,strength:2,hot:false,li:true,tags:['BlackRock','Portfolio Management','Deputy Head'],avenir:'BlackRock\'s deputy head of portfolio management — market and risk intelligence for Avenir.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'Casey Lankenau',title:'Partner',org:'Ares Management Corporation',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Ares','PE','Credit','Partner'],avenir:'Ares partner — alternative credit and private equity deal flow for Avenir.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'Cole Charnas',title:'Senior Partner',org:'26North',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['26North','PE','Senior Partner'],avenir:'26North senior partner (Josh Harris-affiliated fund). Direct pipeline to Apollo/Harris PE ecosystem.',intro:'LinkedIn',date:'Apr 2026'},
-{name:'Jemina Opman-Auge',title:'Investor',org:'General Atlantic',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['General Atlantic','Growth Equity','Tech'],avenir:'General Atlantic growth equity — co-investment and deal intel for mid-market tech targets.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'Anna Peyton Malizia',title:'Vice President',org:'General Atlantic',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['General Atlantic','VP','Growth Equity'],avenir:'GA VP — growth equity deal flow and portfolio intelligence.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'Kane Herrick',title:'Vice President',org:'L Catterton – Flagship Buyout Fund',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['L Catterton','Consumer PE','Buyout'],avenir:'L Catterton buyout fund VP — consumer deal intelligence under Scott Dahnke\'s platform.',intro:'LinkedIn',date:'Jan 2026'},
-{name:'Mark Rappo',title:'Principal',org:'KKR',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['KKR','PE','Principal'],avenir:'KKR principal — private equity deal co-sourcing and transaction intelligence.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'Robert Steven Kaplan',title:'Partner & Vice Chairman',org:'Goldman Sachs',cat:'Goldman Sachs',email:null,tier:1,strength:2,hot:false,li:true,tags:['Goldman','Vice Chairman','Senior','Former Harvard'],avenir:'Vice Chairman of Goldman — elite deal access and institutional relationship capital.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'David Ulevitch',title:'General Partner',org:'a16z',cat:'VC / PE',email:null,tier:1,strength:2,hot:true,li:true,tags:['a16z','Andreessen','American Dynamism','GP'],avenir:'a16z GP — frontier tech VC. Co-investments and portfolio intro for Avenir AI/tech deals.',intro:'LinkedIn',date:'May 2026'},
-{name:'Terry Burgess',title:'Head of Investment Boutiques, Managing Partner',org:'Wellington Management',cat:'Finance / Banking',email:null,tier:2,strength:2,hot:false,li:true,tags:['Wellington','Asset Management','Boutiques'],avenir:'Wellington managing partner — institutional asset management relationships for Avenir.',intro:'LinkedIn',date:'May 2026'},
-{name:'Doug Philippone',title:'Venture Capitalist / Former Army Ranger',org:'Independent',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['VC','Defense Tech','Army Ranger','Mathematician'],avenir:'Rare combination of VC, defense/security tech, and operational excellence. Avenir defense-adjacent deals.',intro:'LinkedIn',date:'May 2026'},
-{name:'Michael Steltenkamp',title:'Director',org:'GTCR',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['GTCR','PE','Middle Market'],avenir:'GTCR director — mid-market PE deal flow and co-investment intelligence.',intro:'LinkedIn',date:'Apr 2026'},
-{name:'Jamie Brodsky',title:'Managing Partner & Co-CEO',org:'Breakwall Capital',cat:'Finance / Banking',email:null,tier:2,strength:2,hot:false,li:true,tags:['Breakwall Capital','Hedge Fund','Co-CEO'],avenir:'Breakwall Capital Co-CEO — alternative investment strategies for Avenir deal analysis.',intro:'LinkedIn',date:'May 2026'},
-{name:'Scott Dahnke',title:'Global CEO',org:'L Catterton',cat:'VC / PE',email:null,tier:1,strength:2,hot:true,li:true,tags:['L Catterton','Consumer PE','Global CEO','Luxury'],avenir:'L Catterton Global CEO. World\'s largest consumer PE — most direct Avenir VC partner.',intro:'LinkedIn',date:'Jan 2026'},
-{name:'Alicia Sontag',title:'Co-Founder & Managing Partner',org:'Prelude Growth Partners',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Prelude Growth','Consumer','Founder','Managing Partner'],avenir:'Prelude Growth co-founder — consumer growth PE. Perfect fit for Avenir consumer M&A deal sourcing.',intro:'LinkedIn',date:'Apr 2026'},
-{name:'William Quartner',title:'Partner',org:'Prelude Growth Partners',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Prelude Growth','Consumer Brands','Partner'],avenir:'Prelude Growth Partners — consumer brand investor. Key co-source for Avenir consumer pipeline.',intro:'LinkedIn',date:'May 2026'},
-{name:'Eric Bilmes',title:'Partner',org:'Kohlberg & Company',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Kohlberg','PE','Middle Market','Partner'],avenir:'Kohlberg partner — mid-market PE deal flow and co-investment intelligence.',intro:'LinkedIn',date:'Feb 2026'},
-{name:'Max Hoberman',title:'Principal',org:'Garnett Station Partners',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Garnett Station','PE','Consumer','Restaurant'],avenir:'Garnett Station Partners — restaurant and consumer-focused PE. QSR/consumer deal collaboration for Avenir.',intro:'LinkedIn',date:'Feb 2026'},
-{name:'Howard Norowitz',title:'Partner',org:'Garnett Station Partners',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Garnett Station','PE','Consumer'],avenir:'Garnett Station partner — restaurant and consumer PE intelligence for Avenir pipeline.',intro:'LinkedIn',date:'Feb 2026'},
+// ══════════════════════════════════════════════════════════════════════════════
+// GOLDMAN SACHS
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'Robert Steven Kaplan', title: 'Vice Chairman & Partner', org: 'Goldman Sachs (former Dallas Fed President)',
+  cat: 'Goldman Sachs', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/in/rob-s-kaplan',
+  tags: ['Goldman', 'Fed', 'Finance']
+},
+{
+  name: 'Adrian Jones', title: 'Chairman, Global Private Equity', org: 'Goldman Sachs',
+  cat: 'Goldman Sachs', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Adrian+Jones+Goldman+Sachs+PE',
+  tags: ['Goldman', 'PE']
+},
 
-/* ── xAI / TECH ── */
-{name:'Vardhan Agnihotri',title:'Member of Technical Staff',org:'xAI (Elon Musk\'s AI)',cat:'Tech / AI',email:'vardy.mov@gmail.com',tier:2,strength:3,hot:false,li:true,tags:['xAI','AI','Grok','UPenn M&T','Fathom'],avenir:'Building at xAI. Frontier AI insider — valuable for Avenir AI deal thesis and portfolio company diligence.',intro:'Wharton M&T peer',date:'Nov 2025'},
-{name:'Yuvraj Lakhotia',title:'Engineer',org:'xAI / SpaceX',cat:'Tech / AI',email:null,tier:2,strength:2,hot:false,li:true,tags:['xAI','SpaceX','AI','UPenn M&T'],avenir:'xAI + SpaceX engineer from Penn M&T. Frontier AI and space tech intelligence.',intro:'Penn M&T peer',date:'Sep 2025'},
-{name:'Daniel Kalimi',title:'CS + Wharton @ UPenn',org:'Palantir Technologies',cat:'Tech / AI',email:null,tier:2,strength:2,hot:false,li:true,tags:['Palantir','AI','Enterprise','CS Wharton'],avenir:'Palantir insider (visited NYC office). AI/enterprise software deals relevant for Avenir tech portfolio.',intro:'LinkedIn / Penn',date:'Jun 2026'},
-{name:'Bracy Fertig PhD',title:'Founder & CEO',org:'Orchestra | Precision Cancer Diagnostics',cat:'Healthcare',email:null,tier:2,strength:2,hot:false,li:true,tags:['Biotech','Cancer Diagnostics','CEO','Founder'],avenir:'Precision cancer diagnostics founder — biotech deal intelligence for Avenir healthcare thesis.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Cesar Ezra Ades',title:'Founding Partner',org:'Mazal Venture Builder',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Venture Builder','Founder','VC','Israel'],avenir:'Venture builder partner — startup pipeline and co-investment for Avenir early-stage deals.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Ofek Katriel',title:'Building AI Infra',org:'ex-8200',cat:'Tech / AI',email:null,tier:2,strength:2,hot:false,li:true,tags:['AI','8200','Israel Tech','Infrastructure'],avenir:'Ex-8200 AI builder — Israeli deep tech pipeline and AI infrastructure intelligence.',intro:'LinkedIn',date:'Jun 2026'},
+// ══════════════════════════════════════════════════════════════════════════════
+// FINANCE
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'Jim Esposito', title: 'President', org: 'Citadel Securities',
+  cat: 'Finance', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/in/jim-esposito-27153772',
+  tags: ['Citadel', 'Trading', 'Markets']
+},
+{
+  name: 'Adam Teatle', title: 'Managing Director', org: 'Lazard',
+  cat: 'Finance', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/in/adam-taetle-34ba5b102',
+  tags: ['Lazard', 'M&A']
+},
+{
+  name: 'David Schneid', title: 'GM & Head of Product, Aladdin Accounting', org: 'BlackRock',
+  cat: 'Finance', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=David+Schneid+BlackRock+Aladdin',
+  tags: ['BlackRock', 'JHP']
+},
 
-/* ── BLACKSTONE ── */
-{name:'Patrick Winter',title:'Senior Vice President',org:'Blackstone',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Blackstone','SVP','PE'],avenir:'Blackstone SVP — access to world\'s largest alternative asset firm deal intelligence.',intro:'LinkedIn',date:'May 2026'},
-{name:'Eric Tawney',title:'Principal',org:'Blackstone',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Blackstone','Principal','PE'],avenir:'Blackstone principal — PE deal analysis and portfolio company intelligence.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Ryan Smith',title:'Principal',org:'Blackstone',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Blackstone','Principal','PE'],avenir:'Blackstone principal — direct line into BX deal flow.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Randi Lewis',title:'Managing Director',org:'Blackstone',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Blackstone','MD','PE'],avenir:'Blackstone MD — high-level deal intelligence and co-investment opportunities.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Jonathan Veneri',title:'Managing Director, Global Fund Finance',org:'Blackstone',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Blackstone','Fund Finance','MD'],avenir:'BX MD of Fund Finance — fund structure and capital markets intelligence for Avenir.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Joseph Cassanelli',title:'Senior Managing Director, Tactical Opportunities',org:'Blackstone',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Blackstone','SMD','Tactical Opp'],avenir:'BX Tactical Opp SMD — opportunistic deal flow including distressed and special situations.',intro:'LinkedIn',date:'Feb 2026'},
-{name:'Julia Martin',title:'Tactical Opportunities',org:'Blackstone',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Blackstone','Tactical Opp','PE'],avenir:'Blackstone Tactical Opp — special situation and distressed deal intelligence.',intro:'LinkedIn',date:'Jun 2026'},
+// ══════════════════════════════════════════════════════════════════════════════
+// PE / VC
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'David Ulevitch', title: 'General Partner', org: 'a16z (Andreessen Horowitz)',
+  cat: 'PE / VC', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/in/davidulevitch/',
+  tags: ['a16z', 'VC', 'Tech']
+},
+{
+  name: 'Raz Alon', title: 'Investor', org: 'Point72 Ventures',
+  cat: 'PE / VC', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/in/razallon/',
+  tags: ['VC', 'Israel', 'Point72']
+},
+{
+  name: 'Adam Rothenberg', title: 'Partner', org: 'BoxGroup',
+  cat: 'PE / VC', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/adamrothenberg',
+  tags: ['VC', 'Seed', 'JHP']
+},
+{
+  name: 'Ryan Josephson', title: 'Principal', org: 'Stonecroft Management',
+  cat: 'PE / VC', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Ryan+Josephson+Stonecroft+Management',
+  tags: ['PE', 'Family Office', 'JHP']
+},
+{
+  name: 'Jonathon Granowitz', title: 'Senior Associate', org: 'Lovell Minnick Partners',
+  cat: 'PE / VC', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Jonathon+Granowitz+Lovell+Minnick',
+  tags: ['PE', 'JHP']
+},
+{
+  name: 'Cole Bianco', title: 'Vice President (Healthcare PE)', org: 'Warburg Pincus',
+  cat: 'PE / VC', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/cole-bianco-68a148114',
+  tags: ['PE', 'Healthcare', 'JHP']
+},
 
-/* ── APOLLO ── */
-{name:'Chris McIntyre',title:'Partner, Apollo Leadership Team',org:'Apollo Global Management',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Apollo','Partner','Leadership','PE'],avenir:'Apollo leadership team member — PE deal flow and co-investment opportunities.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'Matt O\'Mara',title:'Partner, Co-head Apollo Aligned Alternatives',org:'Apollo Global Management',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Apollo','Co-Head','Alternatives','Partner'],avenir:'Apollo alternatives co-head — innovative deal structures and credit opportunities for Avenir.',intro:'LinkedIn',date:'Jan 2026'},
-{name:'Jeff Sestilio',title:'Principal',org:'Apollo Global Management',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Apollo','Principal','PE'],avenir:'Apollo principal — direct PE deal flow and co-investment intelligence.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'Stuart Tishman',title:'Managing Director',org:'Apollo Global Management',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Apollo','MD','PE'],avenir:'Apollo MD — real assets and PE deal pipeline for Avenir.',intro:'LinkedIn',date:'Feb 2026'},
+// ══════════════════════════════════════════════════════════════════════════════
+// TECH / AI
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'Vardhan Agnihotri', title: 'AI Engineer', org: 'xAI — Elon Musk (UPenn M&T \'26)',
+  cat: 'Tech / AI', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/in/agno3',
+  tags: ['xAI', 'AI', 'Penn M&T', 'Peer']
+},
+{
+  name: 'Eric Kalimi', title: 'Business Development', org: 'Palantir',
+  cat: 'Penn Peers', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/in/eric-k-4134b8243/',
+  tags: ['Palantir', 'AI', 'Penn', 'Peer']
+},
+{
+  name: 'Daniel Winston', title: 'Office of the CEO', org: 'Palantir',
+  cat: 'Tech / AI', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/daniel-winston-500541164',
+  tags: ['Palantir', 'AI', 'JHP']
+},
+{
+  name: 'Eytan Elbaz', title: 'Co-Creator, AdSense / Investor', org: 'Google / Various',
+  cat: 'Tech / AI', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/in/eytan-elbaz-b098198',
+  tags: ['Google', 'Entrepreneur', 'AdSense']
+},
+{
+  name: 'Aria Eghbali', title: 'AI Strategist', org: 'Distyl',
+  cat: 'Tech / AI', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/aria-eghbali',
+  tags: ['AI', 'JHP']
+},
 
-/* ── GOLDMAN SACHS EXTENDED ── */
-{name:'Michele Titi-Cappelli',title:'Partner, PE Head EMEA Financial Services',org:'Goldman Sachs',cat:'Goldman Sachs',email:null,tier:2,strength:2,hot:false,li:true,tags:['Goldman','EMEA','PE','Partner','Financial Services'],avenir:'GS EMEA PE head — international deal flow and cross-border acquisition intelligence.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Jonathan Barry',title:'Partner',org:'Goldman Sachs',cat:'Goldman Sachs',email:null,tier:2,strength:2,hot:false,li:true,tags:['Goldman','Partner'],avenir:'GS partner — multi-faceted deal and relationship intelligence.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Kyle Kniffen',title:'MD, Global Head of Alternatives TPW',org:'Goldman Sachs',cat:'Goldman Sachs',email:null,tier:2,strength:2,hot:false,li:true,tags:['Goldman','Alternatives','MD','TPW'],avenir:'GS global head of alternatives distribution — Avenir fund placement and LP introductions.',intro:'LinkedIn',date:'Mar 2026'},
-{name:'Michael Perrier',title:'Managing Director, Markets Coverage',org:'Goldman Sachs',cat:'Goldman Sachs',email:null,tier:2,strength:2,hot:false,li:true,tags:['Goldman','Markets','MD'],avenir:'GS Markets MD — capital markets intelligence for Avenir deal financing.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Bobby Shepard',title:'IBD GBM Private',org:'Goldman Sachs',cat:'Goldman Sachs',email:'Robert.Shepard@gs.com',tier:2,strength:3,hot:false,li:false,tags:['Goldman','IB','GBM Private'],avenir:'GS IBD contact from live call — warm relationship for Avenir banking intro.',intro:'Direct call May 2026',date:'May 2026'},
+// ══════════════════════════════════════════════════════════════════════════════
+// LAW
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'Ross Fieldston', title: 'Partner', org: 'Paul, Weiss',
+  cat: 'Law', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Ross+Fieldston+Paul+Weiss',
+  tags: ['Law', 'JHP']
+},
+{
+  name: 'Jesse Roth', title: 'General Counsel', org: 'Xposure',
+  cat: 'Law', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/jesse-roth-3b6286a7',
+  tags: ['Law', 'Entertainment', 'JHP']
+},
 
-/* ── CONSUMER / RETAIL ── */
-{name:'William P. Lauder',title:'Chair, Board of Directors',org:'The Estée Lauder Companies',cat:'Consumer / Retail',email:null,tier:1,strength:2,hot:true,li:true,tags:['Estée Lauder','Board Chair','Luxury','Consumer','Brand'],avenir:'Chairs Estée Lauder — world-class consumer brand intel for Avenir consumer/brand M&A.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Bobby Jain',title:'Founder & CIO',org:'Jain Global',cat:'Finance / Banking',email:null,tier:1,strength:2,hot:false,li:true,tags:['Jain Global','CIO','Hedge Fund','Macro'],avenir:'Jain Global founder/CIO. Multiple connections (Matt O\'Connor, Evan Olovyannikov, Kevin Curtis, Kelly Bezas, Naomi Gale) — deep Jain network.',intro:'LinkedIn network',date:'Active'},
-{name:'Spencer Carr',title:'Trader',org:'Tudor Investment Corporation',cat:'Finance / Banking',email:null,tier:2,strength:2,hot:false,li:true,tags:['Tudor','Trader','Hedge Fund'],avenir:'Tudor Investment trader — macro hedge fund intelligence for Avenir market analysis.',intro:'LinkedIn',date:'May 2026'},
-{name:'Stephanie Crissy Rader',title:'Global Co-Head, Alternatives Capital Formation',org:null,cat:'Finance / Banking',email:null,tier:2,strength:2,hot:false,li:true,tags:['Alternatives','Capital Formation','Co-Head'],avenir:'Global co-head alternatives — LP capital raising intelligence for Avenir fundraise strategy.',intro:'LinkedIn',date:'Jun 2026'},
+// ══════════════════════════════════════════════════════════════════════════════
+// CONSUMER
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'Adam Sloan', title: 'Executive', org: 'Creative Artists Agency (CAA)',
+  cat: 'Consumer', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/adamsloan1',
+  tags: ['Entertainment', 'Sports', 'JHP']
+},
+{
+  name: 'Paul Germain', title: 'President', org: 'Stone Ridge Asset Management',
+  cat: 'Consumer', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/paul-germain-9aa425b9',
+  tags: ['Asset Mgmt', 'JHP']
+},
+{
+  name: 'Aliza Licht', title: 'Founder', org: 'Leave Your Mark',
+  cat: 'Consumer', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/alizalicht',
+  tags: ['Brand', 'Consulting', 'JHP']
+},
+{
+  name: 'Gary Trock', title: 'SVP, Retail Services', org: 'CBRE',
+  cat: 'Consumer', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/gary-trock-528a42b',
+  tags: ['Real Estate', 'Retail', 'JHP']
+},
 
-/* ── KEY PEERS (Penn M&T / Wharton) ── */
-{name:'Sashwat Ravishankar',title:'UPenn M&T \'28',org:'Wharton + CS @ Penn',cat:'Penn / Wharton',email:null,tier:3,strength:3,hot:false,li:true,tags:['Penn M&T','Wharton','CS','Peer'],avenir:'Penn M&T peer — co-build deal sourcing pipeline and share Avenir/Wharton deal flow.',intro:'Penn M&T cohort',date:'Dec 2025'},
-{name:'Akshayan Nagarajah',title:'UPenn M&T',org:'University of Pennsylvania',cat:'Penn / Wharton',email:null,tier:3,strength:3,hot:false,li:true,tags:['Penn M&T','Wharton','Peer'],avenir:'Penn M&T classmate — peer network for Avenir intel sharing.',intro:'Penn M&T',date:'Dec 2025'},
-{name:'Pradyumn Bonu',title:'Economics + CS @ Penn',org:'University of Pennsylvania',cat:'Penn / Wharton',email:null,tier:3,strength:3,hot:false,li:true,tags:['Penn','Economics','CS','Presidential Scholar','Coca-Cola Scholar'],avenir:'Presidential Scholar + Coca-Cola Scholar at Penn — elite peer, potential Avenir talent pipeline.',intro:'Penn',date:'Jan 2026'},
-{name:'Om Shastri',title:'Student',org:'University of Pennsylvania',cat:'Penn / Wharton',email:null,tier:3,strength:3,hot:false,li:true,tags:['Penn','Student','Peer'],avenir:'Penn peer — network and Avenir deal intel sharing.',intro:'Penn',date:'Nov 2024'},
-{name:'Jack DeSena',title:'Stanford Student-Athlete',org:'Stanford University',cat:'Athletics',email:'jack.desena2005@gmail.com',tier:2,strength:5,hot:false,li:true,tags:['Spartan','Stanford','Wrestling','Joe DeSena son'],avenir:'Joe DeSena\'s son — direct bridge to Spartan/DeSena network. Close peer.',intro:'National Preps peer',date:'Jan 2026'},
-{name:'Zachary Harpaz',title:'Penn Wrestler',org:'UPenn',cat:'Athletics',email:null,tier:2,strength:4,hot:false,li:false,tags:['Penn Wrestling','ModMed family','Friend'],avenir:'Close friend + bridge to Joe Harpaz (ModMed CEO). Healthcare/consumer intro.',intro:'Penn Wrestling teammate',date:'Active'},
-{name:'David Prilutsky',title:'Principal',org:'Avenir',cat:'Penn / Wharton',email:null,tier:2,strength:3,hot:true,li:true,tags:['Avenir','Principal','Boss'],avenir:'Principal at Avenir — direct mentor and supervisor during internship.',intro:'Avenir Growth',date:'May 2026'},
+// ══════════════════════════════════════════════════════════════════════════════
+// HEALTHCARE
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'Dr. Uri Geiger', title: 'Entrepreneur & Investor', org: 'Medigus / Multiple Ventures',
+  cat: 'Healthcare', tier: 't-1',
+  email: '', li: 'https://www.linkedin.com/in/urigeiger',
+  tags: ['MedTech', 'Israel', 'Entrepreneur']
+},
+{
+  name: 'Ian Lentnek', title: 'Medical Director', org: 'Siemens Healthineers',
+  cat: 'Healthcare', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/ianlentnek',
+  tags: ['MedTech', 'JHP']
+},
+{
+  name: 'Matthew Sherman', title: 'Strategic Finance & Corp Dev', org: 'WHOOP',
+  cat: 'Healthcare', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/matt-sherman-b199a4111',
+  tags: ['HealthTech', 'JHP']
+},
 
-/* ── ISRAEL NETWORK ── */
-{name:'Yoav Ben-Yeshaya',title:'Partner, Head of M&A Israel',org:'EY-Parthenon',cat:'Israel Network',email:null,tier:2,strength:2,hot:false,li:true,tags:['EY','Israel','M&A','Partner'],avenir:'Head of Israel M&A at EY-Parthenon. Key for cross-border Israel-US deal sourcing and advisory.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Ilan Paz',title:'Barclays Israel CEO',org:'Barclays',cat:'Israel Network',email:null,tier:2,strength:2,hot:false,li:true,tags:['Barclays','Israel','CEO','Banking'],avenir:'Barclays Israel CEO — Israel investment banking and cross-border deal intelligence.',intro:'LinkedIn',date:'Feb 2026'},
-{name:'Emmanuel Peterfreund',title:'Director, Global Markets Sales Israel',org:'HSBC',cat:'Israel Network',email:null,tier:2,strength:2,hot:false,li:true,tags:['HSBC','Israel','Markets','Director'],avenir:'HSBC Israel markets head — capital markets and Israel deal flow for Avenir.',intro:'LinkedIn',date:'Jan 2026'},
+// ══════════════════════════════════════════════════════════════════════════════
+// JHP MENTORS (remaining not in other categories)
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'Adam Phillips', title: 'Managing Partner', org: 'Capital Advisory Ventures',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/adamdphillips',
+  tags: ['PE', 'AI', 'JHP']
+},
+{
+  name: 'Ilan Kaufthal', title: 'Chairman', org: 'East Windsor Advisors',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: '',
+  tags: ['Banking', 'Advisory', 'JHP']
+},
+{
+  name: 'Laura Rapaport', title: 'Founder & CEO', org: 'North Bridge (Real Estate Lending)',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/laura-rapaport-b769244',
+  tags: ['Real Estate', 'JHP']
+},
+{
+  name: 'Dan Haroun', title: 'Co-Founder & Partner', org: 'Catalyst Investment Partners',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/dharoun',
+  tags: ['Real Estate', 'PE', 'JHP']
+},
+{
+  name: 'Joe Richards', title: 'National Director', org: 'AIPAC',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Joe+Richards+AIPAC',
+  tags: ['Policy', 'Israel', 'JHP']
+},
+{
+  name: 'Randy Epstein', title: 'CFO', org: 'Single Family Office',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Randy+Epstein+Family+Office+CFO',
+  tags: ['Family Office', 'JHP']
+},
+{
+  name: 'Reuben Cohen', title: 'Director, Financial Crime Compliance', org: 'Atlas SP Partners',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/reuben-cohen-a6405a9',
+  tags: ['Compliance', 'Finance', 'JHP']
+},
+{
+  name: 'Rachel Nieman Barone', title: 'Luxury Travel Designer', org: 'In the Know Experiences',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/rachel-barone-12b01113',
+  tags: ['Hospitality', 'JHP']
+},
+{
+  name: 'Gabrielle Solomon', title: 'Founder', org: "Franklin's Forum",
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/gabrielle-solomon-68073a18b',
+  tags: ['Consulting', 'JHP']
+},
+{
+  name: 'Samantha Bauer Stavis', title: 'Independent Consultant', org: 'Manor Park Consulting',
+  cat: 'JHP Mentors', tier: 't-mentor',
+  email: '', li: 'https://www.linkedin.com/in/samanthastavis',
+  tags: ['Consulting', 'JHP']
+},
 
-/* ── CONSULTING ── */
-{name:'Juan Aristi Baquero',title:'Partner',org:'McKinsey & Company',cat:'Consulting',email:null,tier:2,strength:2,hot:false,li:true,tags:['McKinsey','Partner'],avenir:'McKinsey partner — strategy intelligence and portfolio company assessment for Avenir deals.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Lukas Tabak',title:'AI Enablement Manager',org:'McKinsey & Company',cat:'Consulting',email:null,tier:2,strength:2,hot:false,li:true,tags:['McKinsey','AI','Enablement'],avenir:'McKinsey AI lead — AI adoption at scale, relevant for Avenir AI portfolio diligence.',intro:'LinkedIn',date:'May 2026'},
-{name:'Jacob Palmer',title:'Managing Director & Partner',org:'Boston Consulting Group',cat:'Consulting',email:null,tier:2,strength:2,hot:false,li:true,tags:['BCG','MD','Partner'],avenir:'BCG MD & Partner — strategy and value creation for Avenir portfolio companies.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'William Davenport',title:'Principal',org:'Boston Consulting Group',cat:'Consulting',email:null,tier:2,strength:2,hot:false,li:true,tags:['BCG','Principal'],avenir:'BCG Principal — referred Omer to BCG internship. Strategy intelligence for Avenir deals.',intro:'LinkedIn (BCG referral)',date:'Apr 2026'},
+// ══════════════════════════════════════════════════════════════════════════════
+// PENN PEERS — same circle, reachable
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'Akshayan Nagarajah', title: 'Student, M&T \'26', org: 'UPenn',
+  cat: 'Penn Peers', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/in/akshayan-nagarajah-88a0781b0',
+  tags: ['Penn M&T', 'Peer']
+},
+{
+  name: 'Sashwat Ravishankar', title: 'Student, M&T \'26', org: 'UPenn / a16z',
+  cat: 'Penn Peers', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/in/sashwat-ravishankar',
+  tags: ['Penn M&T', 'a16z', 'Peer']
+},
+{
+  name: 'Pradyumn Bonu', title: 'Penn Presidential Scholar', org: 'UPenn',
+  cat: 'Penn Peers', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/in/pradyumn-bonu-57b160245',
+  tags: ['Penn', 'Scholar', 'Peer']
+},
+{
+  name: 'Zachary Harpaz', title: 'Student', org: 'UPenn',
+  cat: 'Penn Peers', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/in/zachary-harpaz-844133175',
+  tags: ['Penn', 'Peer']
+},
+{
+  name: 'Sarah Holmes', title: 'Student', org: 'UPenn SEAS',
+  cat: 'Penn Peers', tier: 't-3',
+  email: 'holmes16@seas.upenn.edu', li: 'https://www.linkedin.com/in/sarah-holmes-62babb30b',
+  tags: ['Penn', 'SEAS', 'Peer']
+},
+{
+  name: 'Jay Foziev', title: 'Student & Entrepreneur', org: 'UPenn',
+  cat: 'Penn Peers', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Jay+Foziev+Penn',
+  tags: ['Penn', 'Entrepreneur', 'Peer']
+},
+{
+  name: 'Pedro', title: 'Student', org: 'UPenn',
+  cat: 'Penn Peers', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Pedro+UPenn+student',
+  tags: ['Penn', 'Peer']
+},
+{
+  name: 'Gad Allon', title: 'Director, M&T Program / Professor', org: 'Wharton School',
+  cat: 'Penn Peers', tier: 't-2',
+  email: 'gallon@wharton.upenn.edu', li: 'https://www.linkedin.com/in/gad-allon-2543b25/',
+  tags: ['Wharton', 'M&T', 'Professor']
+},
 
-/* ── MORE FINANCE ── */
-{name:'Andrew Barkan',title:'Partner',org:'Fried Frank',cat:'Law',email:'Andrew.Barkan@friedfrank.com',tier:2,strength:4,hot:true,li:true,tags:['Fried Frank','M&A Law','PE','JHP'],avenir:'M&A PE counsel at elite firm. Invaluable for Avenir deal legal review and transaction structuring.',intro:'JHP Mentor',date:'Mar 2026'},
-{name:'Josh Satin',title:'Partner & CIO',org:'Gelt Venture Partners',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Gelt','VC','Multifamily','Real Estate'],avenir:'Gelt Venture Partners CIO — real estate and multifamily investment intelligence.',intro:'LinkedIn',date:'May 2026'},
-{name:'Jim O\'Donnell',title:'Managing Director, Middle Market M&A',org:'Paulson Investment Company',cat:'Finance / Banking',email:'jodonnell@paulsoninvestment.com',tier:2,strength:3,hot:false,li:true,tags:['Paulson','M&A','Middle Market','IB'],avenir:'Met at National Preps via Joe DeSena. Paulson Investment M&A — deal flow for Avenir middle market targets.',intro:'Joe DeSena introduction',date:'Feb 2026'},
-{name:'Eyal Nirenberg',title:'Managing Director, Investment Banking',org:'Goldman Sachs',cat:'Goldman Sachs',email:null,tier:2,strength:2,hot:false,li:true,tags:['Goldman','MD','IB','Israel'],avenir:'GS Israel IB MD — cross-border deal advisory and Israel-US banking bridge.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Filip Rensky',title:'Vice Chairman',org:'Bank of America Merrill Lynch',cat:'Finance / Banking',email:null,tier:2,strength:2,hot:false,li:true,tags:['BofA','Vice Chairman','IB'],avenir:'BofA Vice Chairman — bank advisory and deal origination capabilities.',intro:'LinkedIn',date:'Apr 2026'},
-{name:'Matan Feldman',title:'Founder & CEO',org:'Wall Street Prep',cat:'Entrepreneurship',email:null,tier:2,strength:2,hot:false,li:true,tags:['Wall Street Prep','EdTech','Founder','Finance'],avenir:'WSP founder — finance education ecosystem, connects to thousands of IB/PE analysts.',intro:'LinkedIn',date:'Feb 2026'},
-{name:'Eytan Elbaz',title:'Co-creator AdSense / Top Seed Investor',org:'Applied Semantics / Scopely',cat:'VC / PE',email:null,tier:1,strength:2,hot:true,li:true,tags:['AdSense','Oculus','Anduril','Scopely','Climate Corp','Top 100 Seed'],avenir:'Co-created AdSense, seeded Oculus, Anduril, Climate Corp. Elite angel network for Avenir.',intro:'LinkedIn',date:'May 2026'},
-{name:'Moshe Libbin',title:'Angel Investor',org:'Ex-McKinsey | Harvard MBA',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Angel','McKinsey','Harvard MBA'],avenir:'Harvard MBA angel investor — seed deal intelligence and co-investment opportunities.',intro:'LinkedIn',date:'May 2026'},
-{name:'Gal Yaniv',title:'Summer Associate at Apollo | Wharton MBA',org:'Apollo / Wharton',cat:'Blackstone / Apollo',email:null,tier:2,strength:2,hot:false,li:true,tags:['Apollo','Wharton','MBA','Israeli'],avenir:'Apollo SA + Israeli Wharton MBA — bridge between Apollo deal flow and Israeli network.',intro:'LinkedIn',date:'May 2026'},
-{name:'Daniel Kimerling',title:'Founder & Managing Partner',org:'Deciens Capital',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Deciens','VC','Fintech','Kauffman Fellow'],avenir:'Deciens Capital founder — fintech VC deal flow for Avenir tech portfolio.',intro:'LinkedIn',date:'Jan 2026'},
-{name:'Steve Gatena',title:'CEO',org:'PRAY.COM',cat:'Entrepreneurship',email:null,tier:2,strength:2,hot:false,li:true,tags:['PRAY','CEO','Founder','Tech'],avenir:'PRAY.COM CEO — direct founder connection, spiritual/wellness consumer brand intelligence.',intro:'LinkedIn',date:'May 2026'},
-{name:'Assaf Levy-Beeri',title:'Co-Founder & CBO',org:'Joya Team / Electro-Optics / AR-VR',cat:'Tech / AI',email:null,tier:2,strength:2,hot:false,li:true,tags:['AR/VR','Optics','Microdisplays','Israel Tech'],avenir:'AR/VR + electro-optics founder — deep tech pipeline for Avenir technology thesis.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Joe DeSena Jr. (Jack)',title:'Stanford Varsity Wrestler',org:'Stanford University',cat:'Athletics',email:'jack.desena2005@gmail.com',tier:2,strength:5,hot:false,li:true,tags:['Spartan','Stanford','Wrestling','Joe DeSena son'],avenir:'Bridge to Joe DeSena and Spartan network. Close peer and recurring connection.',intro:'National Preps',date:'Mar 2024'},
-{name:'Yossi Farro',title:'Tefillin Guy / Community Builder',org:'Jewish Network',cat:'Israel Network',email:null,tier:2,strength:2,hot:false,li:true,tags:['Jewish Network','Israel','Community','Tefillin'],avenir:'Wrapping the most influential Jews in the world — broad Jewish community connector.',intro:'LinkedIn',date:'May 2026'},
-{name:'Andrea Brener',title:'Partner & Chief People Officer',org:'Gordian Ventures',cat:'VC / PE',email:null,tier:2,strength:2,hot:false,li:true,tags:['Gordian Ventures','VC','CPO','Partner'],avenir:'Gordian Ventures partner — co-investor and deal flow partner for Avenir.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Daniel Bronstein',title:'Founder & CEO, Volo Studios',org:'Boston University / Aerial Media',cat:'Entrepreneurship',email:null,tier:3,strength:2,hot:false,li:true,tags:['Volo Studios','Aerial Media','D1 Athlete','BU','Founder'],avenir:'D1 student-athlete founder — peer entrepreneur network for Avenir early-stage deal sourcing.',intro:'LinkedIn',date:'Jun 2026'},
-{name:'Erin Whitelaw',title:'Co-Head of Capital Development & IR',org:'Walleye Capital',cat:'Finance / Banking',email:null,tier:2,strength:2,hot:false,li:true,tags:['Walleye Capital','IR','Capital Development','Co-Head'],avenir:'Walleye Capital co-head of IR — quant/systematic fund intelligence for Avenir market analysis.',intro:'Walleye application',date:'Jun 2026'},
+// ══════════════════════════════════════════════════════════════════════════════
+// ISRAEL
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'Yossi Aloni', title: 'Cybersecurity Expert & Investor', org: 'Israel — Deep Defense & Cyber Network',
+  cat: 'Israel', tier: 't-2', note: 'Elite cyber expert, deep IDF/intelligence connections in Israel',
+  email: '', li: 'https://www.linkedin.com/in/yossi-aloni-02a29a1/',
+  tags: ['Israel', 'Cyber', 'Entrepreneur']
+},
+{
+  name: 'Tamir Kazaz', title: 'Founder & Managing Partner', org: 'Key1 Capital (PE Firm)',
+  cat: 'Israel', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/in/tamir-kazaz-cpa-isr-mba-9200b270/',
+  tags: ['Israel', 'Finance', 'Entrepreneur']
+},
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ATHLETICS
+// ══════════════════════════════════════════════════════════════════════════════,
+{
+  name: 'Ted Schlein', title: 'General Partner', org: 'Kleiner Perkins / Penn Wrestling',
+  cat: 'Athletics', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/in/ted-schlein-5630184b',
+  tags: ['VC', 'Penn Wrestling', 'Cybersecurity']
+},
+{
+  name: 'David Pottruck', title: 'Former CEO, Charles Schwab', org: 'Penn Wrestling Benefactor',
+  cat: 'Athletics', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=David+Pottruck+Charles+Schwab',
+  tags: ['Finance', 'Penn Wrestling', 'CEO']
+},
+{
+  name: 'Sohum Trivedi', title: 'Student-Athlete', org: 'UPenn Wrestling',
+  cat: 'Athletics', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/in/sohumtrivedi/',
+  tags: ['Penn', 'Wrestling', 'Peer']
+},
+// ══════════════════════════════════════════════════════════════════════════════
+// PENN WRESTLING — Alumni Mentors (real roles, direct access)
+// ══════════════════════════════════════════════════════════════════════════════
+{
+  name: 'Kevin Cofsky', title: 'Partner', org: 'Perella Weinberg Partners',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Kevin+Cofsky+Perella+Weinberg',
+  tags: ['Wrestling Alumni', 'Banking', 'Advisory']
+},
+{
+  name: 'Jason Bowlsby', title: 'Analyst', org: 'Apollo Global Management',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Jason+Bowlsby+Apollo+Global',
+  tags: ['Wrestling Alumni', 'Apollo', 'PE']
+},
+{
+  name: 'Ken Elefant', title: 'Partner & Co-Founder', org: 'Sorenson Capital',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Ken+Elefant+Sorenson+Capital',
+  tags: ['Wrestling Alumni', 'VC', 'Sorenson']
+},
+{
+  name: 'Brett Matter', title: 'Head of Trading', org: 'Brahman Capital',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Brett+Matter+Brahman+Capital',
+  tags: ['Wrestling Alumni', 'Hedge Fund', 'Trading']
+},
+{
+  name: 'Rob Hitschler', title: 'Managing Director', org: 'Wells Fargo',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Rob+Hitschler+Wells+Fargo',
+  tags: ['Wrestling Alumni', 'Banking']
+},
+{
+  name: 'Eric Schwarzbach', title: 'Managing Director, Global Corp Banking — FIG', org: 'Major Bank',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Eric+Schwarzbach+Banking+FIG',
+  tags: ['Wrestling Alumni', 'Banking', 'FIG']
+},
+{
+  name: 'Tristan DeVincenzo', title: 'Credit & Special Situations', org: 'Siguler Guff',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Tristan+DeVincenzo+Siguler+Guff',
+  tags: ['Wrestling Alumni', 'Credit', 'Distressed']
+},
+{
+  name: 'Jeff Canfora', title: 'Vice President', org: 'RBC Capital Markets',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Jeff+Canfora+RBC+Capital',
+  tags: ['Wrestling Alumni', 'Banking', 'RBC']
+},
+{
+  name: 'AJ Vindici', title: 'Private Equity', org: 'Pomona Capital',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=AJ+Vindici+Pomona+Capital',
+  tags: ['Wrestling Alumni', 'PE', 'Pomona']
+},
+{
+  name: 'Lior Zamir', title: 'Real Estate Investment', org: 'Pacer Partners',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Lior+Zamir+Pacer+Partners',
+  tags: ['Wrestling Alumni', 'Real Estate']
+},
+{
+  name: 'Brian Butler', title: 'FBI Agent', org: 'Federal Bureau of Investigation',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Brian+Butler+FBI+Penn+Wrestling',
+  tags: ['Wrestling Alumni', 'Law Enforcement', 'Government']
+},
+{
+  name: 'Rob Dolan', title: 'Managing Partner', org: 'Falcon Bridge Consulting',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Rob+Dolan+Falcon+Bridge+Consulting',
+  tags: ['Wrestling Alumni', 'Consulting']
+},
+{
+  name: 'Lorenzo Thomas', title: 'Associate Attorney', org: 'Blank Rome LLP',
+  cat: 'Penn Wrestling', tier: 't-2',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Lorenzo+Thomas+Blank+Rome',
+  tags: ['Wrestling Alumni', 'Law']
+},
+
+// ── Teammates ────────────────────────────────────────────────────────────────
+{
+  name: 'Om Shastri', title: 'Student-Athlete', org: 'UPenn Wrestling',
+  cat: 'Penn Wrestling', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/in/omshastri',
+  tags: ['Teammate', 'Penn', 'Wrestling']
+},
+{
+  name: 'Xander Kuokkanen', title: 'Student-Athlete', org: 'UPenn Wrestling C'28',
+  cat: 'Penn Wrestling', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Xander+Kuokkanen+Penn+Wrestling',
+  tags: ['Teammate', '2028', 'Penn']
+},
+{
+  name: 'Paul Ognissanti', title: 'Student-Athlete', org: 'UPenn Wrestling C'28',
+  cat: 'Penn Wrestling', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Paul+Ognissanti+Penn+Wrestling',
+  tags: ['Teammate', '2028', 'Penn']
+},
+{
+  name: 'John Pardo', title: 'Student-Athlete', org: 'UPenn Wrestling C'28',
+  cat: 'Penn Wrestling', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=John+Pardo+Penn+Wrestling',
+  tags: ['Teammate', '2028', 'Penn']
+},
+{
+  name: 'Denzel Perez', title: 'Student-Athlete', org: 'UPenn Wrestling C'28',
+  cat: 'Penn Wrestling', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Denzel+Perez+Penn+Wrestling',
+  tags: ['Teammate', '2028', 'Penn']
+},
+{
+  name: 'Nate Taylor', title: 'Student-Athlete, Finance & Accounting', org: 'UPenn Wharton C'28',
+  cat: 'Penn Wrestling', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Nate+Taylor+Penn+Wrestling+Wharton',
+  tags: ['Teammate', '2028', 'Wharton']
+},
+{
+  name: 'Cross Wasilewski', title: 'Student-Athlete', org: 'UPenn Wrestling C'28',
+  cat: 'Penn Wrestling', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Cross+Wasilewski+Penn+Wrestling',
+  tags: ['Teammate', '2028', 'Penn']
+},
+{
+  name: 'Reed Fullmer', title: 'Student-Athlete', org: 'UPenn Wrestling C'28',
+  cat: 'Penn Wrestling', tier: 't-3',
+  email: '', li: 'https://www.linkedin.com/search/results/people/?keywords=Reed+Fullmer+Penn+Wrestling',
+  tags: ['Teammate', '2028', 'Penn']
+},
+
 ];
 
-// deduplicate by name
-const seen = new Set();
-const DATA = CONTACTS.filter(c => {
-  if(seen.has(c.name)){return false;}
-  seen.add(c.name); return true;
-});
-
 // ─── STATE ───────────────────────────────────────────────────────────────────
-let activeFilter='all', activeView='grid', activeIdx=null;
+let activeCat = 'all';
+let activeTier = 'all';
+let query = '';
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
-function init(){
-  updateStats();
-  render();
+const CAT_ORDER = [
+  'Inner Circle', 'Power Network', 'Goldman Sachs', 'Finance', 'PE / VC',
+  'Tech / AI', 'Law', 'Consumer', 'Healthcare',
+  'JHP Mentors', 'Penn Peers', 'Israel', 'Athletics', 'Penn Wrestling'
+];
+
+const CAT_SC = {
+  'Inner Circle': 'sc-0', 'Power Network': 'sc-1', 'Goldman Sachs': 'sc-2',
+  'Finance': 'sc-3', 'PE / VC': 'sc-4', 'Tech / AI': 'sc-5',
+  'Law': 'sc-6', 'Consumer': 'sc-7', 'Healthcare': 'sc-8',
+  'JHP Mentors': 'sc-9', 'Penn Peers': 'sc-10', 'Israel': 'sc-11', 'Athletics': 'sc-12'
+};
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+const TIER_MAP = {
+  'inner':    ['t-inner', '⭐ Inner Circle'],
+  't-1':      ['t-1', 'Power Network'],
+  't-2':      ['t-2', 'Senior'],
+  't-3':      ['t-3', 'Peer'],
+  't-mentor': ['t-mentor', 'JHP Mentor'],
+};
+
+function liIcon() {
+  return `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>`;
+}
+function mailIcon() {
+  return `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`;
+}
+function copyIcon() {
+  return `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
 }
 
-function updateStats(){
-  const t1=DATA.filter(c=>c.tier===1).length;
-  const em=DATA.filter(c=>c.email).length;
-  const gs=DATA.filter(c=>c.cat==='Goldman Sachs').length;
-  const bx=DATA.filter(c=>c.cat==='Blackstone / Apollo').length;
-  const ap=DATA.filter(c=>c.cat==='Blackstone / Apollo'&&c.org&&c.org.includes('Apollo')).length;
-
-  document.getElementById('s-total').textContent=DATA.length;
-  document.getElementById('s-email').textContent=em;
-  document.getElementById('s-t1').textContent=t1;
-  document.getElementById('s-gs').textContent=gs;
-  document.getElementById('s-bx').textContent=bx;
-  document.getElementById('s-ap').textContent=ap;
-  document.getElementById('t1-count').textContent=t1;
-  document.getElementById('email-count').textContent=em;
-
-  const counts = {
-    'all':DATA.length,'🔥 Priority':DATA.filter(c=>c.hot).length,
-    'VC / PE':DATA.filter(c=>c.cat==='VC / PE').length,
-    'Goldman Sachs':DATA.filter(c=>c.cat==='Goldman Sachs').length,
-    'Finance / Banking':DATA.filter(c=>c.cat==='Finance / Banking').length,
-    'Blackstone / Apollo':DATA.filter(c=>c.cat==='Blackstone / Apollo').length,
-    'BlackRock':DATA.filter(c=>c.cat==='BlackRock').length,
-    'Tech / AI':DATA.filter(c=>c.cat==='Tech / AI').length,
-    'Consulting':DATA.filter(c=>c.cat==='Consulting').length,
-    'Entrepreneurship':DATA.filter(c=>c.cat==='Entrepreneurship').length,
-    'Healthcare':DATA.filter(c=>c.cat==='Healthcare').length,
-    'Law':DATA.filter(c=>c.cat==='Law').length,
-    'Athletics':DATA.filter(c=>c.cat==='Athletics').length,
-    'Penn / Wharton':DATA.filter(c=>c.cat==='Penn / Wharton').length,
-    'Consumer / Retail':DATA.filter(c=>c.cat==='Consumer / Retail').length,
-    'Israel Network':DATA.filter(c=>c.cat==='Israel Network').length,
-  };
-  const ids={
-    'all':'cnt-all','🔥 Priority':'cnt-hot',
-    'VC / PE':'cnt-vc','Goldman Sachs':'cnt-gs',
-    'Finance / Banking':'cnt-fin','Blackstone / Apollo':'cnt-ba',
-    'BlackRock':'cnt-br','Tech / AI':'cnt-tech',
-    'Consulting':'cnt-con','Entrepreneurship':'cnt-found',
-    'Healthcare':'cnt-health','Law':'cnt-law',
-    'Athletics':'cnt-ath','Penn / Wharton':'cnt-penn',
-    'Consumer / Retail':'cnt-cons','Israel Network':'cnt-il',
-  };
-  Object.entries(ids).forEach(([k,id])=>{
-    const el=document.getElementById(id);
-    if(el)el.textContent=counts[k]||0;
-  });
+function copyText(t) {
+  navigator.clipboard.writeText(t);
+  const el = document.getElementById('toast');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1800);
 }
 
-function getFiltered(){
-  const q=document.getElementById('search').value.toLowerCase();
-  let list=DATA;
-  if(activeFilter!=='all'){
-    if(activeFilter==='🔥 Priority') list=list.filter(c=>c.hot);
-    else list=list.filter(c=>c.cat===activeFilter);
-  }
-  if(q){
-    list=list.filter(c=>
-      c.name.toLowerCase().includes(q)||
-      (c.org||'').toLowerCase().includes(q)||
-      (c.title||'').toLowerCase().includes(q)||
-      (c.email||'').toLowerCase().includes(q)||
-      c.tags.some(t=>t.toLowerCase().includes(q))
-    );
-  }
-  const sort=document.getElementById('sort').value;
-  list=[...list];
-  if(sort==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
-  else if(sort==='tier') list.sort((a,b)=>a.tier-b.tier);
-  else if(sort==='strength') list.sort((a,b)=>b.strength-a.strength);
-  return list;
-}
-
-function cardHTML(c,idx){
-  const meta=CAT_META[c.cat]||{color:'#6366f1'};
-  const av=avatarColor(c.name);
-  const emailBlock=c.email
-    ?`<div class="c-email"><span>${c.email}</span><button class="c-copy" onclick="cp(event,'${c.email}')">⎘</button></div>`
-    :`<div class="no-email">📭 Email not yet verified</div>`;
-  const hotIcon=c.hot?'🔥 ':'';
-  const liIcon=c.li?`<span class="li-badge">🔗 LinkedIn</span>`:'';
-  return `
-  <div class="c-card" onclick="openModal(${idx})" style="border-top:2px solid ${meta.color}">
-    <div class="c-head">
-      <div class="avatar" style="background:${av}">${initials(c.name)}</div>
-      <div>
-        <div class="c-name">${hotIcon}${c.name}</div>
-        <div class="c-title">${c.title}</div>
-        <div class="c-org">${c.org||''}</div>
-      </div>
-    </div>
-    <div class="c-badges">
-      ${tierBadge(c.tier)}
-      <span class="tier" style="background:${meta.color}18;color:${meta.color};border:1px solid ${meta.color}35">${meta.icon} ${c.cat}</span>
-      ${liIcon}
-    </div>
-    ${emailBlock}
-    <div class="avenir-box"><div class="al">⚡ Avenir Value</div><p>${c.avenir}</p></div>
-    <div class="c-strength">
-      <span style="font-size:10px;color:var(--gray2)">Relationship</span>
-      <div class="dots">${dots(c.strength)}</div>
-    </div>
-    <div class="c-footer">
-      <div class="c-btn" onclick="event.stopPropagation();openModal(${idx})">Profile</div>
-      ${c.email?`<div class="c-btn pri" onclick="event.stopPropagation();draftEmail('${c.name}','${c.email}')">✉ Draft</div>`:''}
-    </div>
-  </div>`;
-}
-
-function render(){
-  const grid=document.getElementById('grid');
-  const list=getFiltered();
-  if(!list.length){
-    grid.innerHTML='<div class="empty">No contacts match your search.</div>';
-    return;
-  }
-
-  // group
-  const groups={};
-  list.forEach(c=>{
-    if(!groups[c.cat]) groups[c.cat]=[];
-    groups[c.cat].push(c);
-  });
-
-  let html='';
-
-  // hot section first if 'all'
-  if(activeFilter==='all'){
-    const hot=list.filter(c=>c.hot);
-    if(hot.length){
-      html+=`<div class="section-hdr"><h3>🔥 Priority Relationships</h3><div class="section-line"></div><div class="section-n">${hot.length}</div></div>`;
-      hot.forEach(c=>html+=cardHTML(c,DATA.indexOf(c)));
+// ─── FILTER ──────────────────────────────────────────────────────────────────
+function filtered() {
+  return C.filter(c => {
+    if (activeCat !== 'all' && c.cat !== activeCat) return false;
+    if (activeTier !== 'all' && c.tier !== activeTier) return false;
+    if (query) {
+      const q = query.toLowerCase();
+      if (![c.name, c.title, c.org, ...(c.tags||[]), c.note||''].some(s => s && s.toLowerCase().includes(q))) return false;
     }
-  }
+    return true;
+  });
+}
 
-  const order=['VC / PE','Goldman Sachs','Finance / Banking','Blackstone / Apollo','BlackRock','Tech / AI','Consulting','Consumer / Retail','Entrepreneurship','Healthcare','Law','Israel Network','Athletics','Penn / Wharton'];
-  order.forEach(cat=>{
-    const items=(groups[cat]||[]).filter(c=>!c.hot||activeFilter!=='all');
-    if(!items.length)return;
-    html+=`<div class="section-hdr"><h3>${CAT_META[cat]?.icon||''} ${cat}</h3><div class="section-line"></div><div class="section-n">${items.length}</div></div>`;
-    items.forEach(c=>html+=cardHTML(c,DATA.indexOf(c)));
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function render() {
+  const data = filtered();
+  const root = document.getElementById('root');
+  root.innerHTML = '';
+
+  const catsToShow = activeCat === 'all' ? CAT_ORDER : [activeCat];
+  const groups = {};
+  CAT_ORDER.forEach(cat => groups[cat] = []);
+  data.forEach(c => { if (groups[c.cat]) groups[c.cat].push(c); });
+
+  let total = 0;
+  catsToShow.forEach(cat => {
+    const items = groups[cat];
+    if (!items || items.length === 0) return;
+    total += items.length;
+
+    const sec = document.createElement('div');
+    sec.className = 'section' + (cat === 'Inner Circle' ? ' inner-circle' : '');
+
+    const gid = 'g' + cat.replace(/[^a-zA-Z0-9]/g, '');
+    sec.innerHTML = `<div class="sec-head"><span class="sec-title">${cat}</span><span class="sec-count">${items.length}</span></div><div class="grid" id="${gid}"></div>`;
+    root.appendChild(sec);
+
+    const grid = document.getElementById(gid);
+    items.forEach(c => {
+      const [tc, tl] = TIER_MAP[c.tier] || ['t-3', c.tier];
+      const liUrl = c.li || `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(c.name)}`;
+      const tags = (c.tags||[]).map(t => `<span class="tag">${t}</span>`).join('');
+      const emailPart = c.email
+        ? `<a class="btn btn-mail" href="mailto:${c.email}" onclick="event.stopPropagation()">${mailIcon()} ${c.email}</a><button class="btn btn-copy" onclick="copyText('${c.email}');event.stopPropagation()" title="Copy">${copyIcon()}</button>`
+        : '';
+      const notePart = c.note ? `<div class="cnote">"${c.note}"</div>` : '';
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-row1">
+          <div class="card-info">
+            <div class="cname">${c.name}</div>
+            <div class="ctitle">${c.title}</div>
+            <div class="corg">${c.org}</div>
+            ${notePart}
+          </div>
+          <span class="tbadge ${tc}">${tl}</span>
+        </div>
+        <div class="card-actions">
+          <a class="btn btn-li" href="${liUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${liIcon()} LinkedIn</a>
+          ${emailPart}
+        </div>
+        ${tags ? `<div class="tags">${tags}</div>` : ''}
+      `;
+      grid.appendChild(card);
+    });
   });
 
-  grid.innerHTML=html;
-}
-
-function setFilter(f,el){
-  activeFilter=f;
-  document.querySelectorAll('.sidebar-link').forEach(l=>l.classList.remove('active'));
-  if(el)el.classList.add('active');
-  render();
-}
-function setView(v,btn){
-  activeView=v;
-  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const g=document.getElementById('grid');
-  v==='list'?g.classList.add('list'):g.classList.remove('list');
-}
-
-// ─── MODAL ───────────────────────────────────────────────────────────────────
-function openModal(idx){
-  activeIdx=idx;
-  const c=DATA[idx];
-  const meta=CAT_META[c.cat]||{color:'#6366f1',icon:''};
-  document.getElementById('modal-body').innerHTML=`
-    <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:18px">
-      <div class="avatar" style="width:56px;height:56px;font-size:20px;border-radius:12px;background:${avatarColor(c.name)}">${initials(c.name)}</div>
-      <div>
-        <h2>${c.name}</h2>
-        <div class="m-role">${c.title} · ${c.org||''}</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          ${tierBadge(c.tier)}
-          <span class="tier" style="background:${meta.color}18;color:${meta.color};border:1px solid ${meta.color}35">${meta.icon} ${c.cat}</span>
-          ${c.li?'<span class="li-badge">🔗 LinkedIn</span>':''}
-          ${c.hot?'<span class="tier tier-1">🔥 Priority</span>':''}
-        </div>
-      </div>
-    </div>
-    <div class="m-sec">
-      <h4>Contact Information</h4>
-      ${c.email?`
-        <div class="c-email" style="max-width:100%">
-          <span>${c.email}</span>
-          <button class="c-copy" onclick="cp(event,'${c.email}')">⎘ Copy</button>
-        </div>`:`<p style="color:var(--gray2);font-size:13px">Email not yet verified from inbox.</p>`}
-      ${c.phone?`<p style="font-size:13px;color:var(--gray);margin-top:8px">📞 ${c.phone}</p>`:''}
-      <p style="font-size:11px;color:var(--gray2);margin-top:8px">
-        Connected: ${c.date||'—'} · Via: ${c.intro||'—'} · Strength: ${'★'.repeat(c.strength)}
-      </p>
-    </div>
-    <div class="m-sec">
-      <h4>Avenir Growth Value</h4>
-      <div class="avenir-box"><div class="al">⚡ Strategic Note</div><p>${c.avenir}</p></div>
-    </div>
-    <div class="m-sec">
-      <h4>Tags</h4>
-      <div class="tag-cloud">${c.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-    </div>
-    <div class="m-actions">
-      ${c.email?`<button class="m-btn pri" onclick="draftEmail('${c.name}','${c.email}')">✉ Draft Avenir Intro</button>`:''}
-      ${c.email?`<button class="m-btn" onclick="cp(event,'${c.email}')">⎘ Copy Email</button>`:''}
-      <button class="m-btn" onclick="closeModal()">Close</button>
-    </div>`;
-  document.getElementById('modal').classList.add('open');
-}
-function closeModal(){document.getElementById('modal').classList.remove('open');}
-function maybeClose(e){if(e.target===document.getElementById('modal'))closeModal();}
-
-// ─── ACTIONS ─────────────────────────────────────────────────────────────────
-function cp(e,email){
-  e.stopPropagation();
-  navigator.clipboard.writeText(email).then(()=>toast('Copied: '+email));
-}
-function draftEmail(name,email){
-  const first=name.split(' ')[0];
-  const sub=encodeURIComponent(`Following Up — Omer Barak, Avenir Growth`);
-  const body=encodeURIComponent(`Hi ${first},\n\nHope you're well. I'm reaching out as I'm currently interning at Avenir Growth this summer, focused on deal origination and portfolio strategy.\n\nI'd love to reconnect and share what I've been working on — I think there could be real overlap worth exploring.\n\nWould you have 15 minutes for a quick call?\n\nBest,\nOmer Barak\nAvenir Growth | Penn '27 | Division I Wrestler | Israeli National Team\n📱 305-335-0029 | barakom@sas.upenn.edu\nlinkedin.com/in/omerbarak2005`);
-  window.open(`mailto:${email}?subject=${sub}&body=${body}`);
-}
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
-}
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape')closeModal();
-  if(e.key==='/'&&document.activeElement!==document.getElementById('search')){
-    e.preventDefault();document.getElementById('search').focus();
+  if (total === 0) {
+    root.innerHTML = '<div class="empty">No contacts found.</div>';
   }
+
+  // update sidebar counts
+  document.getElementById('sc-all').textContent = total;
+  CAT_SC['Penn Wrestling'] = 'sc-13';
+Object.entries(CAT_SC).forEach(([cat, id]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = C.filter(c => c.cat === cat).length;
+  });
+}
+
+// ─── EVENTS ──────────────────────────────────────────────────────────────────
+document.querySelectorAll('.sitem').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.sitem').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    activeCat = el.dataset.cat;
+    render();
+  });
 });
 
-init();
+document.querySelectorAll('.fbtn').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    activeTier = el.dataset.tier;
+    render();
+  });
+});
+
+const searchEl = document.getElementById('search');
+searchEl.addEventListener('input', e => { query = e.target.value; render(); });
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== searchEl) { e.preventDefault(); searchEl.focus(); }
+  if (e.key === 'Escape') searchEl.blur();
+});
+
+render();
 </script>
 </body>
 </html>
