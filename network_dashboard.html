@@ -296,7 +296,7 @@ const C = [
 {
   name: 'Gal Gadot', title: 'Actress & Entrepreneur', org: 'Wonder Woman / Rivka Tequila',
   cat: 'Inner Circle', tier: 'inner',
-  email: '', li: 'https://www.linkedin.com/in/gal-gadot/',
+  email: '', li: 'https://www.instagram.com/gal_gadot/',
   tags: ['Entertainment', 'Brand', 'Consumer']
 },
 {
@@ -883,6 +883,7 @@ function render() {
     items.forEach(c => {
       const [tc, tl] = TIER_MAP[c.tier] || ['t-3', c.tier];
       const liUrl = c.li || `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(c.name)}`;
+      const liLabel = liUrl.includes('instagram.com') ? 'Instagram' : 'LinkedIn';
       const tags = (c.tags||[]).map(t => `<span class="tag">${t}</span>`).join('');
       const emailPart = c.email
         ? `<a class="btn btn-mail" href="mailto:${c.email}" onclick="event.stopPropagation()">${mailIcon()} ${c.email}</a><button class="btn btn-copy" onclick="copyText('${c.email}');event.stopPropagation()" title="Copy">${copyIcon()}</button>`
@@ -902,7 +903,7 @@ function render() {
           <span class="tbadge ${tc}">${tl}</span>
         </div>
         <div class="card-actions">
-          <a class="btn btn-li" href="${liUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${liIcon()} LinkedIn</a>
+          <a class="btn btn-li" href="${liUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${liIcon()} ${liLabel}</a>
           ${emailPart}
         </div>
         ${tags ? `<div class="tags">${tags}</div>` : ''}
